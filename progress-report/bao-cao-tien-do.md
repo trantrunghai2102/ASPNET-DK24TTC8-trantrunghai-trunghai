@@ -65,12 +65,12 @@
 
 ## PHẦN III — ĐANG LÀM
 ### 6. Module Xác Thực (Authentication) *Đang làm*
-- [ ] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
-- [ ] Đăng nhập / Đăng xuất
+- [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
+- [x] Đăng nhập / Đăng xuất
 - [ ] Đăng nhập bằng Google OAuth
 - [ ] Đăng nhập bằng Facebook OAuth
 - [ ] Đổi mật khẩu
-- [ ] Phân quyền (Role: Customer / Staff / Admin)
+- [x] Phân quyền (Role: Customer / Staff / Admin)
 
 ---
 
