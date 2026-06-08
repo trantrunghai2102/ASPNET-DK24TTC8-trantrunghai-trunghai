@@ -3,7 +3,7 @@
 
 > **Giảng viên hướng dẫn:** ThS. Lê Nguyên Thảo  
 > **Công nghệ:** C# ASP.NET MVC · MySQL · The Drink VN  
-> **Cập nhật lần cuối:** 04/06/2026
+> **Cập nhật lần cuối:** 08/06/2026
 
 ---
 
@@ -15,7 +15,7 @@
 | 2 | Phân tích yêu cầu hệ thống | Hoàn thành | 100% |
 | 3 | Thiết kế kiến trúc hệ thống | Hoàn thành | 100% |
 | 4 | Thiết kế Use Case | Hoàn thành | 100% |
-| 5 | Thiết kế cơ sở dữ liệu | Đang thực hiện | 60% |
+| 5 | Thiết kế cơ sở dữ liệu | Đang thực hiện | 100% |
 | 6 | Module Xác thực (Auth) | Chưa bắt đầu | 0% |
 | 7 | Module Sản phẩm & Danh mục | Chưa bắt đầu | 0% |
 | 8 | Module Giỏ hàng & Đặt hàng | Chưa bắt đầu | 0% |
@@ -23,8 +23,7 @@
 | 10 | Module Nhân viên | Chưa bắt đầu | 0% |
 | 11 | Module Admin / Quản trị | Chưa bắt đầu | 0% |
 | 12 | Module Thống kê doanh thu | Chưa bắt đầu | 0% |
-| 13 | Kiểm thử (Testing) | Chưa bắt đầu | 0% |
-| 14 | Hoàn thiện báo cáo | Đang thực hiện | 30% |
+| 13 | Hoàn thiện báo cáo | Đang thực hiện | 30% |
 
 > **Tiến độ tổng thể ước tính: ~35%**
 
@@ -51,23 +50,21 @@
 
 ---
 
-## PHẦN II — ĐANG THỰC HIỆN
+## PHẦN II — ĐÃ HOÀN THÀNH
 
-### 5. Thiết Kế Cơ Sở Dữ Liệu *(đang làm)*
+### 5. Thiết Kế Cơ Sở Dữ Liệu 
 - [x] Xác định các thực thể chính của hệ thống
 - [x] Xác định quan hệ giữa các bảng
-- [ ] Hoàn thiện ERD / Diagram đầy đủ
-- [ ] Mô tả chi tiết từng bảng (tên cột, kiểu dữ liệu, ràng buộc)
-- [ ] Script SQL tạo database
+- [x] Hoàn thiện ERD / Diagram đầy đủ
+- [x] Mô tả chi tiết từng bảng (tên cột, kiểu dữ liệu, ràng buộc)
 
 > **Các bảng dự kiến:**
 > `Users` · `Roles` · `Categories` · `Products` · `ProductImages` · `Cart` · `CartItems` · `Orders` · `OrderDetails` · `Payments` · `Reviews` · `Employees`
 
 ---
 
-## PHẦN III — CHƯA BẮT ĐẦU
-
-### 6. Module Xác Thực (Authentication)
+## PHẦN III — ĐANG LÀM
+### 6. Module Xác Thực (Authentication) *Đang làm*
 - [ ] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
 - [ ] Đăng nhập / Đăng xuất
 - [ ] Đăng nhập bằng Google OAuth
