@@ -1,57 +1,61 @@
 @model LoginViewModel
+@using BanCaPheNuocGiaiKhat.Models
 @{
     ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var returnUrl = ViewData["ReturnUrl"] as string;
 }
 
 <section class="auth-showcase">
     <div class="auth-card">
+        <!-- LEFT: coffee image -->
         <div class="auth-visual" aria-hidden="true"></div>
 
+        <!-- RIGHT: form -->
         <div class="auth-entry-panel">
-            <div class="brand-mark">☕</div>
+            <div class="brand-mark" aria-hidden="true">☕</div>
             <h1>TheDrinkVN</h1>
             <p class="auth-entry-subtitle">Welcome back to your coffee journey.</p>
 
-            <div class="auth-tabs" role="tablist" aria-label="Auth">
-                <a asp-action="Login" class="auth-tab active">Login</a>
-                <a asp-action="Register" class="auth-tab">Create Account</a>
+            <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+                <a asp-action="Login" class="auth-tab active" role="tab" aria-selected="true">Login</a>
+                <a asp-action="Register" class="auth-tab" role="tab" aria-selected="false">Create Account</a>
             </div>
 
-            <form asp-action="Login" asp-route-returnUrl="@returnUrl" method="post" class="auth-entry-form">
+            <form asp-action="Login" asp-route-returnUrl="@returnUrl" method="post" class="auth-entry-form" novalidate>
                 @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger small" style="margin-bottom:.75rem"></div>
 
                 <div class="field-block">
                     <label asp-for="LoginName">Username or Email</label>
-                    <input asp-for="LoginName" placeholder="you@example.com" autocomplete="username" />
+                    <input asp-for="LoginName" placeholder="you@example.com" autocomplete="username" id="login-name" />
                     <span asp-validation-for="LoginName" class="text-danger small"></span>
                 </div>
 
                 <div class="field-block">
                     <div class="label-row">
                         <label asp-for="Password">Password</label>
-                        <a href="#" aria-disabled="true">Forgot password?</a>
+                        <a href="#" tabindex="-1" aria-disabled="true">Forgot password?</a>
                     </div>
-                    <input asp-for="Password" placeholder="••••••••" autocomplete="current-password" />
+                    <input asp-for="Password" placeholder="••••••••" autocomplete="current-password" id="login-password" />
                     <span asp-validation-for="Password" class="text-danger small"></span>
                 </div>
 
                 <label class="remember-row">
-                    <input asp-for="RememberMe" />
+                    <input asp-for="RememberMe" id="login-remember" />
                     <span>Remember me</span>
                 </label>
 
-                <button type="submit" class="auth-entry-submit">SIGN IN</button>
+                <button type="submit" class="auth-entry-submit" id="login-submit">SIGN IN</button>
             </form>
 
             <div class="social-divider"><span>OR CONTINUE WITH</span></div>
             <div class="social-stack">
-                <button type="button" class="social-button">
+                <button type="button" class="social-button" id="btn-google-login">
                     <img src="~/images/google.png" alt="" class="social-logo" />
                     <span>Google</span>
                 </button>
-                <button type="button" class="social-button">
+                <button type="button" class="social-button" id="btn-facebook-login">
                     <img src="~/images/facebook.png" alt="" class="social-logo" />
                     <span>Facebook</span>
                 </button>
@@ -62,4 +66,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const form   = document.querySelector('.auth-entry-form');
+            const btn    = document.getElementById('login-submit');
+
+            if (!form || !btn) return;
+
+            form.addEventListener('submit', function () {
+                // Only add loading state if the form is valid
+                if ($(form).valid()) {
+                    btn.classList.add('loading');
+                    btn.textContent = 'ĐANG XỬ LÝ...';
+                }
+            });
+
+            // Re-validate on input change to clear errors early
+            form.querySelectorAll('input').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    $(input).valid();
+                });
+            });
+        })();
+    </script>
 }

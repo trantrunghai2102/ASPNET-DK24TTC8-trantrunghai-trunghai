@@ -4,47 +4,45 @@ namespace BanCaPheNuocGiaiKhat.Models;
 
 public class RegisterViewModel
 {
-    [Required(ErrorMessage = "Vui long nhap ho ten.")]
-    [Display(Name = "Ho ten")]
+    [Required(ErrorMessage = "Vui lòng nhập họ tên.")]
+    [Display(Name = "Họ tên")]
     [StringLength(100)]
     public string FullName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Vui long nhap email.")]
-    [EmailAddress(ErrorMessage = "Email khong hop le.")]
+    [Required(ErrorMessage = "Vui lòng nhập email.")]
+    [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
     [StringLength(150)]
     public string Email { get; set; } = string.Empty;
 
-    [Display(Name = "So dien thoai")]
+    [Display(Name = "Số điện thoại")]
+    [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
     [StringLength(15)]
     public string? Phone { get; set; }
 
-    [Required(ErrorMessage = "Vui long nhap ten dang nhap.")]
-    [Display(Name = "Ten dang nhap")]
-    [StringLength(50, MinimumLength = 3, ErrorMessage = "Ten dang nhap tu 3 den 50 ky tu.")]
-    public string Username { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Vui long nhap mat khau.")]
+    [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
     [DataType(DataType.Password)]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mat khau toi thieu 6 ky tu.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu tối thiểu 6 ký tự.")]
     public string Password { get; set; } = string.Empty;
 
     [Required]
     public string Role { get; set; } = UserRoles.Customer;
 }
 
+
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "Vui long nhap email hoac ten dang nhap.")]
-    [Display(Name = "Email hoac ten dang nhap")]
+    [Required(ErrorMessage = "Vui lòng nhập email.")]
+    [Display(Name = "Email")]
     public string LoginName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Vui long nhap mat khau.")]
+    [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
 
-    [Display(Name = "Ghi nho dang nhap")]
+    [Display(Name = "Ghi nhớ đăng nhập")]
     public bool RememberMe { get; set; }
 }
+
 
 public class ChangePasswordViewModel
 {
