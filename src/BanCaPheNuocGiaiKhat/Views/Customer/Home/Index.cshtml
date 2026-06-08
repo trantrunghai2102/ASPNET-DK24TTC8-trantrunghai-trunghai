@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Customer";
+}
+
+<section class="role-home">
+    <div>
+        <p class="auth-kicker">Customer</p>
+        <h1>Chào mừng, @User.Identity?.Name</h1>
+        <p>Theo dõi giỏ hàng, đơn hàng và các ưu đãi dành riêng cho khách hàng The Drink VN.</p>
+    </div>
+    <div class="role-actions">
+        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee">Đổi mật khẩu</a>
+    </div>
+</section>
+
+<div class="role-grid">
+    <article class="role-card">
+        <span>01</span>
+        <h2>Đơn hàng</h2>
+        <p>Xem trạng thái đơn hàng đang xử lý, đang giao hoặc đã hoàn tất.</p>
+    </article>
+    <article class="role-card">
+        <span>02</span>
+        <h2>Địa chỉ</h2>
+        <p>Quản lý địa chỉ giao hàng mặc định để checkout nhanh hơn.</p>
+    </article>
+    <article class="role-card">
+        <span>03</span>
+        <h2>Ưu đãi</h2>
+        <p>Lưu và áp dụng voucher phù hợp cho đơn hàng tiếp theo.</p>
+    </article>
+</div>

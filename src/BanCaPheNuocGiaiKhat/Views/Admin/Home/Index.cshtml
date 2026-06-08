@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<section class="role-home">
+    <div>
+        <p class="auth-kicker">Admin</p>
+        <h1>Trang quản trị</h1>
+        <p>Quản lý danh mục, sản phẩm, người dùng, đơn hàng và thống kê doanh thu toàn hệ thống.</p>
+    </div>
+    <div class="role-actions">
+        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee">Đổi mật khẩu</a>
+    </div>
+</section>
+
+<div class="role-grid">
+    <article class="role-card">
+        <span>01</span>
+        <h2>Sản phẩm</h2>
+        <p>Thêm, sửa, ẩn sản phẩm và kiểm soát tồn kho.</p>
+    </article>
+    <article class="role-card">
+        <span>02</span>
+        <h2>Người dùng</h2>
+        <p>Quản lý khách hàng, nhân viên và phân quyền tài khoản.</p>
+    </article>
+    <article class="role-card">
+        <span>03</span>
+        <h2>Doanh thu</h2>
+        <p>Theo dõi báo cáo bán hàng theo ngày, tháng và năm.</p>
+    </article>
+</div>

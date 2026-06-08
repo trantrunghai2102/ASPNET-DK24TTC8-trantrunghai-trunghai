@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BanCaPheNuocGiaiKhat.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Auth" ? "auth-page" : "")">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BanCaPheNuocGiaiKhat</a>
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">The Drink VN</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,17 +20,54 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách</a>
                         </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-sm-center gap-sm-2">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <a class="nav-link text-dark" asp-controller="Auth" asp-action="AdminHome">Admin</a>
+                                }
+                                else if (User.IsInRole("staff"))
+                                {
+                                    <a class="nav-link text-dark" asp-controller="Auth" asp-action="StaffHome">Staff</a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link text-dark" asp-controller="Auth" asp-action="CustomerHome">Customer</a>
+                                }
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="ChangePassword">Đổi mật khẩu</a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">Đăng xuất</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Login">Đăng nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-coffee btn-sm" asp-controller="Auth" asp-action="Register">Đăng ký</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Auth" ? "auth-container" : "container")">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -38,7 +75,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - BanCaPheNuocGiaiKhat - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - The Drink VN - <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

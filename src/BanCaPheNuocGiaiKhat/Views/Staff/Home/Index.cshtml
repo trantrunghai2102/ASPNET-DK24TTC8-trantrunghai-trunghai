@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Staff";
+}
+
+<section class="role-home">
+    <div>
+        <p class="auth-kicker">Staff</p>
+        <h1>Bảng làm việc nhân viên</h1>
+        <p>Tiếp nhận đơn hàng, cập nhật trạng thái giao hàng và xuất hóa đơn khi đơn đã giao thành công.</p>
+    </div>
+    <div class="role-actions">
+        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee">Đổi mật khẩu</a>
+    </div>
+</section>
+
+<div class="role-grid">
+    <article class="role-card">
+        <span>01</span>
+        <h2>Đơn chờ xác nhận</h2>
+        <p>Kiểm tra thông tin người nhận, ghi chú khách hàng và xác nhận đơn.</p>
+    </article>
+    <article class="role-card">
+        <span>02</span>
+        <h2>Giao hàng</h2>
+        <p>Cập nhật tiến trình preparing, shipping, delivered hoặc cancelled.</p>
+    </article>
+    <article class="role-card">
+        <span>03</span>
+        <h2>Hóa đơn</h2>
+        <p>Xuất hóa đơn bán hàng sau khi đơn chuyển sang delivered.</p>
+    </article>
+</div>
