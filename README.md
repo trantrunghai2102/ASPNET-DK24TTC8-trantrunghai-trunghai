@@ -160,7 +160,7 @@ Cafe_Website/
 
 ### Yêu cầu hệ thống
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [MySQL8.4.6](https://downloads.mysql.com/archives/get/p/23/file/mysql-8.4.6-winx64.msi)
 ### Bước 1: Clone repository
 
@@ -240,12 +240,12 @@ dotnet run
 
 > _Bắt đầu: 08/06/2026_
 
-- [ ] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
-- [ ] Đăng nhập / Đăng xuất
+- [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
+- [x] Đăng nhập / Đăng xuất
 - [ ] Đăng nhập bằng Google OAuth
 - [ ] Đăng nhập bằng Facebook OAuth
 - [ ] Đổi mật khẩu
-- [ ] Phân quyền (Role: Customer / Staff / Admin)
+- [x] Phân quyền (Role: Customer / Staff / Admin)
 
 ---
 
