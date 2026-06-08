@@ -1,11 +1,13 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
+using BanCaPheNuocGiaiKhat.Data;
 using BanCaPheNuocGiaiKhat.Models;
+using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
@@ -14,11 +16,11 @@ public class AuthController : Controller
     private const int Pbkdf2Iterations = 100_000;
     private const int SaltSize = 16;
     private const int KeySize = 32;
-    private readonly MySqlConnection _connection;
+    private readonly AppDbContext _db;
 
-    public AuthController(MySqlConnection connection)
+    public AuthController(AppDbContext db)
     {
-        _connection = connection;
+        _db = db;
     }
 
     [HttpGet]
@@ -26,9 +28,7 @@ public class AuthController : Controller
     public IActionResult Register()
     {
         if (User.Identity?.IsAuthenticated == true)
-        {
             return RedirectByRole(User.FindFirstValue(ClaimTypes.Role));
-        }
 
         return View(new RegisterViewModel());
     }
@@ -39,48 +39,49 @@ public class AuthController : Controller
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         model.Role = NormalizeRole(model.Role);
+
         if (!ModelState.IsValid)
+            return View(model);
+
+        // Kiểm tra role tồn tại trong DB
+        var role = await _db.Roles.AsNoTracking()
+                            .FirstOrDefaultAsync(r => r.RoleName == model.Role);
+        if (role is null)
         {
+            ModelState.AddModelError(nameof(model.Role), "Vai trò không tồn tại trong hệ thống.");
             return View(model);
         }
 
-        await _connection.OpenAsync();
-
-        var roleId = await GetRoleIdAsync(model.Role);
-        if (roleId is null)
+        // Kiểm tra email hoặc tên đăng nhập trùng
+        var emailLower = model.Email.Trim().ToLowerInvariant();
+        var alreadyExists = await _db.Users.AsNoTracking()
+                                     .AnyAsync(u => u.Email == emailLower);
+        if (alreadyExists)
         {
-            ModelState.AddModelError(nameof(model.Role), "Vai tro khong ton tai trong he thong.");
+            ModelState.AddModelError(string.Empty, "Email đã được sử dụng.");
             return View(model);
         }
 
-        if (await AccountExistsAsync(model.Email, model.Username))
+        var now = DateTime.UtcNow;
+        var newUser = new User
         {
-            ModelState.AddModelError(string.Empty, "Email hoac ten dang nhap da duoc su dung.");
-            return View(model);
-        }
+            RoleId      = role.RoleId,
+            FullName    = model.FullName.Trim(),
+            Email       = emailLower,
+            Phone       = string.IsNullOrWhiteSpace(model.Phone) ? null : model.Phone.Trim(),
+            PasswordHash = HashPassword(model.Password),
+            Status      = UserStatus.active,
+            CreatedAt   = now,
+            UpdatedAt   = now
+        };
 
-        using var command = _connection.CreateCommand();
-        command.CommandText = """
-            INSERT INTO users
-                (role_id, full_name, email, phone, username, password_hash, status, created_at, updated_at)
-            VALUES
-                (@role_id, @full_name, @email, @phone, @username, @password_hash, 'active', NOW(), NOW());
-            SELECT LAST_INSERT_ID();
-            """;
-        command.Parameters.AddWithValue("@role_id", roleId.Value);
-        command.Parameters.AddWithValue("@full_name", model.FullName.Trim());
-        command.Parameters.AddWithValue("@email", model.Email.Trim().ToLowerInvariant());
-        command.Parameters.AddWithValue("@phone", string.IsNullOrWhiteSpace(model.Phone) ? DBNull.Value : model.Phone.Trim());
-        command.Parameters.AddWithValue("@username", model.Username.Trim().ToLowerInvariant());
-        command.Parameters.AddWithValue("@password_hash", HashPassword(model.Password));
-
-        var userId = Convert.ToUInt32(await command.ExecuteScalarAsync());
+        _db.Users.Add(newUser);
+        await _db.SaveChangesAsync();
 
         await SignInAsync(new AuthenticatedUser(
-            userId,
-            model.FullName.Trim(),
-            model.Email.Trim().ToLowerInvariant(),
-            model.Username.Trim().ToLowerInvariant(),
+            newUser.UserId,
+            newUser.FullName,
+            newUser.Email,
             model.Role),
             isPersistent: false);
 
@@ -92,9 +93,7 @@ public class AuthController : Controller
     public IActionResult Login(string? returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)
-        {
             return RedirectByRole(User.FindFirstValue(ClaimTypes.Role));
-        }
 
         ViewData["ReturnUrl"] = returnUrl;
         return View(new LoginViewModel());
@@ -107,36 +106,49 @@ public class AuthController : Controller
     {
         ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid)
+            return View(model);
+
+        var loginLower = model.LoginName.Trim().ToLowerInvariant();
+
+        var user = await _db.Users
+                            .Include(u => u.Role)
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(u => u.Email == loginLower);
+
+        if (user is null || user.PasswordHash is null || !VerifyPassword(model.Password, user.PasswordHash))
         {
+            ModelState.AddModelError(string.Empty, "Thông tin đăng nhập không chính xác.");
             return View(model);
         }
 
-        await _connection.OpenAsync();
-        var user = await FindUserForLoginAsync(model.LoginName);
-
-        if (user is null || !VerifyPassword(model.Password, user.PasswordHash))
+        if (user.Status != UserStatus.active)
         {
-            ModelState.AddModelError(string.Empty, "Thong tin dang nhap khong chinh xac.");
+            ModelState.AddModelError(string.Empty, "Tài khoản không ở trạng thái hoạt động.");
             return View(model);
         }
 
-        if (!string.Equals(user.Status, "active", StringComparison.OrdinalIgnoreCase))
-        {
-            ModelState.AddModelError(string.Empty, "Tai khoan khong o trang thai hoat dong.");
-            return View(model);
-        }
+        // Cập nhật last_login_at
+        await _db.Users
+                 .Where(u => u.UserId == user.UserId)
+                 .ExecuteUpdateAsync(s => s
+                     .SetProperty(u => u.LastLoginAt, DateTime.UtcNow)
+                     .SetProperty(u => u.UpdatedAt,   DateTime.UtcNow));
 
-        await UpdateLastLoginAsync(user.UserId);
-        await SignInAsync(user.ToAuthenticatedUser(), model.RememberMe);
+        var roleName = user.Role?.RoleName ?? UserRoles.Customer;
+        await SignInAsync(new AuthenticatedUser(
+            user.UserId,
+            user.FullName,
+            user.Email,
+            roleName),
+            model.RememberMe);
 
         if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-        {
             return Redirect(returnUrl);
-        }
 
-        return RedirectByRole(user.RoleName);
+        return RedirectByRole(roleName);
     }
 
+    // ── POST /Auth/Logout ────────────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]
@@ -146,170 +158,89 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
+    // ── GET /Auth/ChangePassword ─────────────────────────────────────────
     [HttpGet]
     [Authorize]
-    public IActionResult ChangePassword()
-    {
-        return View(new ChangePasswordViewModel());
-    }
+    public IActionResult ChangePassword() => View(new ChangePasswordViewModel());
 
+    // ── POST /Auth/ChangePassword ────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]
     public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
     {
         if (!ModelState.IsValid)
-        {
             return View(model);
-        }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!uint.TryParse(userId, out var parsedUserId))
+        if (!uint.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Login));
         }
 
-        await _connection.OpenAsync();
-        var currentHash = await GetPasswordHashAsync(parsedUserId);
-        if (currentHash is null || !VerifyPassword(model.CurrentPassword, currentHash))
+        var user = await _db.Users.AsNoTracking()
+                            .Select(u => new { u.UserId, u.PasswordHash })
+                            .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user?.PasswordHash is null || !VerifyPassword(model.CurrentPassword, user.PasswordHash))
         {
-            ModelState.AddModelError(nameof(model.CurrentPassword), "Mat khau hien tai khong dung.");
+            ModelState.AddModelError(nameof(model.CurrentPassword), "Mật khẩu hiện tại không đúng.");
             return View(model);
         }
 
-        using var command = _connection.CreateCommand();
-        command.CommandText = "UPDATE users SET password_hash = @password_hash, updated_at = NOW() WHERE user_id = @user_id";
-        command.Parameters.AddWithValue("@password_hash", HashPassword(model.NewPassword));
-        command.Parameters.AddWithValue("@user_id", parsedUserId);
-        await command.ExecuteNonQueryAsync();
+        await _db.Users
+                 .Where(u => u.UserId == userId)
+                 .ExecuteUpdateAsync(s => s
+                     .SetProperty(u => u.PasswordHash, HashPassword(model.NewPassword))
+                     .SetProperty(u => u.UpdatedAt,    DateTime.UtcNow));
 
-        TempData["SuccessMessage"] = "Doi mat khau thanh cong.";
+        TempData["SuccessMessage"] = "Đổi mật khẩu thành công.";
         return RedirectToAction(nameof(ChangePassword));
     }
 
+    // ── Role-based landing pages ──────────────────────────────────────────
     [HttpGet]
     [Authorize(Roles = UserRoles.Admin)]
-    public IActionResult AdminHome()
-    {
-        return View("~/Views/Admin/Home/Index.cshtml");
-    }
+    public IActionResult AdminHome() => View("~/Views/Admin/Home/Index.cshtml");
 
     [HttpGet]
     [Authorize(Roles = UserRoles.Staff)]
-    public IActionResult StaffHome()
-    {
-        return View("~/Views/Staff/Home/Index.cshtml");
-    }
+    public IActionResult StaffHome() => View("~/Views/Staff/Home/Index.cshtml");
 
     [HttpGet]
     [Authorize(Roles = UserRoles.Customer)]
-    public IActionResult CustomerHome()
-    {
-        return View("~/Views/Customer/Home/Index.cshtml");
-    }
+    public IActionResult CustomerHome() => View("~/Views/Customer/Home/Index.cshtml");
 
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult AccessDenied()
-    {
-        return View();
-    }
+    public IActionResult AccessDenied() => View();
 
-    private async Task<byte?> GetRoleIdAsync(string role)
-    {
-        using var command = _connection.CreateCommand();
-        command.CommandText = "SELECT role_id FROM roles WHERE role_name = @role_name LIMIT 1";
-        command.Parameters.AddWithValue("@role_name", role);
-        var result = await command.ExecuteScalarAsync();
-        return result is null || result == DBNull.Value ? null : Convert.ToByte(result);
-    }
-
-    private async Task<bool> AccountExistsAsync(string email, string username)
-    {
-        using var command = _connection.CreateCommand();
-        command.CommandText = """
-            SELECT COUNT(*)
-            FROM users
-            WHERE LOWER(email) = @email OR LOWER(username) = @username
-            """;
-        command.Parameters.AddWithValue("@email", email.Trim().ToLowerInvariant());
-        command.Parameters.AddWithValue("@username", username.Trim().ToLowerInvariant());
-        return Convert.ToInt32(await command.ExecuteScalarAsync()) > 0;
-    }
-
-    private async Task<LoginUser?> FindUserForLoginAsync(string loginName)
-    {
-        using var command = _connection.CreateCommand();
-        command.CommandText = """
-            SELECT u.user_id, u.full_name, u.email, u.username, u.password_hash, u.status, r.role_name
-            FROM users u
-            INNER JOIN roles r ON r.role_id = u.role_id
-            WHERE LOWER(u.email) = @login_name OR LOWER(u.username) = @login_name
-            LIMIT 1
-            """;
-        command.Parameters.AddWithValue("@login_name", loginName.Trim().ToLowerInvariant());
-
-        using var reader = await command.ExecuteReaderAsync();
-        if (!await reader.ReadAsync())
-        {
-            return null;
-        }
-
-        return new LoginUser(
-            Convert.ToUInt32(reader.GetValue(reader.GetOrdinal("user_id"))),
-            reader.GetString(reader.GetOrdinal("full_name")),
-            reader.GetString(reader.GetOrdinal("email")),
-            reader.GetString(reader.GetOrdinal("username")),
-            reader.IsDBNull(reader.GetOrdinal("password_hash")) ? string.Empty : reader.GetString(reader.GetOrdinal("password_hash")),
-            reader.GetString(reader.GetOrdinal("status")),
-            reader.GetString(reader.GetOrdinal("role_name")));
-    }
-
-    private async Task<string?> GetPasswordHashAsync(uint userId)
-    {
-        using var command = _connection.CreateCommand();
-        command.CommandText = "SELECT password_hash FROM users WHERE user_id = @user_id LIMIT 1";
-        command.Parameters.AddWithValue("@user_id", userId);
-        var result = await command.ExecuteScalarAsync();
-        return result is null || result == DBNull.Value ? null : Convert.ToString(result);
-    }
-
-    private async Task UpdateLastLoginAsync(uint userId)
-    {
-        using var command = _connection.CreateCommand();
-        command.CommandText = "UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE user_id = @user_id";
-        command.Parameters.AddWithValue("@user_id", userId);
-        await command.ExecuteNonQueryAsync();
-    }
+    // ── Private helpers ───────────────────────────────────────────────────
 
     private async Task SignInAsync(AuthenticatedUser user, bool isPersistent)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new(ClaimTypes.Name, user.FullName),
-            new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.Role, user.RoleName),
-            new("username", user.Username)
+            new(ClaimTypes.Name,           user.FullName),
+            new(ClaimTypes.Email,          user.Email),
+            new(ClaimTypes.Role,           user.RoleName)
         };
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
+        var identity   = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal  = new ClaimsPrincipal(identity);
         var properties = new AuthenticationProperties { IsPersistent = isPersistent };
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
     }
 
-    private IActionResult RedirectByRole(string? role)
-    {
-        return NormalizeRole(role) switch
+    private IActionResult RedirectByRole(string? role) =>
+        NormalizeRole(role) switch
         {
-            UserRoles.Admin => RedirectToAction(nameof(AdminHome)),
-            UserRoles.Staff => RedirectToAction(nameof(StaffHome)),
-            _ => RedirectToAction(nameof(CustomerHome))
+            UserRoles.Admin  => RedirectToAction(nameof(AdminHome)),
+            UserRoles.Staff  => RedirectToAction(nameof(StaffHome)),
+            _                => RedirectToAction("Index", "Home")
         };
-    }
 
     private static string NormalizeRole(string? role)
     {
@@ -320,40 +251,21 @@ public class AuthController : Controller
     private static string HashPassword(string password)
     {
         var salt = RandomNumberGenerator.GetBytes(SaltSize);
-        var key = Rfc2898DeriveBytes.Pbkdf2(password, salt, Pbkdf2Iterations, HashAlgorithmName.SHA256, KeySize);
+        var key  = Rfc2898DeriveBytes.Pbkdf2(password, salt, Pbkdf2Iterations, HashAlgorithmName.SHA256, KeySize);
         return $"PBKDF2-SHA256:{Pbkdf2Iterations}:{Convert.ToBase64String(salt)}:{Convert.ToBase64String(key)}";
     }
 
     private static bool VerifyPassword(string password, string storedHash)
     {
         var parts = storedHash.Split(':');
-        if (parts.Length != 4 || parts[0] != "PBKDF2-SHA256")
-        {
-            return false;
-        }
+        if (parts.Length != 4 || parts[0] != "PBKDF2-SHA256") return false;
+        if (!int.TryParse(parts[1], out var iterations))      return false;
 
-        if (!int.TryParse(parts[1], out var iterations))
-        {
-            return false;
-        }
-
-        var salt = Convert.FromBase64String(parts[2]);
+        var salt        = Convert.FromBase64String(parts[2]);
         var expectedKey = Convert.FromBase64String(parts[3]);
-        var actualKey = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expectedKey.Length);
+        var actualKey   = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA256, expectedKey.Length);
         return CryptographicOperations.FixedTimeEquals(actualKey, expectedKey);
     }
 
-    private sealed record AuthenticatedUser(uint UserId, string FullName, string Email, string Username, string RoleName);
-
-    private sealed record LoginUser(
-        uint UserId,
-        string FullName,
-        string Email,
-        string Username,
-        string PasswordHash,
-        string Status,
-        string RoleName)
-    {
-        public AuthenticatedUser ToAuthenticatedUser() => new(UserId, FullName, Email, Username, RoleName);
-    }
+    private sealed record AuthenticatedUser(uint UserId, string FullName, string Email, string RoleName);
 }

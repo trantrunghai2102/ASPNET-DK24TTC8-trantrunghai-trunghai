@@ -1,51 +1,57 @@
-using MySql.Data.MySqlClient;
+using BanCaPheNuocGiaiKhat.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ── MVC ──────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
+
+// ── Cookie Authentication ─────────────────────────────────────────────────
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Auth/Login";
-        options.LogoutPath = "/Auth/Logout";
+        options.LoginPath       = "/Auth/Login";
+        options.LogoutPath      = "/Auth/Logout";
         options.AccessDeniedPath = "/Auth/AccessDenied";
-        options.Cookie.Name = "TheDrinkVN.Auth";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.Cookie.Name     = "TheDrinkVN.Auth";
+        options.ExpireTimeSpan  = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddTransient(_ => new MySqlConnection(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString),
+        mySql => mySql.EnableRetryOnFailure(3)
+    ));
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    using var connection = new MySqlConnection(connectionString);
+    var db     = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     try
     {
-        connection.Open();
-        app.Logger.LogInformation("Ket noi MySQL thanh cong! Database: {Database}, Server: {Server}",
-            connection.Database, connection.DataSource);
+        await db.Database.MigrateAsync();      // tạo / cập nhật schema + seed roles
+        logger.LogInformation("Database migration và seed roles thành công.");
     }
     catch (Exception ex)
     {
-        app.Logger.LogError(ex, "Ket noi MySQL that bai!");
+        logger.LogError(ex, "Lỗi khi migrate database.");
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
