@@ -1,7 +1,7 @@
 # The Drink VN — Website Bán Cà Phê & Nước Giải Khát
 
 > **Đồ án môn học** · Chuyên đề ASP.NET
-> **Giảng viên hướng dẫn:** ThS. Lê Nguyên Thảo  
+> **Giảng viên hướng dẫn:** · TS. Đoàn Phước Miền  
 > **Thương hiệu:** The Drink VN
 
 ---
