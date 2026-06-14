@@ -16,7 +16,7 @@ public class User
     [Key]
     [Column("user_id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public uint UserId { get; set; }
+    public int UserId { get; set; }
 
     [Column("role_id")]
     public byte RoleId { get; set; } = 3;

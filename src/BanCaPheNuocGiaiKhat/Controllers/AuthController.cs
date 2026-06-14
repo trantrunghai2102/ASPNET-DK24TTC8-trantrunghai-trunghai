@@ -172,7 +172,7 @@ public class AuthController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        if (!uint.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Login));
@@ -267,5 +267,5 @@ public class AuthController : Controller
         return CryptographicOperations.FixedTimeEquals(actualKey, expectedKey);
     }
 
-    private sealed record AuthenticatedUser(uint UserId, string FullName, string Email, string RoleName);
+    private sealed record AuthenticatedUser(int UserId, string FullName, string Email, string RoleName);
 }

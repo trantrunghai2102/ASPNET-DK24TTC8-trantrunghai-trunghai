@@ -22,10 +22,9 @@ builder.Services
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
+    options.UseSqlServer(
         connectionString,
-        ServerVersion.AutoDetect(connectionString),
-        mySql => mySql.EnableRetryOnFailure(3)
+        sqlServer => sqlServer.EnableRetryOnFailure(3)
     ));
 
 var app = builder.Build();

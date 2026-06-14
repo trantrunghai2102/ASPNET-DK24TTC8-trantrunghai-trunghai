@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Auth" ? "auth-page" : "")">
 
@@ -28,7 +29,7 @@
             <a asp-controller="Home" asp-action="Index" class="site-nav__brand">TheDrinkVN</a>
 
             <ul class="site-nav__links">
-                <li><a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">Shop</a></li>
+                <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Shop</a></li>
                 <li><a href="#">Categories</a></li>
                 <li><a href="#">About</a></li>
             </ul>

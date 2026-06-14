@@ -1,0 +1,224 @@
+@model BanCaPheNuocGiaiKhat.Models.ProductListViewModel
+@{
+    ViewData["Title"] = "Our Coffees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        
+        <header class="catalog-header">
+            <h1 class="catalog-title">Our Coffees</h1>
+            <p class="catalog-subtitle">Explore our curated selection of single-origin beans and expertly crafted blends.</p>
+        </header>
+
+        <form id="filterForm" method="get" asp-controller="SanPham" asp-action="Index">
+            
+            <!-- Category Selector (horizontal tags at the top) -->
+            <div class="category-tabs">
+                <a href="@Url.Action("Index", "SanPham", new { search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                   class="category-tab-btn @(Model.SelectedCategoryId == null ? "active" : "")">Tất cả</a>
+                @foreach (var cat in Model.Categories)
+                {
+                    <a href="@Url.Action("Index", "SanPham", new { categoryId = cat.CategoryId, search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                       class="category-tab-btn @(Model.SelectedCategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
+                }
+                <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+            </div>
+
+            <!-- Toolbar: Search and Sort -->
+            <div class="catalog-toolbar">
+                <div class="toolbar-search">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" name="search" value="@Model.SearchQuery" placeholder="Search coffees..." class="toolbar-search-input" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }" />
+                </div>
+
+                <div class="toolbar-sort">
+                    <select name="sortBy" class="toolbar-sort-select" onchange="document.getElementById('filterForm').submit();">
+                        <option value="popularity" selected="@(Model.SortBy == "popularity" ? "selected" : null)">Sort by: Popularity</option>
+                        <option value="price-asc" selected="@(Model.SortBy == "price-asc" ? "selected" : null)">Price: Low to High</option>
+                        <option value="price-desc" selected="@(Model.SortBy == "price-desc" ? "selected" : null)">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main catalog layout: Sidebar filters + Grid -->
+            <div class="catalog-layout">
+                
+                <!-- Sidebar Filters -->
+                <aside class="catalog-sidebar">
+                    
+                    <!-- Roast Level Filter -->
+                    <div class="filter-group">
+                        <h3 class="filter-title">Roast Level</h3>
+                        <div class="filter-options">
+                            @{
+                                var roastLevels = new[] { ("light", "Light Roast"), ("medium", "Medium Roast"), ("dark", "Dark Roast"), ("espresso", "Espresso Roast") };
+                            }
+                            @foreach (var (val, label) in roastLevels)
+                            {
+                                <label class="filter-option">
+                                    <input type="checkbox" name="roast" value="@val" 
+                                           checked="@(Model.SelectedRoastLevels.Contains(val) ? "checked" : null)" 
+                                           onchange="document.getElementById('filterForm').submit();" />
+                                    <span>@label</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Region Filter -->
+                    <div class="filter-group">
+                        <h3 class="filter-title">Region</h3>
+                        <div class="filter-options">
+                            @{
+                                var regions = new[] { ("south-america", "South America"), ("central-america", "Central America"), ("africa", "Africa"), ("asia-pacific", "Asia Pacific") };
+                            }
+                            @foreach (var (val, label) in regions)
+                            {
+                                <label class="filter-option">
+                                    <input type="checkbox" name="region" value="@val" 
+                                           checked="@(Model.SelectedRegions.Contains(val) ? "checked" : null)" 
+                                           onchange="document.getElementById('filterForm').submit();" />
+                                    <span>@label</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Grind Type Filter -->
+                    <div class="filter-group">
+                        <h3 class="filter-title">Grind Type</h3>
+                        <div class="filter-options">
+                            @{
+                                var grindTypes = new[] { ("whole-bean", "Whole Bean"), ("coarse", "Coarse (French Press)"), ("medium", "Medium (Drip)"), ("fine", "Fine (Espresso)") };
+                            }
+                            @foreach (var (val, label) in grindTypes)
+                            {
+                                <label class="filter-option">
+                                    <input type="checkbox" name="grind" value="@val" 
+                                           checked="@(Model.SelectedGrindTypes.Contains(val) ? "checked" : null)" 
+                                           onchange="document.getElementById('filterForm').submit();" />
+                                    <span>@label</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                </aside>
+
+                <!-- Product List and Pagination -->
+                <main class="catalog-main">
+                    @if (Model.Products.Any())
+                    {
+                        <div class="catalog-grid">
+                            @foreach (var product in Model.Products)
+                            {
+                                <div class="product-card">
+                                    <div class="product-card__img">
+                                        @if (product.IsNew)
+                                        {
+                                            <span class="badge-new">NEW</span>
+                                        }
+                                        else if (product.IsBestseller)
+                                        {
+                                            <span class="badge-bestseller">BESTSELLER</span>
+                                        }
+                                        <a href="/SanPham/Detail/@product.Slug">
+                                            <img src="@(product.ThumbnailUrl ?? "/images/product-ethiopian.png")" alt="@product.Name" loading="lazy" />
+                                        </a>
+                                    </div>
+                                    <div class="product-card__body">
+                                        <p class="product-tag">TheDrinkVN</p>
+                                        <a href="/SanPham/Detail/@product.Slug" style="text-decoration: none; color: inherit;">
+                                            <p class="product-name">@product.Name</p>
+                                        </a>
+                                        <p class="product-desc">@product.ShortDesc</p>
+                                        
+                                        @if (product.RoastLevel != null)
+                                        {
+                                            <div class="product-meta">
+                                                <span>Roast</span>
+                                                <div class="roast-dots">
+                                                    @{
+                                                        var filledDots = product.RoastLevel switch {
+                                                            "light" => 1,
+                                                            "medium" => 2,
+                                                            "dark" => 3,
+                                                            "espresso" => 4,
+                                                            _ => 0
+                                                        };
+                                                    }
+                                                    @for (int i = 1; i <= 4; i++)
+                                                    {
+                                                        <span class="roast-dot @(i <= filledDots ? "filled" : "")"></span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="product-footer">
+                                            <span class="product-price sm">$@product.BasePrice.ToString("F2")</span>
+                                            <button type="button" class="btn-add-cart" aria-label="Add to cart" title="Add to cart">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Pagination -->
+                        @if (Model.TotalPages > 1)
+                        {
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                        <button type="submit" name="page" value="@(Model.CurrentPage - 1)" class="page-link" @(Model.CurrentPage == 1 ? "disabled" : "")>
+                                            &laquo; Prev
+                                        </button>
+                                    </li>
+                                    
+                                    @for (int p = 1; p <= Model.TotalPages; p++)
+                                    {
+                                        <li class="page-item @(Model.CurrentPage == p ? "active" : "")">
+                                            <button type="submit" name="page" value="@p" class="page-link @(Model.CurrentPage == p ? "active" : "")">
+                                                @p
+                                            </button>
+                                        </li>
+                                    }
+
+                                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                                        <button type="submit" name="page" value="@(Model.CurrentPage + 1)" class="page-link" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
+                                            Next &raquo;
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="no-products">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>
+                            </svg>
+                            <h3>Không tìm thấy sản phẩm nào</h3>
+                            <p>Vui lòng thử lại với các bộ lọc hoặc từ khóa tìm kiếm khác.</p>
+                            <a href="@Url.Action("Index", "SanPham")" class="btn-coffee mt-3">Xóa bộ lọc</a>
+                        </div>
+                    }
+                </main>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
