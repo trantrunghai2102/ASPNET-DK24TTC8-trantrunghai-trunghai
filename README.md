@@ -47,8 +47,8 @@
 |---|---|---|
 | **Ngôn ngữ** | C# | .NET 8.0 |
 | **Framework** | ASP.NET Core MVC | 8.0 |
-| **Cơ sở dữ liệu** | MySQL | 8.4.6 |
-| **ORM / Data Access** | MySql.Data (ADO.NET) | 8.x |
+| **Cơ sở dữ liệu** | SQL Server| 2025 |
+| **ORM / Data Access** | EF SQL Server | 8.x |
 | **Front-end** | Razor Views + Bootstrap | 5.x |
 | **IDE** | Visual Studio / VS Code | — |
 
@@ -66,14 +66,14 @@ Dự án áp dụng mô hình **MVC (Model – View – Controller)**:
                          ▼
 ┌──────────────────────────────────────────────────────┐
 │              ASP.NET Core MVC Application            │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐ │
-│  │   Views      │  │  Controllers │  │   Models    │ │
-│  │  (Razor)     │◄─│  (C#)        │──│  (C#)       │ │
-│  │  + Bootstrap │  │              │  │             │ │
-│  └─────────────┘  └──────┬───────┘  └──────┬──────┘ │
-└──────────────────────────┼──────────────────┼────────┘
-                           │                  │
-                           ▼                  ▼
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  │
+│  │   Views     │  │  Controllers │  │   Models    │  │
+│  │  (Razor)    │◄─│  (C#)        │──│  (C#)       │  │
+│  │  + Bootstrap│  │              │  │             │  │
+│  └─────────────┘  └──────┬───────┘  └──────┬──────┘  │
+└──────────────────────────┼─────────────────┼─────────┘
+                           │                 │
+                           ▼                 ▼
                  ┌──────────────────────────────────┐
                  │        MySQL 8.4                 │
                  │        Database: thedrinkvn_db   │
