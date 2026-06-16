@@ -13,6 +13,12 @@ public class HoaDonTomTatViewModel
 public class DanhSachHoaDonViewModel
 {
     public List<HoaDonTomTatViewModel> Invoices { get; set; } = new();
+
+    // Added stats
+    public int PendingOrders { get; set; }
+    public int ProcessingOrders { get; set; }
+    public int CompletedOrders { get; set; }
+    public int TotalOrders { get; set; }
 }
 
 public class HoaDonItemViewModel
