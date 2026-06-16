@@ -1,0 +1,118 @@
+@model BanCaPheNuocGiaiKhat.Models.DonHangCuaToiListViewModel
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+
+    string StatusLabel(string s) => s switch
+    {
+        "pending"    => "Chờ xác nhận",
+        "processing" => "Đang xử lý",
+        "shipping"   => "Đang giao",
+        "delivered"  => "Đã giao",
+        "cancelled"  => "Đã hủy",
+        _            => s
+    };
+
+    string StatusStyle(string s) => s switch
+    {
+        "pending"    => "background:#fef9c3;color:#a16207;",
+        "processing" => "background:#dbeafe;color:#1d4ed8;",
+        "shipping"   => "background:#ede9fe;color:#6d28d9;",
+        "delivered"  => "background:#dcfce7;color:#15803d;",
+        "cancelled"  => "background:#fee2e2;color:#b91c1c;",
+        _            => "background:var(--border);color:var(--text-muted);"
+    };
+
+    var filterOptions = new (string val, string label)[] {
+        ("", "Tất cả"),
+        ("pending", "Chờ xác nhận"),
+        ("processing", "Đang xử lý"),
+        ("shipping", "Đang giao"),
+        ("delivered", "Đã giao"),
+        ("cancelled", "Đã hủy")
+    };
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
+            <div>
+                <h1 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin:0 0 .25rem;">
+                    <i class="bi bi-bag-check"></i> Đơn hàng của tôi
+                </h1>
+                <p style="color:var(--text-muted);font-size:.875rem;margin:0;">Theo dõi trạng thái các đơn hàng đã đặt.</p>
+            </div>
+            <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="font-size:.875rem;">
+                <i class="bi bi-shop"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;">
+            @foreach (var opt in filterOptions)
+            {
+                var isActive = (Model.FilterStatus ?? "") == opt.val;
+                <a asp-action="DonHangCuaToi" asp-route-status="@(opt.val == "" ? null : opt.val)"
+                   style="display:inline-flex;align-items:center;padding:.35rem .9rem;border-radius:20px;font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid @(isActive ? "transparent" : "var(--border)");@(isActive ? "background:var(--coffee-darkest);color:#fff;" : "background:var(--cream-white);color:var(--text-secondary);")">
+                    @opt.label
+                </a>
+            }
+        </div>
+
+        @if (!Model.Orders.Any())
+        {
+            <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+                <i class="bi bi-inbox" style="font-size:2.5rem;display:block;margin-bottom:.75rem;"></i>
+                <p style="margin:0;">Không có đơn hàng nào.</p>
+                <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="margin-top:1rem;font-size:.875rem;">
+                    Khám phá sản phẩm
+                </a>
+            </div>
+        }
+        else
+        {
+            <div style="display:grid;gap:.75rem;">
+                @foreach (var order in Model.Orders)
+                {
+                    <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem 1.25rem;box-shadow:var(--shadow-sm);display:flex;align-items:center;flex-wrap:wrap;gap:1rem;">
+                        <div style="flex:1;min-width:180px;">
+                            <div style="font-weight:700;color:var(--text-primary);font-size:.95rem;">
+                                <i class="bi bi-receipt" style="color:var(--coffee-darkest);"></i>
+                                Đơn #@order.OrderId
+                            </div>
+                            <div style="font-size:.8rem;color:var(--text-muted);margin-top:.2rem;">
+                                @order.CreatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")
+                                &nbsp;·&nbsp; @order.ItemCount sản phẩm
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+                            <span style="font-size:.8rem;font-weight:600;padding:.25rem .7rem;border-radius:20px;@StatusStyle(order.Status)">
+                                @StatusLabel(order.Status)
+                            </span>
+                            <span style="font-weight:700;color:var(--coffee-darkest);white-space:nowrap;">
+                                @order.TotalAmount.ToString("N3") vnđ
+                            </span>
+                            <a asp-action="TheoDoi" asp-route-id="@order.OrderId"
+                               style="display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .8rem;border-radius:var(--radius-sm);background:var(--cream-deep);color:var(--text-primary);font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid var(--border);">
+                                <i class="bi bi-eye"></i> Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div style="display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem;">
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        var isActive = p == Model.CurrentPage;
+                        <a asp-action="DonHangCuaToi" asp-route-status="@Model.FilterStatus" asp-route-page="@p"
+                           style="display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;text-decoration:none;border:1px solid @(isActive ? "transparent" : "var(--border)");@(isActive ? "background:var(--coffee-darkest);color:#fff;" : "background:var(--cream-white);color:var(--text-secondary);")">
+                            @p
+                        </a>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>

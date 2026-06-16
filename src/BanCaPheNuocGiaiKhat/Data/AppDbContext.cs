@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<CartItem> CartItems => Set<CartItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1045,9 +1046,17 @@ public class AppDbContext : DbContext
             entity.Property(o => o.OrderId)
                   .HasColumnType("int")
                   .ValueGeneratedOnAdd();
-
+            
+            entity.Property(o => o.CustomerId)
+                  .HasColumnType("int");
+            
             entity.Property(o => o.StaffId)
                   .HasColumnType("int");
+
+            entity.Property(o => o.OrderType)
+                  .HasColumnType("nvarchar(20)")
+                  .HasDefaultValue("instore")
+                  .IsRequired();
 
             entity.Property(o => o.TotalAmount)
                   .HasColumnType("decimal(18,2)")
@@ -1064,6 +1073,21 @@ public class AppDbContext : DbContext
                   .HasDefaultValue("pending")
                   .IsRequired();
 
+            entity.Property(o => o.PaymentStatus)
+                  .HasColumnType("nvarchar(20)")
+                  .HasDefaultValue("unpaid")
+                  .IsRequired();
+
+            entity.Property(o => o.RecipientName)
+                  .HasColumnType("nvarchar(100)");
+
+            entity.Property(o => o.RecipientPhone)
+                  .HasColumnType("nvarchar(15)");
+
+            entity.Property(o => o.DeliveryAddress)
+                  .HasColumnType("nvarchar(300)");
+
+
             entity.Property(o => o.Notes)
                   .HasColumnType("nvarchar(500)");
 
@@ -1074,6 +1098,11 @@ public class AppDbContext : DbContext
             entity.Property(o => o.UpdatedAt)
                   .HasColumnType("datetime")
                   .IsRequired();
+            
+            entity.HasOne(o => o.Customer)
+                  .WithMany()
+                  .HasForeignKey(o => o.CustomerId)
+                  .OnDelete(DeleteBehavior.NoAction);
 
             entity.HasOne(o => o.Staff)
                   .WithMany()
@@ -1171,6 +1200,46 @@ public class AppDbContext : DbContext
                   .WithOne(o => o.Invoice)
                   .HasForeignKey<Invoice>(i => i.OrderId)
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<CartItem>(entity =>
+        {
+            entity.ToTable("cart_items");
+            entity.HasKey(c => c.CartItemId);
+
+            entity.Property(c => c.CartItemId)
+                  .HasColumnType("int")
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(c => c.UserId)
+                  .HasColumnType("int")
+                  .IsRequired();
+
+            entity.Property(c => c.ProductId)
+                  .HasColumnType("int");
+
+            entity.Property(c => c.Quantity)
+                  .HasColumnType("int")
+                  .HasDefaultValue(1)
+                  .IsRequired();
+
+            entity.Property(c => c.CreatedAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.Property(c => c.UpdatedAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.HasOne(c => c.User)
+                  .WithMany()
+                  .HasForeignKey(c => c.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(c => c.Product)
+                  .WithMany()
+                  .HasForeignKey(c => c.ProductId)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }

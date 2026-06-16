@@ -1,0 +1,97 @@
+@model BanCaPheNuocGiaiKhat.Models.GioHangViewModel
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <header class="catalog-header">
+            <h1 class="catalog-title">Giỏ hàng của bạn</h1>
+            <p class="catalog-subtitle">Kiểm tra và chỉnh sửa sản phẩm trước khi đặt hàng.</p>
+        </header>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        @if (!Model.Items.Any())
+        {
+            <div style="text-align:center;padding:3rem 0;">
+                <i class="bi bi-cart-x" style="font-size:3rem;color:var(--text-muted);"></i>
+                <p style="margin-top:1rem;color:var(--text-muted);">Giỏ hàng trống. Hãy chọn sản phẩm yêu thích của bạn!</p>
+                <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="margin-top:1rem;">Xem sản phẩm</a>
+            </div>
+        }
+        else
+        {
+            <div style="display:grid;gap:1.5rem;">
+                @foreach (var item in Model.Items)
+                {
+                    <div style="display:flex;gap:1rem;align-items:flex-start;background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;box-shadow:var(--shadow-sm);">
+                        @if (!string.IsNullOrEmpty(item.ThumbnailUrl))
+                        {
+                            <img src="@item.ThumbnailUrl" alt="@item.ProductName" style="width:80px;height:80px;object-fit:cover;border-radius:var(--radius-sm);" loading="lazy" />
+                        }
+                        else
+                        {
+                            <div style="width:80px;height:80px;background:#d1d5db;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.75rem;">Chưa có ảnh</div>
+                        }
+
+                        <div style="flex:1;">
+                            <p style="font-weight:600;color:var(--text-primary);margin:0 0 .25rem;">@item.ProductName</p>
+                            <p style="color:var(--coffee-mid);font-weight:600;margin:0 0 .75rem;">@item.UnitPrice.ToString("N3") vnđ</p>
+
+                            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+                                <form asp-action="CapNhat" method="post" style="display:flex;align-items:center;gap:.5rem;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="CartItemId" value="@item.CartItemId" />
+                                    <label style="font-size:.85rem;color:var(--text-secondary);">Số lượng:</label>
+                                    <input type="number" name="Quantity" value="@item.Quantity" min="1" max="@item.StockQty"
+                                           style="width:70px;padding:.3rem .5rem;border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;" />
+                                    <button type="submit" class="btn btn-coffee" style="padding:.3rem .8rem;font-size:.82rem;">
+                                        <i class="bi bi-arrow-repeat"></i> Cập nhật
+                                    </button>
+                                </form>
+
+                                <form asp-action="Xoa" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                                    <button type="submit" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:.25rem;"
+                                            onclick="return confirm('Xóa sản phẩm này khỏi giỏ hàng?')">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div style="text-align:right;min-width:100px;">
+                            <p style="font-weight:700;color:var(--coffee-darkest);font-size:1rem;margin:0;">@item.Subtotal.ToString("N3") vnđ</p>
+                            <p style="font-size:.78rem;color:var(--text-muted);margin:.25rem 0 0;">x @item.Quantity</p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;margin-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;box-shadow:var(--shadow-sm);">
+                <div>
+                    <p style="font-size:.9rem;color:var(--text-secondary);margin:0;">Tổng cộng</p>
+                    <p style="font-size:1.5rem;font-weight:700;color:var(--coffee-darkest);margin:.25rem 0 0;">@Model.TotalAmount.ToString("N3") vnđ</p>
+                </div>
+                <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+                    <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);">
+                        <i class="bi bi-arrow-left"></i> Tiếp tục mua
+                    </a>
+                    <a asp-controller="DatHang" asp-action="ThongTin" class="btn btn-coffee">
+                        <i class="bi bi-bag-check"></i> Đặt hàng
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,147 @@
+@model BanCaPheNuocGiaiKhat.Models.DonHangOnlineListViewModel
+
+@{
+    ViewData["Title"] = "Quản lý đơn hàng online";
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <header class="catalog-header">
+            <h1 class="catalog-title">Đơn hàng online</h1>
+            <p class="catalog-subtitle">Tiếp nhận và xử lý đơn hàng đặt trực tuyến từ khách hàng.</p>
+        </header>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+            @{
+                var filters = new[]
+                {
+                    ("", "Tất cả"),
+                    ("pending", "Chờ xác nhận"),
+                    ("processing", "Đang xử lý"),
+                    ("shipping", "Đang vận chuyển"),
+                    ("delivered", "Đã giao"),
+                    ("cancelled", "Đã hủy")
+                };
+            }
+            @foreach (var (val, label) in filters)
+            {
+                var isActive = (Model.FilterStatus ?? "") == val;
+                <a asp-action="Index" asp-route-status="@val"
+                   style="padding:.35rem .9rem;border-radius:20px;font-size:.83rem;font-weight:600;text-decoration:none;border:1px solid var(--border);
+                          background:@(isActive ? "var(--coffee-mid)" : "var(--cream-white)");
+                          color:@(isActive ? "#fff" : "var(--text-secondary)");">
+                    @label
+                </a>
+            }
+        </div>
+
+        @if (!Model.Orders.Any())
+        {
+            <div style="text-align:center;padding:3rem 0;color:var(--text-muted);">
+                <i class="bi bi-inbox" style="font-size:2.5rem;"></i>
+                <p style="margin-top:.75rem;">Không có đơn hàng nào.</p>
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;background:var(--cream-white);border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm);">
+                    <thead>
+                        <tr style="background:var(--coffee-darkest);color:#fff;">
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Mã ĐH</th>
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Khách hàng</th>
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Người nhận</th>
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">SĐT</th>
+                            <th style="padding:.75rem 1rem;text-align:right;font-size:.83rem;">Tổng tiền</th>
+                            <th style="padding:.75rem 1rem;text-align:center;font-size:.83rem;">Trạng thái</th>
+                            <th style="padding:.75rem 1rem;text-align:center;font-size:.83rem;">Thanh toán</th>
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Thời gian</th>
+                            <th style="padding:.75rem 1rem;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in Model.Orders)
+                        {
+                            <tr style="border-bottom:1px solid var(--border);">
+                                <td style="padding:.7rem 1rem;font-weight:600;color:var(--text-primary);font-size:.88rem;">#@o.OrderId</td>
+                                <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.CustomerName ?? "—")</td>
+                                <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientName ?? "—")</td>
+                                <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientPhone ?? "—")</td>
+                                <td style="padding:.7rem 1rem;text-align:right;font-weight:600;color:var(--coffee-darkest);font-size:.88rem;">@o.TotalAmount.ToString("N3") vnđ</td>
+                                <td style="padding:.7rem 1rem;text-align:center;">
+                                    @{
+                                        var (bg, fg) = o.Status switch
+                                        {
+                                            "pending"    => ("#fef9c3", "#a16207"),
+                                            "processing" => ("#dbeafe", "#1d4ed8"),
+                                            "shipping"   => ("#e0f2fe", "#0369a1"),
+                                            "delivered"  => ("#dcfce7", "#15803d"),
+                                            "cancelled"  => ("#fee2e2", "#b91c1c"),
+                                            _            => ("#f3f4f6", "#374151")
+                                        };
+                                        var statusLabel = o.Status switch
+                                        {
+                                            "pending"    => "Chờ xác nhận",
+                                            "processing" => "Đang xử lý",
+                                            "shipping"   => "Đang vận chuyển",
+                                            "delivered"  => "Đã giao",
+                                            "cancelled"  => "Đã hủy",
+                                            _            => o.Status
+                                        };
+                                    }
+                                    <span style="background:@bg;color:@fg;padding:.2rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">@statusLabel</span>
+                                </td>
+                                <td style="padding:.7rem 1rem;text-align:center;">
+                                    @if (o.PaymentStatus == "paid")
+                                    {
+                                        <span style="background:#dcfce7;color:#15803d;padding:.2rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">Đã thanh toán</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="background:#fee2e2;color:#b91c1c;padding:.2rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;">Chưa thanh toán</span>
+                                    }
+                                </td>
+                                <td style="padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);">@o.CreatedAt.ToLocalTime().ToString("HH:mm dd/MM/yy")</td>
+                                <td style="padding:.7rem 1rem;">
+                                    <a asp-action="ChiTiet" asp-route-id="@o.OrderId" class="btn btn-coffee" style="padding:.3rem .75rem;font-size:.8rem;">
+                                        <i class="bi bi-eye"></i> Xem
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (Model.TotalPages > 1)
+        {
+            <div style="display:flex;justify-content:center;gap:.4rem;margin-top:1.5rem;flex-wrap:wrap;">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a asp-action="Index" asp-route-status="@Model.FilterStatus" asp-route-page="@(Model.CurrentPage - 1)"
+                       style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--cream-white);color:var(--text-primary);text-decoration:none;font-size:.85rem;">‹</a>
+                }
+                @for (int p = 1; p <= Model.TotalPages; p++)
+                {
+                    <a asp-action="Index" asp-route-status="@Model.FilterStatus" asp-route-page="@p"
+                       style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid @(p == Model.CurrentPage ? "var(--coffee-mid)" : "var(--border)");border-radius:var(--radius-md);background:@(p == Model.CurrentPage ? "var(--coffee-mid)" : "var(--cream-white)");color:@(p == Model.CurrentPage ? "#fff" : "var(--text-primary)");text-decoration:none;font-size:.85rem;font-weight:@(p == Model.CurrentPage ? "700" : "400");">@p</a>
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a asp-action="Index" asp-route-status="@Model.FilterStatus" asp-route-page="@(Model.CurrentPage + 1)"
+                       style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--cream-white);color:var(--text-primary);text-decoration:none;font-size:.85rem;">›</a>
+                }
+            </div>
+        }
+    </div>
+</div>

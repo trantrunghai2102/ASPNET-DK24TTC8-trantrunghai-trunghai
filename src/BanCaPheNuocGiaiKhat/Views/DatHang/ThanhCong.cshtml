@@ -1,0 +1,75 @@
+@model BanCaPheNuocGiaiKhat.Models.DatHangThanhCongViewModel
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <div style="text-align:center;padding:2rem 0 1rem;">
+            <i class="bi bi-check-circle-fill" style="font-size:3.5rem;color:#16a34a;"></i>
+            <h1 style="font-size:1.75rem;font-weight:700;color:var(--text-primary);margin:.75rem 0 .5rem;">Đặt hàng thành công!</h1>
+            <p style="color:var(--text-secondary);">Cảm ơn bạn đã đặt hàng. Nhân viên sẽ liên hệ để xác nhận đơn hàng.</p>
+        </div>
+
+        <div style="max-width:600px;margin:0 auto;display:grid;gap:1.25rem;">
+
+            <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);">
+                <h2 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 1rem;">
+                    <i class="bi bi-receipt"></i> Đơn hàng #@Model.OrderId
+                </h2>
+                <div style="display:grid;gap:.6rem;font-size:.88rem;">
+                    <div style="display:flex;gap:.5rem;">
+                        <span style="color:var(--text-muted);min-width:130px;">Người nhận:</span>
+                        <span style="font-weight:600;color:var(--text-primary);">@Model.RecipientName</span>
+                    </div>
+                    <div style="display:flex;gap:.5rem;">
+                        <span style="color:var(--text-muted);min-width:130px;">Điện thoại:</span>
+                        <span style="font-weight:600;color:var(--text-primary);">@Model.RecipientPhone</span>
+                    </div>
+                    <div style="display:flex;gap:.5rem;">
+                        <span style="color:var(--text-muted);min-width:130px;">Địa chỉ:</span>
+                        <span style="font-weight:600;color:var(--text-primary);">@Model.DeliveryAddress</span>
+                    </div>
+                    <div style="display:flex;gap:.5rem;">
+                        <span style="color:var(--text-muted);min-width:130px;">Thời gian đặt:</span>
+                        <span style="color:var(--text-primary);">@Model.CreatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                    </div>
+                    <div style="display:flex;gap:.5rem;">
+                        <span style="color:var(--text-muted);min-width:130px;">Trạng thái:</span>
+                        <span style="background:#fef9c3;color:#a16207;padding:.2rem .6rem;border-radius:20px;font-size:.8rem;font-weight:600;">Chờ xác nhận</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);">
+                <h2 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 1rem;">
+                    <i class="bi bi-bag"></i> Sản phẩm đã đặt
+                </h2>
+                <div style="display:grid;gap:.6rem;">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-size:.88rem;">
+                            <span style="color:var(--text-secondary);flex:1;">@item.ProductName <span style="color:var(--text-muted);">x@(item.Quantity)</span></span>
+                            <span style="font-weight:600;color:var(--text-primary);white-space:nowrap;">@item.Subtotal.ToString("N3") vnđ</span>
+                        </div>
+                    }
+                </div>
+                <hr style="border:none;border-top:1px solid var(--border);margin:.75rem 0;" />
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-weight:700;color:var(--text-primary);">Tổng cộng</span>
+                    <span style="font-size:1.15rem;font-weight:700;color:var(--coffee-darkest);">@Model.TotalAmount.ToString("N3") vnđ</span>
+                </div>
+                <p style="font-size:.78rem;color:var(--text-muted);margin-top:.5rem;">
+                    <i class="bi bi-cash-coin"></i> Thanh toán tiền mặt khi nhận hàng.
+                </p>
+            </div>
+
+            <div style="display:flex;justify-content:center;">
+                <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);">
+                    <i class="bi bi-shop"></i> Tiếp tục mua sắm
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
