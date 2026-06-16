@@ -167,4 +167,85 @@ public class SanPhamController : Controller
 
         return View(viewModel);
     }
+
+    [HttpGet]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = UserRoles.Admin + "," + UserRoles.Staff)]
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.Categories = await _db.Categories.ToListAsync();
+        return View(new AdminProductCreateViewModel());
+    }
+
+    [HttpPost]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = UserRoles.Admin + "," + UserRoles.Staff)]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(AdminProductCreateViewModel model, List<IFormFile> images)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Categories = await _db.Categories.ToListAsync();
+            return View(model);
+        }
+
+        var product = new BanCaPheNuocGiaiKhat.Models.Entities.Product
+        {
+            Name = model.Name,
+            Slug = model.Slug,
+            CategoryId = model.CategoryId,
+            ShortDesc = model.ShortDesc,
+            DetailDesc = model.DetailDesc,
+            BasePrice = model.BasePrice,
+            PromotionPrice = model.PromotionPrice,
+            StockQty = model.StockQty,
+            RoastLevel = model.RoastLevel,
+            Region = model.Region,
+            GrindType = model.GrindType,
+            Status = model.Status,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        _db.Products.Add(product);
+        await _db.SaveChangesAsync();
+
+        if (images != null && images.Any())
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
+            Directory.CreateDirectory(uploadsFolder);
+            
+            int displayOrder = 1;
+            foreach (var file in images)
+            {
+                if (file.Length > 0)
+                {
+                    var ext = Path.GetExtension(file.FileName);
+                    var newFileName = $"{Guid.NewGuid()}{ext}";
+                    var filePath = Path.Combine(uploadsFolder, newFileName);
+                    
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    
+                    var imgUrl = $"/uploads/products/{newFileName}";
+                    
+                    if (displayOrder == 1)
+                    {
+                        product.ThumbnailUrl = imgUrl;
+                    }
+                    
+                    _db.ProductImages.Add(new BanCaPheNuocGiaiKhat.Models.Entities.ProductImage
+                    {
+                        ProductId = product.ProductId,
+                        Url = imgUrl,
+                        SortOrder = displayOrder++
+                    });
+                }
+            }
+            await _db.SaveChangesAsync();
+        }
+
+        TempData["Success"] = $"Đã tạo sản phẩm {product.Name} thành công.";
+        return RedirectToAction(nameof(AdminIndex));
+    }
 }

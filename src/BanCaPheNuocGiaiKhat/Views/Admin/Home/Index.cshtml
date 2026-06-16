@@ -1,32 +1,173 @@
+@model BanCaPheNuocGiaiKhat.Models.AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Admin";
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var maxRevenue = Model.RevenueByDay.Count == 0 ? 0 : Model.RevenueByDay.Max(x => x.Revenue);
 }
 
-<section class="role-home">
+<header class="admin-topbar" style="margin-bottom: 2rem;">
     <div>
-        <p class="auth-kicker">Admin</p>
-        <h1>Trang quản trị</h1>
-        <p>Quản lý danh mục, sản phẩm, người dùng, đơn hàng và thống kê doanh thu toàn hệ thống.</p>
+        <h1>Revenue Analytics</h1>
+        <span>Track store performance and customer purchasing trends.</span>
     </div>
-    <div class="role-actions">
-        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee">Đổi mật khẩu</a>
+    <div>
+        <form asp-controller="Auth" asp-action="AdminHome" method="get" style="margin: 0;">
+            <div class="admin-secondary-btn" style="padding: 0; position: relative;">
+                <i class="bi bi-calendar3" style="margin-left: 0.9rem; pointer-events: none;"></i>
+                <select name="month" onchange="this.form.submit()" style="border: none; background: transparent; padding: 0.4rem 2rem 0.4rem 0.6rem; outline: none; font-weight: 850; color: #5b351f; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size: 0.75rem;">
+                    <option value="">Cả năm @Model.Year</option>
+                    @for (var i = 1; i <= 12; i++)
+                    {
+                        if (Model.Month == i)
+                        {
+                            <option value="@i" selected>Tháng @i, @Model.Year</option>
+                        }
+                        else
+                        {
+                            <option value="@i">Tháng @i, @Model.Year</option>
+                        }
+                    }
+                </select>
+                <i class="bi bi-chevron-down" style="font-size: 0.6rem; position: absolute; right: 0.9rem; pointer-events: none;"></i>
+                <input type="hidden" name="year" value="@Model.Year" />
+            </div>
+        </form>
     </div>
+</header>
+
+<section class="admin-stats">
+    <article class="admin-stat-card">
+        <div class="admin-stat-card__top">
+            <small>TOTAL REVENUE</small>
+            <span class="admin-stat-card__icon" style="background:#e8dfd8; color:#6d5a4d"><i class="bi bi-cash-stack"></i></span>
+        </div>
+        <div>
+            <strong>@Model.TotalRevenue.ToString("N0") đ</strong>
+            <span class="admin-stat-card__trend admin-stat-card__trend--up"><i class="bi bi-arrow-up-right"></i> +12.5% vs last month</span>
+        </div>
+    </article>
+    <article class="admin-stat-card">
+        <div class="admin-stat-card__top">
+            <small>AVG ORDER VALUE</small>
+            <span class="admin-stat-card__icon" style="background:#eee6dd; color:#6d5a4d"><i class="bi bi-receipt"></i></span>
+        </div>
+        <div>
+            <strong>@Model.AverageOrderValue.ToString("N0") đ</strong>
+            <span class="admin-stat-card__trend admin-stat-card__trend--up"><i class="bi bi-arrow-up-right"></i> +3.2% vs last month</span>
+        </div>
+    </article>
+    <article class="admin-stat-card">
+        <div class="admin-stat-card__top">
+            <small>TOTAL ORDERS</small>
+            <span class="admin-stat-card__icon" style="background:#f1e8e2; color:#6d5a4d"><i class="bi bi-bag"></i></span>
+        </div>
+        <div>
+            <strong>@Model.TotalOrders</strong>
+            <span class="admin-stat-card__trend" style="color:#6d5a4d"><i class="bi bi-arrow-right"></i> +0.5% vs last month</span>
+        </div>
+    </article>
+    <article class="admin-stat-card">
+        <div class="admin-stat-card__top">
+            <small>PRODUCTS SOLD</small>
+            <span class="admin-stat-card__icon" style="background:#e8dfd8; color:#6d5a4d"><i class="bi bi-box"></i></span>
+        </div>
+        <div>
+            <strong>@Model.TotalProductsSold</strong>
+            <span class="admin-stat-card__trend admin-stat-card__trend--up"><i class="bi bi-arrow-up-right"></i> +4.2% vs last month</span>
+        </div>
+    </article>
 </section>
 
-<div class="role-grid">
-    <article class="role-card">
-        <span>01</span>
-        <h2>Sản phẩm</h2>
-        <p>Thêm, sửa, ẩn sản phẩm và kiểm soát tồn kho.</p>
+<section class="admin-dashboard-layout">
+    <article class="admin-panel">
+        <div class="admin-panel__header">
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">REVENUE OVER TIME</small>
+            <div style="display:flex; border: 1px solid #d8c4b7; border-radius: 4px; overflow: hidden;">
+                <button style="padding: .3rem .8rem; border:none; background: #fbf4ef; font-size:.75rem; font-weight:700; color:#5b351f;">Daily</button>
+                <button style="padding: .3rem .8rem; border:none; border-left: 1px solid #d8c4b7; background: #fff; font-size:.75rem; font-weight:600; color:#6d5a4d;">Monthly</button>
+            </div>
+        </div>
+        <div style="padding: 1.5rem; height: 340px;">
+            <div class="admin-revenue-bars">
+                @if (Model.RevenueByDay.Count == 0)
+                {
+                    <div class="admin-empty-state">
+                        <i class="bi bi-bar-chart"></i>
+                        <span>No revenue data for this period.</span>
+                    </div>
+                }
+                @foreach (var item in Model.RevenueByDay)
+                {
+                    var height = maxRevenue <= 0 ? 4 : Math.Max(8, (int)(item.Revenue / maxRevenue * 250));
+                    <div class="admin-revenue-bar" title="@item.Date.ToString("MMM dd"): @item.Revenue.ToString("N0") đ">
+                        <span style="height:@(height)px"></span>
+                    </div>
+                }
+            </div>
+        </div>
     </article>
-    <article class="role-card">
-        <span>02</span>
-        <h2>Người dùng</h2>
-        <p>Quản lý khách hàng, nhân viên và phân quyền tài khoản.</p>
-    </article>
-    <article class="role-card">
-        <span>03</span>
-        <h2>Doanh thu</h2>
-        <p>Theo dõi báo cáo bán hàng theo ngày, tháng và năm.</p>
-    </article>
-</div>
+
+    <aside class="admin-panel">
+        <div class="admin-panel__header" style="border-bottom:none">
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">TOP PRODUCTS BY VOLUME</small>
+        </div>
+        <div style="padding: 0 1.2rem 1.2rem;">
+            @if(!Model.TopProducts.Any())
+            {
+                <div style="color:#6d5a4d; font-size:.85rem; text-align:center; padding: 2rem 0;">No sales data yet.</div>
+            }
+            else
+            {
+                var maxQty = Model.TopProducts.Max(p => p.Quantity);
+                var colors = new[] { "#5b351f", "#5b351f", "#c8a98a", "#d7b493", "#e6ddd8", "#eee2dc" };
+                var idx = 0;
+                foreach (var prod in Model.TopProducts)
+                {
+                    var pct = maxQty == 0 ? 0 : (prod.Quantity * 100.0) / maxQty;
+                    var color = colors[Math.Min(idx, colors.Length - 1)];
+                    <div style="margin-bottom: 1.2rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:.3rem; font-size:.8rem; font-weight:700; color:#231a15">
+                            <span>@prod.ProductName</span>
+                            <span style="color:#6d5a4d;">@prod.Quantity items</span>
+                        </div>
+                        <div style="width:100%; height:6px; background:#eee2dc; border-radius:999px;">
+                            <div style="width:@((int)pct)%; height:100%; background:@color; border-radius:999px;"></div>
+                        </div>
+                    </div>
+                    idx++;
+                }
+            }
+        </div>
+    </aside>
+</section>
+
+<section class="admin-panel" style="margin-top: 1.5rem;">
+    <div class="admin-panel__header">
+        <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">RECENT INVOICES</small>
+        <a asp-controller="HoaDon" asp-action="Index" class="admin-view-all">View All</a>
+    </div>
+    <div class="admin-product-table">
+        <div class="admin-product-table__head" style="grid-template-columns: minmax(150px, 1fr) 150px 200px;">
+            <span>Invoice Code</span>
+            <span>Total Amount</span>
+            <span>Paid At</span>
+        </div>
+        @if (!Model.RecentInvoices.Any())
+        {
+            <div style="padding: 2rem; text-align: center; color: #6d5a4d; font-size: .85rem;">No recent invoices</div>
+        }
+        else
+        {
+            foreach (var inv in Model.RecentInvoices)
+            {
+                <div class="admin-product-table__row" style="grid-template-columns: minmax(150px, 1fr) 150px 200px;">
+                    <div>
+                        <strong style="display:block; font-size:.85rem; color:#231a15;">@inv.InvoiceCode</strong>
+                    </div>
+                    <div style="font-size:.85rem; font-weight:700; color:#231a15;">@inv.TotalAmount.ToString("N0") đ</div>
+                    <div style="font-size:.8rem; color:#6d5a4d;">@inv.PaidAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</div>
+                </div>
+            }
+        }
+    </div>
+</section>
