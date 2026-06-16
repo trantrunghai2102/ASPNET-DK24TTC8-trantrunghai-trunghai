@@ -1,0 +1,223 @@
+@model BanCaPheNuocGiaiKhat.Models.HoaDonChiTietViewModel
+@{
+    ViewData["Title"] = "Hóa đơn " + Model.InvoiceCode;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+.invoice-wrapper {
+    max-width: 640px;
+    margin: 0 auto;
+}
+.invoice-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    box-shadow: var(--shadow-md);
+}
+.invoice-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px dashed var(--border);
+}
+.invoice-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--coffee-darkest);
+    letter-spacing: -.5px;
+    margin-bottom: .25rem;
+}
+.invoice-tagline {
+    font-size: .8rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+.invoice-code {
+    display: inline-block;
+    background: var(--coffee-darkest);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    padding: .25rem .75rem;
+    border-radius: 100px;
+    margin-bottom: .5rem;
+}
+.invoice-datetime {
+    font-size: .82rem;
+    color: var(--text-muted);
+}
+.invoice-section-title {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 1.5rem 0 .75rem;
+}
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+}
+.invoice-table th {
+    text-align: left;
+    padding: .45rem .5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    font-size: .8rem;
+}
+.invoice-table th.text-right,
+.invoice-table td.text-right { text-align: right; }
+.invoice-table td {
+    padding: .55rem .5rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+}
+.invoice-table tr:last-child td { border-bottom: none; }
+.invoice-totals {
+    margin-top: 1.25rem;
+    border-top: 2px solid var(--coffee-darkest);
+    padding-top: 1rem;
+}
+.totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: .3rem 0;
+    font-size: .88rem;
+    color: var(--text-secondary);
+}
+.totals-row.grand-total {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--coffee-darkest);
+    padding: .5rem 0;
+    border-top: 1px solid var(--border);
+    margin-top: .5rem;
+}
+.totals-row.change {
+    font-weight: 600;
+    color: var(--coffee-mid);
+}
+.invoice-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--border);
+    font-size: .8rem;
+    color: var(--text-muted);
+}
+.action-buttons {
+    display: flex;
+    gap: .75rem;
+    margin-top: 1.5rem;
+}
+.btn-new-order {
+    flex: 1;
+    padding: .75rem;
+    background: var(--cream-deep);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: .9rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+.btn-new-order:hover { background: var(--border); }
+.btn-print {
+    flex: 1;
+    padding: .75rem;
+    background: var(--coffee-dark);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-print:hover { background: var(--coffee-darkest); }
+
+@@media print {
+    .site-nav, .promo-banner, .site-footer, .action-buttons { display: none !important; }
+    .invoice-box { box-shadow: none; border: none; padding: 0; }
+    .catalog-page { padding: 0; }
+}
+</style>
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <div class="invoice-wrapper">
+
+            <div class="invoice-box">
+                <div class="invoice-header">
+                    <div class="invoice-brand">TheDrinkVN</div>
+                    <div class="invoice-tagline">Artisan Coffee &amp; Beverages</div>
+                    <div class="invoice-code">@Model.InvoiceCode</div>
+                    <div class="invoice-datetime">
+                        @Model.PaidAt.ToLocalTime().ToString("HH:mm — dd/MM/yyyy")
+                    </div>
+                </div>
+
+                <div class="invoice-section-title">Danh sách sản phẩm</div>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th class="text-right">Đơn giá</th>
+                            <th class="text-right">SL</th>
+                            <th class="text-right">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td class="text-right">@item.UnitPrice.ToString("N3") vnđ</td>
+                                <td class="text-right">@item.Quantity</td>
+                                <td class="text-right">@item.Subtotal.ToString("N3") vnđ</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="invoice-totals">
+                    <div class="totals-row grand-total">
+                        <span>Tổng thanh toán</span>
+                        <span>@Model.TotalAmount.ToString("N3") vnđ</span>
+                    </div>
+                    <div class="totals-row">
+                        <span>Tiền khách đưa</span>
+                        <span>@Model.CashGiven.ToString("N3") vnđ</span>
+                    </div>
+                    <div class="totals-row change">
+                        <span>Tiền thừa trả lại</span>
+                        <span>@Model.ChangeAmount.ToString("N3") vnđ</span>
+                    </div>
+                </div>
+
+                <div class="invoice-footer">
+                    <p>Cảm ơn quý khách đã mua hàng tại TheDrinkVN!</p>
+                    <p style="margin-top:.25rem;">Hóa đơn số: <strong>@Model.InvoiceCode</strong></p>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/BanHang" class="btn-new-order"><i class="bi bi-plus-lg"></i> Đơn mới</a>
+                    <button type="button" class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> In hóa đơn</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

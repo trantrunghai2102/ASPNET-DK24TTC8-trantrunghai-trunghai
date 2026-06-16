@@ -12,6 +12,9 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,14 +31,14 @@ public class AppDbContext : DbContext
                   .ValueGeneratedOnAdd();
 
             entity.Property(r => r.RoleName)
-                  .HasColumnType("varchar(30)")
+                  .HasColumnType("nvarchar(30)")
                   .IsRequired();
 
             entity.HasIndex(r => r.RoleName)
                   .IsUnique();
 
             entity.Property(r => r.Description)
-                  .HasColumnType("varchar(150)");
+                  .HasColumnType("nvarchar(150)");
 
             entity.HasData(
                 new Role { RoleId = 1, RoleName = "admin",    Description = "Quản trị viên hệ thống, toàn quyền." },
@@ -59,44 +62,44 @@ public class AppDbContext : DbContext
                   .HasDefaultValue((byte)3);
 
             entity.Property(u => u.FullName)
-                  .HasColumnType("varchar(100)")
+                  .HasColumnType("nvarchar(100)")
                   .IsRequired();
 
             entity.Property(u => u.Email)
-                  .HasColumnType("varchar(150)")
+                  .HasColumnType("nvarchar(150)")
                   .IsRequired();
 
             entity.HasIndex(u => u.Email)
                   .IsUnique();
 
             entity.Property(u => u.Phone)
-                  .HasColumnType("varchar(15)");
+                  .HasColumnType("nvarchar(15)");
 
             entity.Property(u => u.Address)
-                  .HasColumnType("varchar(300)");
+                  .HasColumnType("nvarchar(300)");
 
             entity.Property(u => u.AvatarUrl)
-                  .HasColumnType("varchar(500)");
+                  .HasColumnType("nvarchar(500)");
 
             entity.Property(u => u.PasswordHash)
-                  .HasColumnType("varchar(255)");
+                  .HasColumnType("nvarchar(255)");
 
             entity.Property(u => u.GoogleId)
-                  .HasColumnType("varchar(100)");
+                  .HasColumnType("nvarchar(100)");
 
             entity.HasIndex(u => u.GoogleId)
                   .IsUnique()
                   .HasFilter("[google_id] IS NOT NULL");
 
             entity.Property(u => u.FacebookId)
-                  .HasColumnType("varchar(100)");
+                  .HasColumnType("nvarchar(100)");
 
             entity.HasIndex(u => u.FacebookId)
                   .IsUnique()
                   .HasFilter("[facebook_id] IS NOT NULL");
 
             entity.Property(u => u.Status)
-                  .HasColumnType("varchar(20)")
+                  .HasColumnType("nvarchar(20)")
                   .HasConversion<string>()
                   .HasDefaultValue(UserStatus.active)
                   .IsRequired();
@@ -164,7 +167,7 @@ public class AppDbContext : DbContext
                   .IsRequired();
 
             entity.Property(p => p.Slug)
-                  .HasColumnType("varchar(200)")
+                  .HasColumnType("nvarchar(200)")
                   .IsRequired();
 
             entity.HasIndex(p => p.Slug)
@@ -197,7 +200,7 @@ public class AppDbContext : DbContext
                   .IsRequired();
 
             entity.Property(p => p.Status)
-                  .HasColumnType("varchar(50)")
+                  .HasColumnType("nvarchar(50)")
                   .HasDefaultValue("active")
                   .IsRequired();
 
@@ -1032,6 +1035,141 @@ public class AppDbContext : DbContext
             entity.HasOne(pi => pi.Product)
                   .WithMany(p => p.ProductImages)
                   .HasForeignKey(pi => pi.ProductId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+         modelBuilder.Entity<Order>(entity =>
+        {
+            entity.ToTable("orders");
+            entity.HasKey(o => o.OrderId);
+
+            entity.Property(o => o.OrderId)
+                  .HasColumnType("int")
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(o => o.StaffId)
+                  .HasColumnType("int");
+
+            entity.Property(o => o.TotalAmount)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.Property(o => o.CashGiven)
+                  .HasColumnType("decimal(18,2)");
+
+            entity.Property(o => o.ChangeAmount)
+                  .HasColumnType("decimal(18,2)");
+
+            entity.Property(o => o.Status)
+                  .HasColumnType("nvarchar(30)")
+                  .HasDefaultValue("pending")
+                  .IsRequired();
+
+            entity.Property(o => o.Notes)
+                  .HasColumnType("nvarchar(500)");
+
+            entity.Property(o => o.CreatedAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.Property(o => o.UpdatedAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.HasOne(o => o.Staff)
+                  .WithMany()
+                  .HasForeignKey(o => o.StaffId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.ToTable("order_items");
+            entity.HasKey(oi => oi.OrderItemId);
+
+            entity.Property(oi => oi.OrderItemId)
+                  .HasColumnType("int")
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(oi => oi.OrderId)
+                  .HasColumnType("int")
+                  .IsRequired();
+
+            entity.Property(oi => oi.ProductId)
+                  .HasColumnType("int");
+
+            entity.Property(oi => oi.ProductName)
+                  .HasColumnType("nvarchar(200)")
+                  .IsRequired();
+
+            entity.Property(oi => oi.UnitPrice)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.Property(oi => oi.Quantity)
+                  .HasColumnType("int")
+                  .IsRequired();
+
+            entity.Property(oi => oi.Subtotal)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.HasOne(oi => oi.Order)
+                  .WithMany(o => o.OrderItems)
+                  .HasForeignKey(oi => oi.OrderId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(oi => oi.Product)
+                  .WithMany()
+                  .HasForeignKey(oi => oi.ProductId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.ToTable("invoices");
+            entity.HasKey(i => i.InvoiceId);
+
+            entity.Property(i => i.InvoiceId)
+                  .HasColumnType("int")
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(i => i.OrderId)
+                  .HasColumnType("int")
+                  .IsRequired();
+
+            entity.HasIndex(i => i.OrderId)
+                  .IsUnique();
+
+            entity.Property(i => i.InvoiceCode)
+                  .HasColumnType("nvarchar(50)")
+                  .IsRequired();
+
+            entity.HasIndex(i => i.InvoiceCode)
+                  .IsUnique();
+
+            entity.Property(i => i.TotalAmount)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.Property(i => i.CashGiven)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.Property(i => i.ChangeAmount)
+                  .HasColumnType("decimal(18,2)")
+                  .IsRequired();
+
+            entity.Property(i => i.PaidAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.Property(i => i.CreatedAt)
+                  .HasColumnType("datetime")
+                  .IsRequired();
+
+            entity.HasOne(i => i.Order)
+                  .WithOne(o => o.Invoice)
+                  .HasForeignKey<Invoice>(i => i.OrderId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
     }

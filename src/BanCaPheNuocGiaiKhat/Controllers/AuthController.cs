@@ -238,7 +238,7 @@ public class AuthController : Controller
         NormalizeRole(role) switch
         {
             UserRoles.Admin  => RedirectToAction(nameof(AdminHome)),
-            UserRoles.Staff  => RedirectToAction(nameof(StaffHome)),
+            UserRoles.Staff  => RedirectToAction("Index", "BanHang"),
             _                => RedirectToAction("Index", "Home")
         };
 

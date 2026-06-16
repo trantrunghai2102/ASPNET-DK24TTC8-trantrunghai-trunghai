@@ -9,24 +9,26 @@
         <p>Tiếp nhận đơn hàng, cập nhật trạng thái giao hàng và xuất hóa đơn khi đơn đã giao thành công.</p>
     </div>
     <div class="role-actions">
-        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee">Đổi mật khẩu</a>
+        <a asp-controller="BanHang" asp-action="Index" class="btn btn-coffee">Bắt đầu bán hàng</a>
+        <a asp-controller="Auth" asp-action="ChangePassword" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);">Đổi mật khẩu</a>
     </div>
 </section>
 
 <div class="role-grid">
     <article class="role-card">
         <span>01</span>
+        <h2>Bán hàng</h2>
+        <p>Tìm kiếm sản phẩm, thêm vào đơn, nhận tiền mặt và xuất hóa đơn ngay tại quầy.</p>
+        <a asp-controller="BanHang" asp-action="Index" style="display:inline-block;margin-top:.75rem;font-size:.82rem;font-weight:600;color:var(--coffee-mid);">Mở màn hình bán hàng →</a>
+    </article>
+    <article class="role-card">
+        <span>02</span>
         <h2>Đơn chờ xác nhận</h2>
         <p>Kiểm tra thông tin người nhận, ghi chú khách hàng và xác nhận đơn.</p>
     </article>
     <article class="role-card">
-        <span>02</span>
-        <h2>Giao hàng</h2>
-        <p>Cập nhật tiến trình preparing, shipping, delivered hoặc cancelled.</p>
-    </article>
-    <article class="role-card">
         <span>03</span>
         <h2>Hóa đơn</h2>
-        <p>Xuất hóa đơn bán hàng sau khi đơn chuyển sang delivered.</p>
+        <p>Xuất hóa đơn bán hàng sau khi hoàn tất thanh toán.</p>
     </article>
 </div>

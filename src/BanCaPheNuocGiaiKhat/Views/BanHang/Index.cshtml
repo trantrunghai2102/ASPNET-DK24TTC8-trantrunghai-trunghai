@@ -1,0 +1,441 @@
+@model BanCaPheNuocGiaiKhat.Models.BanHangViewModel
+@{
+    ViewData["Title"] = "Bán hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<style>
+.pos-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
+    min-height: calc(100vh - 160px);
+    align-items: start;
+}
+.pos-products {
+    background: var(--cream-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+.pos-search {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+.pos-search input {
+    width: 100%;
+    padding: .65rem 1rem .65rem 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: .9rem;
+    background: var(--cream-base);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color .2s;
+}
+.pos-search input:focus { border-color: var(--coffee-mid); }
+.pos-search svg {
+    position: absolute;
+    left: .8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: .25rem;
+}
+.product-card-pos {
+    background: var(--cream-base);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: .85rem .75rem;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s, transform .1s;
+    user-select: none;
+    text-align: center;
+}
+.product-card-pos:hover {
+    border-color: var(--coffee-mid);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+.product-card-pos.selected {
+    border-color: var(--coffee-dark);
+    background: var(--cream-deep);
+}
+.product-card-pos .thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-bottom: .5rem;
+}
+.product-card-pos .thumb-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #d1d5db;
+    border-radius: var(--radius-sm);
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: .75rem;
+}
+.product-card-pos .prod-name {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: .25rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.product-card-pos .prod-price {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--coffee-mid);
+}
+.product-card-pos .cat-badge {
+    font-size: .7rem;
+    color: var(--text-muted);
+    margin-bottom: .2rem;
+}
+.pos-panel {
+    background: var(--cream-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    position: sticky;
+    top: 1rem;
+}
+.pos-panel h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--coffee-darkest);
+    margin-bottom: 1rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+}
+.cart-empty {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--text-muted);
+    font-size: .85rem;
+}
+.cart-items { margin-bottom: 1rem; }
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.cart-item-name {
+    flex: 1;
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+.cart-item-price {
+    font-size: .8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+.qty-ctrl {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+}
+.qty-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--cream-base);
+    color: var(--text-primary);
+    font-size: .9rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .15s;
+}
+.qty-btn:hover { background: var(--cream-deep); }
+.qty-val {
+    min-width: 24px;
+    text-align: center;
+    font-size: .85rem;
+    font-weight: 600;
+}
+.cart-remove {
+    background: none;
+    border: none;
+    color: #c0392b;
+    cursor: pointer;
+    font-size: .8rem;
+    padding: 0 .2rem;
+    line-height: 1;
+}
+.cart-summary {
+    background: var(--cream-deep);
+    border-radius: var(--radius-md);
+    padding: .85rem 1rem;
+    margin-bottom: 1rem;
+}
+.cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .85rem;
+    color: var(--text-secondary);
+    margin-bottom: .3rem;
+}
+.cart-summary-row.total {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--coffee-darkest);
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px solid var(--border);
+    margin-bottom: 0;
+}
+.btn-confirm-order {
+    width: 100%;
+    padding: .85rem;
+    background: var(--coffee-dark);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-confirm-order:hover { background: var(--coffee-darkest); }
+.btn-confirm-order:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+.alert-pos {
+    padding: .65rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    font-size: .85rem;
+}
+.alert-pos.error { background: #ffeaea; color: #c0392b; border: 1px solid #f5c6c6; }
+@@media (max-width: 768px) {
+    .pos-layout { grid-template-columns: 1fr; }
+    .pos-panel { position: static; }
+}
+</style>
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <header class="catalog-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+            <div>
+                <h1 class="catalog-title">Bán hàng</h1>
+                <p class="catalog-subtitle">Chọn sản phẩm, nhập số lượng và xác nhận đơn hàng.</p>
+            </div>
+            <a asp-controller="HoaDon" asp-action="Index"
+               style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-md);font-size:.85rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .15s;"
+               onmouseover="this.style.background='var(--border)'" onmouseout="this.style.background='var(--cream-deep)'">
+                <i class="bi bi-receipt"></i> Xem hóa đơn
+            </a>
+        </header>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-pos error">@TempData["Error"]</div>
+        }
+
+        <div class="pos-layout">
+
+            <div class="pos-products">
+                <div class="pos-search">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="productSearch" placeholder="Tìm sản phẩm..." />
+                </div>
+
+                @if (!Model.Products.Any())
+                {
+                    <p style="text-align:center;color:var(--text-muted);padding:2rem 0;">Chưa có sản phẩm nào.</p>
+                }
+                else
+                {
+                    <div class="product-grid" id="productGrid">
+                        @foreach (var p in Model.Products)
+                        {
+                            <div class="product-card-pos"
+                                 data-id="@p.ProductId"
+                                 data-name="@p.Name"
+                                 data-price="@p.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                 data-search="@p.Name.ToLower() @(p.CategoryName?.ToLower())"
+                                 onclick="addToCart(this)">
+                                @if (!string.IsNullOrEmpty(p.ThumbnailUrl))
+                                {
+                                    <img class="thumb" src="@p.ThumbnailUrl" alt="@p.Name" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                    <div class="thumb-placeholder" style="display:none;">Chưa có ảnh</div>
+                                }
+                                else
+                                {
+                                    <div class="thumb-placeholder">Chưa có ảnh</div>
+                                }
+                                @if (!string.IsNullOrEmpty(p.CategoryName))
+                                {
+                                    <div class="cat-badge">@p.CategoryName</div>
+                                }
+                                <div class="prod-name">@p.Name</div>
+                                <div class="prod-price">@p.Price.ToString("N3") vnđ</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="pos-panel">
+                <h2>Đơn hàng hiện tại</h2>
+
+                <div id="cartEmpty" class="cart-empty">
+                    <p>Chưa có sản phẩm nào.<br/>Nhấn vào sản phẩm để thêm vào đơn.</p>
+                </div>
+
+                <div id="cartItems" class="cart-items" style="display:none;"></div>
+
+                <div id="cartSummary" class="cart-summary" style="display:none;">
+                    <div class="cart-summary-row">
+                        <span>Số loại sản phẩm</span>
+                        <span id="cartItemCount">0</span>
+                    </div>
+                    <div class="cart-summary-row total">
+                        <span>Tổng tiền</span>
+                        <span id="cartTotal">0 vnđ</span>
+                    </div>
+                </div>
+
+                <form id="orderForm" method="post" asp-action="TaoHoaDon" asp-controller="BanHang">
+                    @Html.AntiForgeryToken()
+                    <div id="cartHiddenInputs"></div>
+                    <button type="submit" class="btn-confirm-order" id="btnConfirmOrder" disabled>
+                        Xác nhận đơn hàng →
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+let cart = [];
+
+function addToCart(card) {
+    const id    = parseInt(card.dataset.id);
+    const name  = card.dataset.name;
+    const price = parseFloat(card.dataset.price);
+    const existing = cart.find(function(x) { return x.productId === id; });
+    if (existing) {
+        existing.qty++;
+    } else {
+        cart.push({ productId: id, name: name, price: price, qty: 1 });
+    }
+    renderCart();
+}
+
+function changeQty(productId, delta) {
+    const item = cart.find(function(x) { return x.productId === productId; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+        cart = cart.filter(function(x) { return x.productId !== productId; });
+    }
+    renderCart();
+}
+
+function removeItem(productId) {
+    cart = cart.filter(function(x) { return x.productId !== productId; });
+    renderCart();
+}
+
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function renderCart() {
+    var cartItemsEl   = document.getElementById('cartItems');
+    var cartEmptyEl   = document.getElementById('cartEmpty');
+    var cartSummaryEl = document.getElementById('cartSummary');
+    var btnConfirm    = document.getElementById('btnConfirmOrder');
+    var hiddenInputs  = document.getElementById('cartHiddenInputs');
+
+    if (cart.length === 0) {
+        cartItemsEl.style.display   = 'none';
+        cartEmptyEl.style.display   = '';
+        cartSummaryEl.style.display = 'none';
+        btnConfirm.disabled         = true;
+        hiddenInputs.innerHTML      = '';
+        document.querySelectorAll('.product-card-pos.selected').forEach(function(c) {
+            c.classList.remove('selected');
+        });
+        return;
+    }
+
+    cartEmptyEl.style.display   = 'none';
+    cartItemsEl.style.display   = '';
+    cartSummaryEl.style.display = '';
+    btnConfirm.disabled         = false;
+
+    cartItemsEl.innerHTML = cart.map(function(item) {
+        return '<div class="cart-item">' +
+            '<div class="cart-item-name">' + escHtml(item.name) + '</div>' +
+            '<div class="qty-ctrl">' +
+                '<button type="button" class="qty-btn" onclick="changeQty(' + item.productId + ', -1)">−</button>' +
+                '<span class="qty-val">' + item.qty + '</span>' +
+                '<button type="button" class="qty-btn" onclick="changeQty(' + item.productId + ', 1)">+</button>' +
+            '</div>' +
+            '<div class="cart-item-price">' + (item.price * item.qty).toFixed(3) + ' vnđ</div>' +
+            '<button type="button" class="cart-remove" onclick="removeItem(' + item.productId + ')" title="Xóa"><i class="bi bi-x"></i></button>' +
+        '</div>';
+    }).join('');
+
+    var totalAmount = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+    document.getElementById('cartItemCount').textContent = cart.length;
+    document.getElementById('cartTotal').textContent     = totalAmount.toFixed(3) + ' vnđ';
+
+    document.querySelectorAll('.product-card-pos').forEach(function(c) {
+        var inCart = cart.some(function(x) { return x.productId === parseInt(c.dataset.id); });
+        c.classList.toggle('selected', inCart);
+    });
+
+    hiddenInputs.innerHTML = cart.map(function(item, i) {
+        return '<input type="hidden" name="Items[' + i + '].ProductId" value="' + item.productId + '" />' +
+               '<input type="hidden" name="Items[' + i + '].Quantity" value="' + item.qty + '" />';
+    }).join('');
+}
+
+document.getElementById('productSearch').addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('.product-card-pos').forEach(function(card) {
+        var match = !q || card.dataset.search.includes(q);
+        card.style.display = match ? '' : 'none';
+    });
+});
+</script>
+}
