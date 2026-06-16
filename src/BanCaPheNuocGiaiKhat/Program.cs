@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── MVC ──────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
 
-// ── Cookie Authentication ─────────────────────────────────────────────────
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -37,6 +35,7 @@ using (var scope = app.Services.CreateScope())
     {
         await db.Database.MigrateAsync();      // tạo / cập nhật schema + seed roles
         logger.LogInformation("Database migration và seed roles thành công.");
+        await IdentitySeeder.SeedAsync(db, logger);
     }
     catch (Exception ex)
     {
