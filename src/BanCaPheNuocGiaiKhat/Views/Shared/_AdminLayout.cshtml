@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="admin-sidebar" aria-label="Quản trị">
+            <div class="admin-brand">
+                <span class="admin-brand__mark"><img src="https://ui-avatars.com/api/?name=Admin&background=random" style="width: 32px; border-radius: 50%;" alt="Admin"/></span>
+                <div>
+                    <strong>Admin Panel</strong>
+                    <small>Coffee Boutique Management</small>
+                </div>
+            </div>
+
+            <a asp-controller="SanPham" asp-action="Create" class="admin-new-product">
+                <i class="bi bi-plus-lg"></i>
+                NEW PRODUCT
+            </a>
+
+            <nav class="admin-nav">
+                @{
+                    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                }
+                <a asp-controller="Auth" asp-action="AdminHome" class="@(currentController == "Auth" && currentAction == "AdminHome" ? "active" : "")">
+                    <i class="bi bi-grid"></i> DASHBOARD
+                </a>
+                <a asp-controller="HoaDon" asp-action="Index" class="@(currentController == "HoaDon" ? "active" : "")">
+                    <i class="bi bi-receipt"></i> ORDERS
+                </a>
+                <a asp-controller="SanPham" asp-action="AdminIndex" class="@(currentController == "SanPham" && (currentAction == "AdminIndex" || currentAction == "Create") ? "active" : "")">
+                    <i class="bi bi-cup"></i> PRODUCTS
+                </a>
+                @if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Admin))
+                {
+                    <a asp-controller="NguoiDung" asp-action="Index" class="@(currentController == "NguoiDung" ? "active" : "")">
+                        <i class="bi bi-people"></i> CUSTOMERS
+                    </a>
+                }
+            </nav>
+
+            <div class="admin-sidebar__footer">
+                <a asp-controller="Auth" asp-action="ChangePassword"><i class="bi bi-gear"></i> SETTINGS</a>
+                <form asp-controller="Auth" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"><i class="bi bi-box-arrow-left"></i> LOGOUT</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

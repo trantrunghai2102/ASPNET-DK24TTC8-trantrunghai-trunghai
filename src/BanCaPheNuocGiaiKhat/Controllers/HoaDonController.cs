@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Staff)]
+[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Staff)]
 public class HoaDonController : Controller
 {
     private readonly AppDbContext _db;
@@ -32,7 +32,18 @@ public class HoaDonController : Controller
             })
             .ToListAsync();
 
-        return View(new DanhSachHoaDonViewModel { Invoices = invoices });
+        var pending = await _db.Orders.CountAsync(o => o.Status == "pending");
+        var processing = await _db.Orders.CountAsync(o => o.Status == "processing");
+        var completed = await _db.Orders.CountAsync(o => o.Status == "completed");
+
+        return View(new DanhSachHoaDonViewModel 
+        { 
+            Invoices = invoices,
+            PendingOrders = pending,
+            ProcessingOrders = processing,
+            CompletedOrders = completed,
+            TotalOrders = pending + processing + completed
+        });
     }
 
     // POST /HoaDon/Xoa/{id}

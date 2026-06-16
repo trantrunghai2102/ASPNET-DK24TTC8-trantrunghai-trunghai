@@ -73,12 +73,12 @@
             <div class="detail-price">
                 @if (Model.Product.PromotionPrice.HasValue)
                 {
-                    <span class="old-price">$@Model.Product.BasePrice.ToString("N3") vnd</span>
-                    <span class="current-price promotion">$@Model.Product.PromotionPrice.Value.ToString("N3") vnd</span>
+                    <span class="old-price">@Model.Product.BasePrice.ToString("N0") đ</span>
+                    <span class="current-price promotion">@Model.Product.PromotionPrice.Value.ToString("N0") đ</span>
                 }
                 else
                 {
-                    <span class="current-price">$@Model.Product.BasePrice.ToString("N3") vnd</span>
+                    <span class="current-price">@Model.Product.BasePrice.ToString("N0") đ</span>
                 }
             </div>
 
@@ -138,7 +138,7 @@
                         <svg class="icon-minus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </summary>
                     <div class="accordion-content">
-                        <p>Free standard shipping on orders over 500.000 vnd. Orders are roasted and shipped within 48 hours to ensure maximum freshness. If you're not completely satisfied, return the unused portion within 30 days.</p>
+                        <p>Free standard shipping on orders over 500.000 đ. Orders are roasted and shipped within 48 hours to ensure maximum freshness. If you're not completely satisfied, return the unused portion within 30 days.</p>
                     </div>
                 </details>
             </div>
@@ -172,7 +172,7 @@
                             <p class="product-desc">@item.ShortDesc</p>
                             
                             <div class="product-footer">
-                                <span class="product-price sm">$@item.BasePrice.ToString("N3") vnd</span>
+                                <span class="product-price sm">@item.BasePrice.ToString("N0") đ</span>
                                 <button type="button" class="btn-add-cart" aria-label="Add to cart">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                 </button>
