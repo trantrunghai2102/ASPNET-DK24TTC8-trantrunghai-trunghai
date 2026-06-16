@@ -75,9 +75,9 @@
 ---
 
 ### 7. Module Sản Phẩm & Danh Mục
-- [ ] Trang danh sách sản phẩm (lọc theo danh mục: cà phê, trà sữa, nước ép, sinh tố...)
-- [ ] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, tình trạng)
-- [ ] Tìm kiếm sản phẩm theo tên
+- [x] Trang danh sách sản phẩm (lọc theo danh mục: cà phê, trà sữa, nước ép, sinh tố...)
+- [x] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, tình trạng)
+- [x] Tìm kiếm sản phẩm theo tên
 - [ ] Lọc sản phẩm theo khoảng giá
 - [ ] CRUD danh mục (Admin)
 - [ ] CRUD sản phẩm — thêm/sửa/xóa/cập nhật tồn kho (Admin)
@@ -97,7 +97,6 @@
 
 ### 9. Module Thanh Toán
 - [ ] Thanh toán khi nhận hàng (COD)
-- [ ] Thanh toán trực tuyến (cổng thanh toán điện tử)
 - [ ] Lưu lịch sử giao dịch
 
 ---
@@ -135,7 +134,7 @@
 - [x] Mở đầu (lý do, mục tiêu, đối tượng, phạm vi nghiên cứu)
 - [x] Chương Cơ sở lý thuyết
 - [x] Chương Hiện thực hóa — phân tích yêu cầu, use case, kiến trúc
-- [ ] Hoàn thiện phần Thiết kế CSDL (diagram + mô tả bảng)
+- [x] Hoàn thiện phần Thiết kế CSDL (diagram + mô tả bảng)
 - [ ] Chương 4 — Kết quả (ảnh chụp màn hình, mô tả từng chức năng)
 - [ ] Chương 5 — Kết luận và hướng phát triển
 - [ ] Tóm tắt đồ án
