@@ -195,14 +195,14 @@
                     <input type="hidden" name="orderId" value="@Model.OrderId" />
 
                     <div class="payment-form-group">
-                        <label for="cashGiven">Tiền khách đưa (USD)</label>
+                        <label for="cashGiven">Tiền khách đưa (vnđ)</label>
                         <input type="number"
                                id="cashGiven"
                                name="cashGiven"
                                class="payment-input"
                                min="0"
-                               step="0.01"
-                               placeholder="0.00"
+                               step="any"
+                               placeholder="0"
                                autocomplete="off"
                                oninput="calcChange()" />
                     </div>
@@ -234,7 +234,10 @@ function calcChange() {
     var changeEl  = document.getElementById('changeDisplay');
     var btnPay    = document.getElementById('btnPay');
     var cash      = parseFloat(cashInput.value) || 0;
-    var change    = cash - totalAmount;
+    
+    // Chuyển đổi tiền VND nhập vào thành đơn vị nghìn VND để so khớp với totalAmount trong DB
+    var cashInThousands = cash / 1000;
+    var change          = cashInThousands - totalAmount;
 
     if (cash <= 0) {
         changeEl.textContent = '—';
@@ -244,11 +247,13 @@ function calcChange() {
     }
 
     if (change < 0) {
-        changeEl.textContent = '−$' + Math.abs(change).toFixed(2) + ' (thiếu)';
+        var changeInVnd = Math.abs(change) * 1000;
+        changeEl.textContent = '−' + changeInVnd.toLocaleString('vi-VN') + ' vnđ (thiếu)';
         changeEl.className   = 'amount negative';
         btnPay.disabled      = true;
     } else {
-        changeEl.textContent = change.toFixed(3) + ' vnđ';
+        var changeInVnd = change * 1000;
+        changeEl.textContent = changeInVnd.toLocaleString('vi-VN') + ' vnđ';
         changeEl.className   = 'amount';
         btnPay.disabled      = false;
     }

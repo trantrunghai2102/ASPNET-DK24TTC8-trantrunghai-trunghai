@@ -152,6 +152,9 @@ public class BanHangController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> XacNhanThanhToan(int orderId, decimal cashGiven)
     {
+        // Chuyển đổi từ tiền VND nhập vào (ví dụ 100000) về đơn vị nghìn VND trong DB (ví dụ 100.00)
+        cashGiven = cashGiven / 1000m;
+
         var order = await _db.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.OrderId == orderId && o.Status == "pending");
