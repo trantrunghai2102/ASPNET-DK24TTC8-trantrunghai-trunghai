@@ -9,11 +9,6 @@
         <p class="admin-kicker">MANAGE SALES</p>
         <h1>Orders to Process</h1>
     </div>
-    <div>
-        <a asp-controller="BanHang" asp-action="Index" class="admin-primary-btn" target="_blank">
-            <i class="bi bi-cart"></i> POS
-        </a>
-    </div>
 </header>
 
 @if (TempData["Success"] != null)
@@ -32,11 +27,11 @@
         </div>
         
         <div class="admin-product-table">
-            <div class="admin-product-table__head" style="grid-template-columns: 80px minmax(150px, 1fr) 120px 100px;">
+            <div class="admin-product-table__head" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
                 <span>Code</span>
                 <span>Date</span>
                 <span>Staff</span>
-                <span>Amount</span>
+                <span style="text-align: right;">Amount</span>
             </div>
             
             @if (!Model.Invoices.Any())
@@ -47,11 +42,11 @@
             {
                 foreach (var hd in Model.Invoices)
                 {
-                    <div class="admin-product-table__row" style="grid-template-columns: 80px minmax(150px, 1fr) 120px 100px;">
+                    <div class="admin-product-table__row" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
                         <div><span class="admin-status">@hd.InvoiceCode</span></div>
                         <div style="font-size:.8rem; font-weight:600; color:#231a15;">@hd.PaidAt.ToLocalTime().ToString("MMM dd, HH:mm")</div>
                         <div style="font-size:.8rem; color:#6d5a4d;">@(hd.StaffName ?? "—")</div>
-                        <div style="font-size:.85rem; font-weight:700; color:#231a15;">@hd.TotalAmount.ToString("N0") đ</div>
+                        <div style="font-size:.85rem; font-weight:700; color:#231a15; text-align: right;">@hd.TotalAmount.ToString("N0") đ</div>
                     </div>
                 }
             }

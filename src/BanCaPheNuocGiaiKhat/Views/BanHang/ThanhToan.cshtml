@@ -174,14 +174,14 @@
                         {
                             <tr>
                                 <td>@item.ProductName</td>
-                                <td class="text-right">@item.UnitPrice.ToString("N3") vnđ</td>
-                                <td class="text-right">@item.Quantity</td>
-                                <td class="text-right">@item.Subtotal.ToString("N3") vnđ</td>
+                                <td class="text-right">@item.UnitPrice.ToString("N0") đ</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-right">@item.Subtotal.ToString("N0") đ</td>
                             </tr>
                         }
                         <tr class="total-row">
                             <td colspan="3">Tổng tiền</td>
-                            <td class="text-right">@Model.TotalAmount.ToString("N3") vnđ</td>
+                            <td class="text-right">@Model.TotalAmount.ToString("N0") đ</td>
                         </tr>
                     </tbody>
                 </table>
