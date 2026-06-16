@@ -214,10 +214,63 @@
 
                 <div class="action-buttons">
                     <a href="/BanHang" class="btn-new-order"><i class="bi bi-plus-lg"></i> Đơn mới</a>
-                    <button type="button" class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> In hóa đơn</button>
-                </div>
+                    <button type="button" class="btn-print" onclick="exportPdf()"><i class="bi bi-file-earmark-pdf"></i> Xuất PDF</button>                </div>
             </div>
 
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+async function exportPdf() {
+    const el = document.querySelector('.invoice-box');
+    const { jsPDF } = window.jspdf;
+
+    const canvas = await html2canvas(el, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        onclone: (doc) => {
+            const cloned = doc.querySelector('.invoice-box');
+            // Đúng class rồi
+            doc.querySelectorAll('.action-buttons').forEach(e => e.remove());
+            cloned.style.cssText += `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin: 0 !important;
+            `;
+        }
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+
+    // Tính từ canvas thực tế, chia scale để ra px đúng
+    const widthMm = (canvas.width / 3) * 0.264583;
+    const heightMm = (canvas.height / 3) * 0.264583;
+
+    const pageW = 210;
+    const pageH = 297;
+
+    const pdf = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    });
+
+    const x = (pageW - widthMm) / 2;
+    const y = (pageH - heightMm) / 2;
+
+    pdf.addImage(imgData, 'PNG', x, y, widthMm, heightMm);
+    pdf.save('hoa-don-@(Model.InvoiceCode).pdf');
+}
+</script>
+}

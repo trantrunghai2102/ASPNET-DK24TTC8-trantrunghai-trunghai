@@ -13,6 +13,9 @@ public class HoaDonTomTatViewModel
 public class DanhSachHoaDonViewModel
 {
     public List<HoaDonTomTatViewModel> Invoices { get; set; } = new();
+    public int CurrentPage { get; set; } = 1;
+    public int TotalPages { get; set; } = 1;
+
 
     // Added stats
     public int PendingOrders { get; set; }

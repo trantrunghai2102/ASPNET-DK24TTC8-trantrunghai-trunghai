@@ -27,8 +27,26 @@
 
             <ul class="site-nav__links">
                 <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Shop</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">About</a></li>
+                 @if (User.IsInRole("staff"))
+                {
+                    <li>
+                        <a asp-controller="BanHang"
+                        asp-action="Index"
+                        class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "BanHang" ? "active" : "")">
+                            Sales Desk
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("customer"))
+                {
+                    <li>
+                        <a asp-controller="DatHang"
+                           asp-action="DonHangCuaToi"
+                           class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DatHang" ? "active" : "")">
+                            Đơn hàng
+                        </a>
+                    </li>
+                }
             </ul>
 
             <div class="site-nav__right">
@@ -37,9 +55,12 @@
                     <input type="text" placeholder="Search coffees..." aria-label="Search" />
                 </div>
 
-                <a href="#" class="site-nav__icon-btn" aria-label="Cart" title="Giỏ hàng">
-                    <i class="bi bi-bag" style="font-size:17px;"></i>
-                </a>
+                  @if (User.IsInRole("customer"))
+                {
+                    <a asp-controller="GioHang" asp-action="Index" class="site-nav__icon-btn" aria-label="Cart" title="Giỏ hàng">
+                        <i class="bi bi-bag" style="font-size:17px;"></i>
+                    </a>
+                }
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {

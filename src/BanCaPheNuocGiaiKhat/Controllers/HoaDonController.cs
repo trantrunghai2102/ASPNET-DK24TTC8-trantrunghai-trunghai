@@ -17,11 +17,22 @@ public class HoaDonController : Controller
     }
 
     // GET /HoaDon
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var invoices = await _db.Invoices
+        const int pageSize = 10;
+
+         var query = _db.Invoices
             .Include(i => i.Order).ThenInclude(o => o.Staff)
-            .OrderByDescending(i => i.PaidAt)
+            .OrderByDescending(i => i.PaidAt);
+
+        int totalItems = await query.CountAsync();
+        int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+        if (page < 1) page = 1;
+        if (totalPages > 0 && page > totalPages) page = totalPages;
+
+        var invoices = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(i => new HoaDonTomTatViewModel
             {
                 InvoiceId   = i.InvoiceId,
@@ -36,14 +47,23 @@ public class HoaDonController : Controller
         var processing = await _db.Orders.CountAsync(o => o.Status == "processing");
         var completed = await _db.Orders.CountAsync(o => o.Status == "completed");
 
-        return View(new DanhSachHoaDonViewModel 
+        var viewModel = new DanhSachHoaDonViewModel 
         { 
             Invoices = invoices,
+            CurrentPage = page,
+            TotalPages  = Math.Max(1, totalPages),
             PendingOrders = pending,
             ProcessingOrders = processing,
             CompletedOrders = completed,
             TotalOrders = pending + processing + completed
-        });
+        };
+
+        if (User.IsInRole(UserRoles.Admin))
+        {
+            return View("~/Views/Admin/HoaDon/Index.cshtml", viewModel);
+        }
+
+        return View("~/Views/HoaDon/Index.cshtml", viewModel);
     }
 
     // POST /HoaDon/Xoa/{id}

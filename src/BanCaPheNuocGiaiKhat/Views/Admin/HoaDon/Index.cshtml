@@ -1,0 +1,104 @@
+@model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<header class="admin-topbar" style="margin-bottom: 2rem;">
+    <div>
+        <p class="admin-kicker">MANAGE SALES</p>
+        <h1>Orders to Process</h1>
+    </div>
+</header>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="font-size: .88rem; font-weight: 600; padding: .75rem 1rem;">@TempData["Success"]</div>
+}
+
+<section class="admin-orders-layout">
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ALL INVOICES</small>
+            <div style="display:flex; border: 1px solid #d8c4b7; border-radius: 4px; overflow: hidden;">
+                <button style="padding: .3rem .8rem; border:none; background: #fbf4ef; font-size:.75rem; font-weight:700; color:#5b351f;">All</button>
+                <button style="padding: .3rem .8rem; border:none; border-left: 1px solid #d8c4b7; background: #fff; font-size:.75rem; font-weight:600; color:#6d5a4d;">Today</button>
+            </div>
+        </div>
+        
+        <div class="admin-product-table">
+            <div class="admin-product-table__head" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
+                <span>Code</span>
+                <span>Date</span>
+                <span>Staff</span>
+                <span style="text-align: right;">Amount</span>
+            </div>
+            
+            @if (!Model.Invoices.Any())
+            {
+                <div style="padding: 3rem; text-align: center; color: #6d5a4d; font-size: .85rem;">Chưa có hóa đơn nào.</div>
+            }
+            else
+            {
+                foreach (var hd in Model.Invoices)
+                {
+                    <div class="admin-product-table__row" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
+                        <div><span class="admin-status">@hd.InvoiceCode</span></div>
+                        <div style="font-size:.8rem; font-weight:600; color:#231a15;">@hd.PaidAt.ToLocalTime().ToString("MMM dd, HH:mm")</div>
+                        <div style="font-size:.8rem; color:#6d5a4d;">@(hd.StaffName ?? "—")</div>
+                        <div style="font-size:.85rem; font-weight:700; color:#231a15; text-align: right;">@hd.TotalAmount.ToString("N0") đ</div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div>
+        <div class="admin-panel" style="margin-bottom: 1.5rem;">
+            <div class="admin-panel__header" style="border-bottom:none">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ORDER STATS</small>
+            </div>
+            <div style="padding: 0 1.2rem 1.2rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem;">
+                    <div style="display:flex; align-items:center; gap:.5rem;">
+                        <span style="width:10px; height:10px; border-radius:50%; background:#dcebf0;"></span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Pending Orders</span>
+                    </div>
+                    <strong style="font-size:.9rem; color:#231a15">@Model.PendingOrders</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem;">
+                    <div style="display:flex; align-items:center; gap:.5rem;">
+                        <span style="width:10px; height:10px; border-radius:50%; background:#f1e6d8;"></span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Processing Orders</span>
+                    </div>
+                    <strong style="font-size:.9rem; color:#231a15">@Model.ProcessingOrders</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:.5rem;">
+                        <span style="width:10px; height:10px; border-radius:50%; background:#e2efd9;"></span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Completed Orders</span>
+                    </div>
+                    <strong style="font-size:.9rem; color:#231a15">@Model.CompletedOrders</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-panel__header" style="border-bottom:none">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">RECENT ACTIVITY</small>
+            </div>
+            <div class="admin-activity-list">
+                @foreach (var hd in Model.Invoices.Take(4))
+                {
+                    <div class="admin-activity-item">
+                        <div class="admin-activity-item__icon" style="background:#e2efd9; color:#41652e"><i class="bi bi-check-lg"></i></div>
+                        <div class="admin-activity-item__content">
+                            <p>Invoice @hd.InvoiceCode paid</p>
+                            <small>@hd.PaidAt.ToLocalTime().ToString("MMM dd, yyyy - HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

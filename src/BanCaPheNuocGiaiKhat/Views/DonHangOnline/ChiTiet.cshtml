@@ -1,0 +1,214 @@
+@model BanCaPheNuocGiaiKhat.Models.DonHangOnlineChiTietViewModel
+
+@{
+    ViewData["Title"] = $"Đơn hàng #{Model.OrderId}";
+}
+
+<div class="catalog-page">
+    <div class="section-wrapper">
+        <nav style="font-size:.83rem;color:var(--text-muted);margin-bottom:1.25rem;">
+            <a asp-controller="DonHangOnline" asp-action="Index" style="color:var(--coffee-mid);text-decoration:none;">Đơn hàng online</a>
+            <span style="margin:0 .4rem;">›</span>
+            <span>Đơn hàng #@Model.OrderId</span>
+        </nav>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;">
+
+            <!-- Thông tin đơn hàng + sản phẩm -->
+            <div style="display:grid;gap:1.25rem;">
+
+                <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);">
+                    <h2 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 1rem;">Đơn hàng #@Model.OrderId</h2>
+                    <div style="display:grid;gap:.6rem;font-size:.88rem;">
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">Khách hàng:</span>
+                            <span style="font-weight:600;">@(Model.CustomerName ?? "—")
+                                @if (Model.CustomerEmail != null)
+                                {
+                                    <span style="color:var(--text-muted);font-weight:400;"> (@Model.CustomerEmail)</span>
+                                }
+                            </span>
+                        </div>
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">Người nhận:</span>
+                            <span>@(Model.RecipientName ?? "—")</span>
+                        </div>
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">SĐT:</span>
+                            <span>@(Model.RecipientPhone ?? "—")</span>
+                        </div>
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">Địa chỉ:</span>
+                            <span>@(Model.DeliveryAddress ?? "—")</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <div style="display:flex;gap:.5rem;">
+                                <span style="color:var(--text-muted);min-width:140px;">Ghi chú:</span>
+                                <span style="font-style:italic;">@Model.Notes</span>
+                            </div>
+                        }
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">Đặt lúc:</span>
+                            <span>@Model.CreatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                        <div style="display:flex;gap:.5rem;">
+                            <span style="color:var(--text-muted);min-width:140px;">Cập nhật lúc:</span>
+                            <span>@Model.UpdatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.StaffName))
+                        {
+                            <div style="display:flex;gap:.5rem;">
+                                <span style="color:var(--text-muted);min-width:140px;">Nhân viên XL:</span>
+                                <span>@Model.StaffName</span>
+                            </div>
+                        }
+                        <div style="display:flex;gap:.75rem;align-items:center;margin-top:.25rem;">
+                            @{
+                                var statusLabel = Model.Status switch
+                                {
+                                    "pending"    => "Chờ xác nhận",
+                                    "processing" => "Đang xử lý",
+                                    "shipping"   => "Đang vận chuyển",
+                                    "delivered"  => "Đã giao",
+                                    "cancelled"  => "Đã hủy",
+                                    _            => Model.Status
+                                };
+                                var (bg, fg) = Model.Status switch
+                                {
+                                    "pending"    => ("#fef9c3", "#a16207"),
+                                    "processing" => ("#dbeafe", "#1d4ed8"),
+                                    "shipping"   => ("#e0f2fe", "#0369a1"),
+                                    "delivered"  => ("#dcfce7", "#15803d"),
+                                    "cancelled"  => ("#fee2e2", "#b91c1c"),
+                                    _            => ("#f3f4f6", "#374151")
+                                };
+                            }
+                            <span style="color:var(--text-muted);min-width:140px;">Trạng thái:</span>
+                            <span style="background:@bg;color:@fg;padding:.2rem .75rem;border-radius:20px;font-size:.82rem;font-weight:600;">@statusLabel</span>
+                            @if (Model.PaymentStatus == "paid")
+                            {
+                                <span style="background:#dcfce7;color:#15803d;padding:.2rem .75rem;border-radius:20px;font-size:.82rem;font-weight:600;">Đã thanh toán</span>
+                            }
+                            else
+                            {
+                                <span style="background:#fee2e2;color:#b91c1c;padding:.2rem .75rem;border-radius:20px;font-size:.82rem;font-weight:600;">Chưa thanh toán</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);">
+                    <h2 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 1rem;">
+                        <i class="bi bi-bag"></i> Sản phẩm
+                    </h2>
+                    <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+                        <thead>
+                            <tr style="border-bottom:2px solid var(--border);">
+                                <th style="text-align:left;padding:.5rem .75rem;color:var(--text-secondary);">Sản phẩm</th>
+                                <th style="text-align:right;padding:.5rem .75rem;color:var(--text-secondary);">Đơn giá</th>
+                                <th style="text-align:center;padding:.5rem .75rem;color:var(--text-secondary);">SL</th>
+                                <th style="text-align:right;padding:.5rem .75rem;color:var(--text-secondary);">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr style="border-bottom:1px solid var(--border);">
+                                    <td style="padding:.6rem .75rem;">@item.ProductName</td>
+                                    <td style="padding:.6rem .75rem;text-align:right;color:var(--text-secondary);">@item.UnitPrice.ToString("N3") vnđ</td>
+                                    <td style="padding:.6rem .75rem;text-align:center;">@item.Quantity</td>
+                                    <td style="padding:.6rem .75rem;text-align:right;font-weight:600;color:var(--coffee-darkest);">@item.Subtotal.ToString("N3") vnđ</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="padding:.75rem;text-align:right;font-weight:700;">Tổng cộng</td>
+                                <td style="padding:.75rem;text-align:right;font-size:1.1rem;font-weight:700;color:var(--coffee-darkest);">@Model.TotalAmount.ToString("N3") vnđ</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cập nhật trạng thái -->
+            <div style="display:grid;gap:1rem;">
+                @if (Model.Status != "cancelled" && !(Model.Status == "delivered" && Model.PaymentStatus == "paid"))
+                {
+                    <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;box-shadow:var(--shadow-sm);">
+                        <h2 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 1rem;">Cập nhật trạng thái</h2>
+
+                        @if (Model.Status == "pending")
+                        {
+                            <form asp-action="CapNhatTrangThai" method="post" style="margin-bottom:.5rem;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                <input type="hidden" name="NewStatus" value="processing" />
+                                <button type="submit" class="btn btn-coffee" style="width:100%;">
+                                    <i class="bi bi-play-circle"></i> Tiếp nhận — Đang xử lý
+                                </button>
+                            </form>
+                            <form asp-action="CapNhatTrangThai" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                <input type="hidden" name="NewStatus" value="cancelled" />
+                                <button type="submit" style="width:100%;padding:.55rem;border:1px solid #dc2626;border-radius:var(--radius-sm);background:none;color:#dc2626;cursor:pointer;font-weight:600;"
+                                        onclick="return confirm('Hủy đơn hàng này?')">
+                                    <i class="bi bi-x-circle"></i> Hủy đơn hàng
+                                </button>
+                            </form>
+                        }
+                        else if (Model.Status == "processing")
+                        {
+                            <form asp-action="CapNhatTrangThai" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                <input type="hidden" name="NewStatus" value="shipping" />
+                                <button type="submit" class="btn btn-coffee" style="width:100%;">
+                                    <i class="bi bi-truck"></i> Bàn giao vận chuyển
+                                </button>
+                            </form>
+                        }
+                        else if (Model.Status == "shipping")
+                        {
+                            <form asp-action="CapNhatTrangThai" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                <input type="hidden" name="NewStatus" value="delivered" />
+                                <button type="submit" class="btn btn-coffee" style="width:100%;">
+                                    <i class="bi bi-house-check"></i> Xác nhận đã giao
+                                </button>
+                            </form>
+                        }
+                        else if (Model.Status == "delivered" && Model.PaymentStatus == "unpaid")
+                        {
+                            <form asp-action="CapNhatTrangThai" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="OrderId" value="@Model.OrderId" />
+                                <input type="hidden" name="NewStatus" value="paid" />
+                                <button type="submit" class="btn btn-coffee" style="width:100%;background:#16a34a;"
+                                        onclick="return confirm('Xác nhận khách đã thanh toán tiền mặt?')">
+                                    <i class="bi bi-cash-coin"></i> Xác nhận đã thu tiền
+                                </button>
+                            </form>
+                        }
+                    </div>
+                }
+
+                <a asp-action="Index" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);display:block;text-align:center;">
+                    <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

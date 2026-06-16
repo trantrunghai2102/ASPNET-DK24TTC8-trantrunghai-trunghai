@@ -11,8 +11,15 @@ public class Order
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderId { get; set; }
 
+    [Column("customer_id")]
+    public int? CustomerId { get; set; }
+
     [Column("staff_id")]
     public int? StaffId { get; set; }
+
+    [Column("order_type")]
+    [StringLength(20)]
+    public string OrderType { get; set; } = "instore";
 
     [Column("total_amount", TypeName = "decimal(18,2)")]
     public decimal TotalAmount { get; set; }
@@ -28,6 +35,22 @@ public class Order
     [StringLength(30)]
     public string Status { get; set; } = "pending";
 
+    [Column("payment_status")]
+    [StringLength(20)]
+    public string PaymentStatus { get; set; } = "unpaid";
+
+    [Column("recipient_name")]
+    [StringLength(100)]
+    public string? RecipientName { get; set; }
+
+    [Column("recipient_phone")]
+    [StringLength(15)]
+    public string? RecipientPhone { get; set; }
+
+    [Column("delivery_address")]
+    [StringLength(300)]
+    public string? DeliveryAddress { get; set; }
+
     [Column("notes")]
     [StringLength(500)]
     public string? Notes { get; set; }
@@ -39,6 +62,9 @@ public class Order
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation
+    [ForeignKey(nameof(CustomerId))]
+    public User? Customer { get; set; }
+
     [ForeignKey(nameof(StaffId))]
     public User? Staff { get; set; }
 

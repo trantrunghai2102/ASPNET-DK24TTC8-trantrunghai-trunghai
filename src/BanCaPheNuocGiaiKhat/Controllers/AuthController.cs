@@ -288,12 +288,11 @@ public class AuthController : Controller
 
     [HttpGet]
     [Authorize(Roles = UserRoles.Staff)]
-    public IActionResult StaffHome() => View("~/Views/Staff/Home/Index.cshtml");
+    public IActionResult StaffHome() => RedirectToAction("Index", "BanHang");
 
     [HttpGet]
     [Authorize(Roles = UserRoles.Customer)]
-    public IActionResult CustomerHome() => View("~/Views/Customer/Home/Index.cshtml");
-
+    public IActionResult CustomerHome() => RedirectToAction("DonHangCuaToi", "DatHang");
     [HttpGet]
     [AllowAnonymous]
     public IActionResult AccessDenied() => View();
