@@ -75,7 +75,7 @@ Dự án áp dụng mô hình **MVC (Model – View – Controller)**:
                            │                 │
                            ▼                 ▼
                  ┌──────────────────────────────────┐
-                 │        MySQL 8.4                 │
+                 │        SQL Server 2025           │
                  │        Database: thedrinkvn_db   │
                  └──────────────────────────────────┘
 ```
