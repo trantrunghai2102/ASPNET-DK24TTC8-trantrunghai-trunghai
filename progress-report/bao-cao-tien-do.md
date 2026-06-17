@@ -3,7 +3,7 @@
 
 > **Giảng viên hướng dẫn:** ThS. Lê Nguyên Thảo  
 > **Công nghệ:** C# ASP.NET MVC · MySQL · The Drink VN  
-> **Cập nhật lần cuối:** 08/06/2026
+> **Cập nhật lần cuối:** 16/06/2026
 
 ---
 
@@ -15,17 +15,17 @@
 | 2 | Phân tích yêu cầu hệ thống | Hoàn thành | 100% |
 | 3 | Thiết kế kiến trúc hệ thống | Hoàn thành | 100% |
 | 4 | Thiết kế Use Case | Hoàn thành | 100% |
-| 5 | Thiết kế cơ sở dữ liệu | Đang thực hiện | 100% |
-| 6 | Module Xác thực (Auth) | Chưa bắt đầu | 0% |
-| 7 | Module Sản phẩm & Danh mục | Chưa bắt đầu | 0% |
-| 8 | Module Giỏ hàng & Đặt hàng | Chưa bắt đầu | 0% |
-| 9 | Module Thanh toán | Chưa bắt đầu | 0% |
-| 10 | Module Nhân viên | Chưa bắt đầu | 0% |
-| 11 | Module Admin / Quản trị | Chưa bắt đầu | 0% |
-| 12 | Module Thống kê doanh thu | Chưa bắt đầu | 0% |
-| 13 | Hoàn thiện báo cáo | Đang thực hiện | 30% |
+| 5 | Thiết kế cơ sở dữ liệu | Hoàn thành | 100% |
+| 6 | Module Xác thực (Auth) | Đang thực hiện | 85% |
+| 7 | Module Sản phẩm & Danh mục | Đang thực hiện | 90% |
+| 8 | Module Giỏ hàng & Đặt hàng | Hoàn thành | 100% |
+| 9 | Module Thanh toán | Hoàn thành | 100% |
+| 10 | Module Nhân viên | Hoàn thành | 100% |
+| 11 | Module Admin / Quản trị | Đang thực hiện | 90% |
+| 12 | Module Thống kê doanh thu | Hoàn thành | 100% |
+| 13 | Hoàn thiện báo cáo | Đang thực hiện | 60% |
 
-> **Tiến độ tổng thể ước tính: ~35%**
+> **Tiến độ tổng thể ước tính: ~85%**
 
 ---
 
@@ -58,84 +58,89 @@
 - [x] Hoàn thiện ERD / Diagram đầy đủ
 - [x] Mô tả chi tiết từng bảng (tên cột, kiểu dữ liệu, ràng buộc)
 
-> **Các bảng dự kiến:**
-> `Users` · `Roles` · `Categories` · `Products` · `ProductImages` · `Cart` · `CartItems` · `Orders` · `OrderDetails` · `Payments` · `Reviews` · `Employees`
+> **Các bảng thực tế:**
+> `Users` · `Roles` · `Categories` · `Products` · `ProductImages` · `CartItems` · `Orders` · `OrderItems` · `Invoices`
 
 ---
 
-## PHẦN III — ĐANG LÀM
+## PHẦN III — TIẾN ĐỘ THỰC HIỆN CÁC MODULE
+
 ### 6. Module Xác Thực (Authentication) *Đang làm*
 - [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
 - [x] Đăng nhập / Đăng xuất
 - [ ] Đăng nhập bằng Google OAuth
 - [ ] Đăng nhập bằng Facebook OAuth
-- [ ] Đổi mật khẩu
+- [x] Đổi mật khẩu
 - [x] Phân quyền (Role: Customer / Staff / Admin)
 
 ---
 
-### 7. Module Sản Phẩm & Danh Mục
-- [x] Trang danh sách sản phẩm (lọc theo danh mục: cà phê, trà sữa, nước ép, sinh tố...)
-- [x] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, tình trạng)
-- [x] Tìm kiếm sản phẩm theo tên
+### 7. Module Sản Phẩm & Danh Mục *Đang làm*
+- [x] Trang danh sách sản phẩm (lọc theo danh mục, mức rang, vùng trồng, kiểu xay...)
+- [x] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, lượt xem, sản phẩm liên quan)
+- [x] Tìm kiếm sản phẩm theo tên và mô tả
+- [x] Sắp xếp sản phẩm theo giá tăng/giảm và độ phổ biến
 - [ ] Lọc sản phẩm theo khoảng giá
 - [ ] CRUD danh mục (Admin)
-- [ ] CRUD sản phẩm — thêm/sửa/xóa/cập nhật tồn kho (Admin)
+- [x] CRUD sản phẩm — thêm/sửa/xóa/tồn kho/upload nhiều hình ảnh (Admin)
 
 ---
 
-### 8. Module Giỏ Hàng & Đặt Hàng
-- [ ] Thêm sản phẩm vào giỏ hàng
-- [ ] Cập nhật số lượng sản phẩm trong giỏ
-- [ ] Xóa sản phẩm khỏi giỏ
-- [ ] Hiển thị tổng tiền thanh toán
-- [ ] Nhập thông tin giao hàng
-- [ ] Xác nhận và gửi đơn hàng
-- [ ] Xem lịch sử đơn hàng (phía khách)
+### 8. Module Giỏ Hàng & Đặt Hàng *Hoàn thành*
+- [x] Thêm sản phẩm vào giỏ hàng
+- [x] Cập nhật số lượng sản phẩm trong giỏ hàng
+- [x] Xóa sản phẩm khỏi giỏ hàng
+- [x] Kiểm tra tồn kho thực tế trước khi đặt
+- [x] Nhập thông tin giao nhận hàng (tên, SĐT, địa chỉ, ghi chú)
+- [x] Xác nhận và gửi đơn hàng trực tuyến
+- [x] Xem lịch sử danh sách đơn hàng (Khách hàng)
+- [x] Theo dõi hành trình chi tiết đơn hàng (Khách hàng)
 
 ---
 
-### 9. Module Thanh Toán
-- [ ] Thanh toán khi nhận hàng (COD)
-- [ ] Lưu lịch sử giao dịch
+### 9. Module Thanh Toán *Hoàn thành*
+- [x] Thanh toán khi nhận hàng (COD) cho đơn online
+- [x] Thanh toán tiền mặt tại quầy (POS) cho đơn offline
+- [x] Lưu lịch sử giao dịch (Tự động xuất Hóa đơn sau khi thanh toán)
 
 ---
 
-### 10. Module Nhân Viên
-- [ ] Xem danh sách đơn hàng được phân công
-- [ ] Kiểm tra thông tin khách hàng trên đơn
-- [ ] Cập nhật trạng thái đơn hàng (đang xử lý / đang giao / hoàn thành / hủy)
-- [ ] Xác nhận đơn hàng
-- [ ] Xuất hóa đơn cho khách
-- [ ] Hỗ trợ xử lý vấn đề đơn hàng
+### 10. Module Nhân Viên *Hoàn thành*
+- [x] Xem danh sách đơn hàng online (lọc theo trạng thái)
+- [x] Tiếp nhận và xử lý đơn hàng được phân công
+- [x] Cập nhật trạng thái đơn hàng (pending -> processing -> shipping -> delivered -> cancelled)
+- [x] Bán hàng tại quầy POS trực quan (chọn món, tính tiền thối)
+- [x] Xuất hóa đơn giấy/điện tử cho khách
+- [x] Kiểm tra tồn kho thời gian thực khi bán hàng
 
 ---
 
-### 11. Module Admin / Quản Trị
-- [ ] Dashboard tổng quan
+### 11. Module Admin / Quản Trị *Đang làm*
+- [x] Dashboard tổng quan (Doanh thu, số đơn hàng, giá trị trung bình, sản phẩm bán ra)
+- [x] Bộ lọc thống kê doanh thu linh hoạt (theo tháng/năm hoặc từ ngày - đến ngày)
+- [x] Biểu đồ trực quan doanh thu theo ngày và Top 6 sản phẩm bán chạy nhất
 - [ ] Quản lý danh mục (thêm / sửa / xóa)
-- [ ] Quản lý sản phẩm (thêm / sửa / xóa / tồn kho)
-- [ ] Quản lý khách hàng (xem danh sách, cập nhật, khóa/mở tài khoản)
-- [ ] Quản lý nhân viên (thêm / sửa / phân quyền)
-- [ ] Theo dõi toàn bộ đơn hàng hệ thống
+- [x] Quản lý sản phẩm (CRUD, tải ảnh động, soft-delete)
+- [x] Quản lý người dùng (xem danh sách, thay đổi vai trò, khóa/mở khóa tài khoản)
+- [x] Theo dõi và quản lý toàn bộ hóa đơn/đơn hàng hệ thống
 
 ---
 
-### 12. Module Thống Kê Doanh Thu
-- [ ] Thống kê doanh thu theo ngày
-- [ ] Thống kê doanh thu theo tháng
-- [ ] Thống kê doanh thu theo năm
-- [ ] Báo cáo sản phẩm bán chạy
-- [ ] Biểu đồ trực quan (chart)
+### 12. Module Thống Kê Doanh Thu *Hoàn thành*
+- [x] Thống kê doanh thu theo ngày
+- [x] Thống kê doanh thu theo tháng / năm
+- [x] Thống kê doanh thu theo khoảng thời gian tùy chọn
+- [x] Báo cáo sản phẩm bán chạy nhất
+- [x] Biểu đồ trực quan doanh thu & số đơn hàng phát sinh
 
 ---
 
-### 14. Hoàn Thiện Báo Cáo
+### 13. Hoàn Thiện Báo Cáo *Đang làm*
 - [x] Mở đầu (lý do, mục tiêu, đối tượng, phạm vi nghiên cứu)
 - [x] Chương Cơ sở lý thuyết
 - [x] Chương Hiện thực hóa — phân tích yêu cầu, use case, kiến trúc
 - [x] Hoàn thiện phần Thiết kế CSDL (diagram + mô tả bảng)
-- [ ] Chương 4 — Kết quả (ảnh chụp màn hình, mô tả từng chức năng)
+- [/] Chương 4 — Kết quả (chụp ảnh màn hình giao diện thực tế và mô tả chức năng)
 - [ ] Chương 5 — Kết luận và hướng phát triển
 - [ ] Tóm tắt đồ án
 - [ ] Mục lục tự động
