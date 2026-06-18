@@ -54,7 +54,7 @@ public class DonHangOnlineController : Controller
             })
             .ToListAsync();
 
-        return View(new DonHangOnlineListViewModel
+        return View("~/Views/Staff/DonHangOnline/Index.cshtml", new DonHangOnlineListViewModel
         {
             Orders       = orders,
             FilterStatus = status,
@@ -98,7 +98,7 @@ public class DonHangOnlineController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Staff/DonHangOnline/ChiTiet.cshtml", vm);
     }
 
     // POST /DonHangOnline/CapNhatTrangThai

@@ -6,24 +6,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Staff)]
-public class HoaDonController : Controller
+[Authorize(Roles = UserRoles.Staff)]
+public class StaffHoaDonController : Controller
 {
     private readonly AppDbContext _db;
 
-    public HoaDonController(AppDbContext db)
+    public StaffHoaDonController(AppDbContext db)
     {
         _db = db;
     }
 
-    // GET /HoaDon
-    public async Task<IActionResult> Index(int page = 1)
+    // GET /StaffHoaDon
+    public async Task<IActionResult> Index(int page = 1, string type = "")
     {
         const int pageSize = 10;
 
-         var query = _db.Invoices
+        var query = _db.Invoices
             .Include(i => i.Order).ThenInclude(o => o.Staff)
-            .OrderByDescending(i => i.PaidAt);
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(type))
+        {
+            query = query.Where(i => i.Order.OrderType == type);
+        }
+
+        query = query.OrderByDescending(i => i.PaidAt);
 
         int totalItems = await query.CountAsync();
         int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
@@ -39,7 +46,8 @@ public class HoaDonController : Controller
                 InvoiceCode = i.InvoiceCode,
                 PaidAt      = i.PaidAt,
                 TotalAmount = i.TotalAmount,
-                StaffName   = i.Order.Staff != null ? i.Order.Staff.FullName : null
+                StaffName   = i.Order.Staff != null ? i.Order.Staff.FullName : null,
+                OrderType   = i.Order.OrderType
             })
             .ToListAsync();
 
@@ -55,37 +63,14 @@ public class HoaDonController : Controller
             PendingOrders = pending,
             ProcessingOrders = processing,
             CompletedOrders = completed,
-            TotalOrders = pending + processing + completed
+            TotalOrders = pending + processing + completed,
+            FilterType = type
         };
 
-        if (User.IsInRole(UserRoles.Admin))
-        {
-            return View("~/Views/Admin/HoaDon/Index.cshtml", viewModel);
-        }
-
-        return View("~/Views/HoaDon/Index.cshtml", viewModel);
+        return View("~/Views/Staff/HoaDon/Index.cshtml", viewModel);
     }
 
-    // POST /HoaDon/Xoa/{id}
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Xoa(int id)
-    {
-        var invoice = await _db.Invoices
-            .Include(i => i.Order)
-            .FirstOrDefaultAsync(i => i.InvoiceId == id);
-
-        if (invoice == null) return NotFound();
-
-        var code = invoice.InvoiceCode;
-        _db.Orders.Remove(invoice.Order);
-        await _db.SaveChangesAsync();
-
-        TempData["Success"] = $"Đã xóa hóa đơn {code}.";
-        return RedirectToAction(nameof(Index));
-    }
-
-    // GET /HoaDon/ChiTiet/{id}
+    // GET /StaffHoaDon/ChiTiet/{id}
     public async Task<IActionResult> ChiTiet(int id)
     {
         var invoice = await _db.Invoices
@@ -113,6 +98,25 @@ public class HoaDonController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Staff/HoaDon/ChiTiet.cshtml", vm);
+    }
+
+    // POST /StaffHoaDon/Xoa/{id}
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Xoa(int id)
+    {
+        var invoice = await _db.Invoices
+            .Include(i => i.Order)
+            .FirstOrDefaultAsync(i => i.InvoiceId == id);
+
+        if (invoice == null) return NotFound();
+
+        var code = invoice.InvoiceCode;
+        _db.Orders.Remove(invoice.Order);
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = $"Đã xóa hóa đơn {code}.";
+        return RedirectToAction(nameof(Index));
     }
 }

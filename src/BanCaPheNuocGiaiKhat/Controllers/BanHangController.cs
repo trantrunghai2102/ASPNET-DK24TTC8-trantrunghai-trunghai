@@ -35,7 +35,7 @@ public class BanHangController : Controller
             .OrderBy(p => p.Name)
             .ToListAsync();
 
-        return View(new BanHangViewModel { Products = products });
+        return View("~/Views/Staff/BanHang/Index.cshtml", new BanHangViewModel { Products = products });
     }
 
     // POST /BanHang/TaoHoaDon
@@ -144,7 +144,7 @@ public class BanHangController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Staff/BanHang/ThanhToan.cshtml", vm);
     }
 
     // POST /BanHang/XacNhanThanhToan
@@ -190,6 +190,6 @@ public class BanHangController : Controller
         _db.Invoices.Add(invoice);
         await _db.SaveChangesAsync();
 
-        return RedirectToAction("ChiTiet", "HoaDon", new { id = invoice.InvoiceId });
+        return RedirectToAction("ChiTiet", "StaffHoaDon", new { id = invoice.InvoiceId });
     }
 }

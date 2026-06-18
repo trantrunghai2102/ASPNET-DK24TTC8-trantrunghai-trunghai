@@ -1,7 +1,6 @@
 @model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
 @{
     ViewData["Title"] = "Quản lý hóa đơn";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <header class="admin-topbar" style="margin-bottom: 2rem;">
@@ -20,15 +19,19 @@
     <div class="admin-panel">
         <div class="admin-panel__header">
             <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ALL INVOICES</small>
-            <div style="display:flex; border: 1px solid #d8c4b7; border-radius: 4px; overflow: hidden;">
-                <button style="padding: .3rem .8rem; border:none; background: #fbf4ef; font-size:.75rem; font-weight:700; color:#5b351f;">All</button>
-                <button style="padding: .3rem .8rem; border:none; border-left: 1px solid #d8c4b7; background: #fff; font-size:.75rem; font-weight:600; color:#6d5a4d;">Today</button>
-            </div>
+            <form method="get" style="display:flex; gap: .5rem; align-items:center;">
+                <select name="type" onchange="this.form.submit()" style="padding: .4rem .6rem; border: 1px solid #d8c4b7; border-radius: 4px; background: #fff; font-size: .8rem; font-weight: 600; color: #4e3a2f; outline: none; cursor: pointer;">
+                    <option value="">Tất cả loại đơn</option>
+                    @if (Model.FilterType == "instore") { <option value="instore" selected>Tại quầy (POS)</option> } else { <option value="instore">Tại quầy (POS)</option> }
+                    @if (Model.FilterType == "online") { <option value="online" selected>Trực tuyến (Online)</option> } else { <option value="online">Trực tuyến (Online)</option> }
+                </select>
+            </form>
         </div>
         
         <div class="admin-product-table">
-            <div class="admin-product-table__head" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
+            <div class="admin-product-table__head" style="grid-template-columns: 110px 100px 130px minmax(120px, 1fr) 100px;">
                 <span>Code</span>
+                <span>Loại đơn</span>
                 <span>Date</span>
                 <span>Staff</span>
                 <span style="text-align: right;">Amount</span>
@@ -42,8 +45,11 @@
             {
                 foreach (var hd in Model.Invoices)
                 {
-                    <div class="admin-product-table__row" style="grid-template-columns: 110px 130px minmax(120px, 1fr) 100px;">
+                    <div class="admin-product-table__row" style="grid-template-columns: 110px 100px 130px minmax(120px, 1fr) 100px;">
                         <div><span class="admin-status">@hd.InvoiceCode</span></div>
+                        <div style="font-size:.8rem; color:#6d5a4d;">
+                            @if (hd.OrderType == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
+                        </div>
                         <div style="font-size:.8rem; font-weight:600; color:#231a15;">@hd.PaidAt.ToLocalTime().ToString("MMM dd, HH:mm")</div>
                         <div style="font-size:.8rem; color:#6d5a4d;">@(hd.StaffName ?? "—")</div>
                         <div style="font-size:.85rem; font-weight:700; color:#231a15; text-align: right;">@hd.TotalAmount.ToString("N0") đ</div>

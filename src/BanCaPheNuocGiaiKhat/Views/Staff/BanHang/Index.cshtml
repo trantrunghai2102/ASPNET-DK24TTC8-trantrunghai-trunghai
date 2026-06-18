@@ -1,7 +1,6 @@
 @model BanCaPheNuocGiaiKhat.Models.BanHangViewModel
 @{
     ViewData["Title"] = "Bán hàng";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
@@ -22,7 +21,7 @@
 }
 .pos-inner {
     display: grid;
-    grid-template-columns: 175px 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 1rem;
 }
 .pos-tree {
@@ -337,7 +336,7 @@
                    style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:var(--coffee-dark);color:#fff;border:1px solid var(--coffee-dark);border-radius:var(--radius-md);font-size:.85rem;font-weight:600;text-decoration:none;white-space:nowrap;">
                     <i class="bi bi-box-seam"></i> Đơn hàng online
                 </a>
-                <a asp-controller="HoaDon" asp-action="Index"
+                <a asp-controller="StaffHoaDon" asp-action="Index"
                    style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-md);font-size:.85rem;font-weight:600;text-decoration:none;white-space:nowrap;">
                     <i class="bi bi-receipt"></i> Xem hóa đơn
                 </a>

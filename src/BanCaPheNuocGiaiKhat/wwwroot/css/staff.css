@@ -1,0 +1,100 @@
+/* ============================================================
+   STAFF INTERFACE STYLES
+   ============================================================ */
+
+.staff-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  color: #231a15;
+  background: #fdfaf7;
+}
+
+.staff-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.8rem 1rem;
+  background: #f5f0eb;
+  border-right: 1px solid #e0d5cc;
+}
+
+.staff-brand {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .4rem .55rem;
+}
+
+.staff-brand__mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #c49a6c;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.staff-brand strong {
+  display: block;
+  font-size: .96rem;
+  font-weight: 800;
+}
+
+.staff-brand small {
+  display: block;
+  margin-top: .1rem;
+  color: #715b4d;
+  font-size: .72rem;
+  font-weight: 600;
+}
+
+.staff-nav {
+  display: grid;
+  gap: .35rem;
+}
+
+.staff-nav a,
+.staff-sidebar__footer a,
+.staff-sidebar__footer button {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 .75rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #4c3a30;
+  font-size: .78rem;
+  font-weight: 750;
+  text-align: left;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.staff-nav a:hover,
+.staff-nav a.active,
+.staff-sidebar__footer a:hover,
+.staff-sidebar__footer button:hover {
+  background: #6b4226;
+  color: #fff;
+}
+
+.staff-sidebar__footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e0d5cc;
+}
+
+.staff-main {
+  padding: 2rem;
+  overflow: hidden;
+}

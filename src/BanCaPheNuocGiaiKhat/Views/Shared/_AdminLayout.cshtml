@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <a asp-controller="SanPham" asp-action="Create" class="admin-new-product">
+            <a asp-controller="AdminSanPham" asp-action="Create" class="admin-new-product">
                 <i class="bi bi-plus-lg"></i>
                 NEW PRODUCT
             </a>
@@ -31,13 +31,13 @@
                     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
                     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
                 }
-                <a asp-controller="Auth" asp-action="AdminHome" class="@(currentController == "Auth" && currentAction == "AdminHome" ? "active" : "")">
+                <a asp-controller="AdminDashboard" asp-action="Index" class="@(currentController == "AdminDashboard" ? "active" : "")">
                     <i class="bi bi-grid"></i> DASHBOARD
                 </a>
-                <a asp-controller="HoaDon" asp-action="Index" class="@(currentController == "HoaDon" ? "active" : "")">
+                <a asp-controller="AdminHoaDon" asp-action="Index" class="@(currentController == "AdminHoaDon" ? "active" : "")">
                     <i class="bi bi-receipt"></i> ORDERS
                 </a>
-                <a asp-controller="SanPham" asp-action="AdminIndex" class="@(currentController == "SanPham" && (currentAction == "AdminIndex" || currentAction == "Create") ? "active" : "")">
+                <a asp-controller="AdminSanPham" asp-action="Index" class="@(currentController == "AdminSanPham" || (currentController == "AdminSanPham" && currentAction == "Create") ? "active" : "")">
                     <i class="bi bi-cup"></i> PRODUCTS
                 </a>
                 @if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Admin))

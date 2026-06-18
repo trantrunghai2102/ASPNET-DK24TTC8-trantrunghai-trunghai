@@ -8,6 +8,7 @@ public class HoaDonTomTatViewModel
     public DateTime PaidAt { get; set; }
     public decimal TotalAmount { get; set; }
     public string? StaffName { get; set; }
+    public string OrderType { get; set; } = string.Empty;
 }
 
 public class DanhSachHoaDonViewModel
@@ -22,6 +23,7 @@ public class DanhSachHoaDonViewModel
     public int ProcessingOrders { get; set; }
     public int CompletedOrders { get; set; }
     public int TotalOrders { get; set; }
+    public string FilterType { get; set; } = string.Empty;
 }
 
 public class HoaDonItemViewModel

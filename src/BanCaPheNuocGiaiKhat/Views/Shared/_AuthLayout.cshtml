@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TheDrinkVN – Artisan coffee & beverages, crafted for the true aficionado." />
+    <title>@ViewData["Title"] – TheDrinkVN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="auth-page">
+
+    <!-- Back-to-home link overlaid on auth pages -->
+    <a asp-controller="Home" asp-action="Index" class="auth-back-home" aria-label="Quay lại trang chủ">
+        <i class="bi bi-arrow-left" style="font-size:16px;"></i>
+        TheDrinkVN
+    </a>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

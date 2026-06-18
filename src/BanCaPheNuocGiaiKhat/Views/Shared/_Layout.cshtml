@@ -11,42 +11,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Auth" ? "auth-page" : "")">
+<body>
 
-@{
-    var isAuth = ViewContext.RouteData.Values["controller"]?.ToString() == "Auth";
-}
-
-@if (!isAuth)
-{
-
-    <!-- Navbar -->
+    <!-- Navbar (Public / Guest) -->
     <nav class="site-nav" id="site-navbar">
         <div class="site-nav__inner">
             <a asp-controller="Home" asp-action="Index" class="site-nav__brand">TheDrinkVN</a>
 
             <ul class="site-nav__links">
                 <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Shop</a></li>
-                 @if (User.IsInRole("staff"))
-                {
-                    <li>
-                        <a asp-controller="BanHang"
-                        asp-action="Index"
-                        class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "BanHang" ? "active" : "")">
-                            Sales Desk
-                        </a>
-                    </li>
-                }
-                @if (User.IsInRole("customer"))
-                {
-                    <li>
-                        <a asp-controller="DatHang"
-                           asp-action="DonHangCuaToi"
-                           class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DatHang" ? "active" : "")">
-                            Đơn hàng
-                        </a>
-                    </li>
-                }
             </ul>
 
             <div class="site-nav__right">
@@ -54,13 +27,6 @@
                     <i class="bi bi-search"></i>
                     <input type="text" placeholder="Search coffees..." aria-label="Search" />
                 </div>
-
-                  @if (User.IsInRole("customer"))
-                {
-                    <a asp-controller="GioHang" asp-action="Index" class="site-nav__icon-btn" aria-label="Cart" title="Giỏ hàng">
-                        <i class="bi bi-bag" style="font-size:17px;"></i>
-                    </a>
-                }
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
@@ -100,29 +66,12 @@
             </div>
         </div>
     </nav>
-}
 
-<!-- Main content -->
-@if (isAuth)
-{
-    <!-- Back-to-home link overlaid on auth pages -->
-    <a asp-controller="Home" asp-action="Index" class="auth-back-home" aria-label="Quay lại trang chủ">
-        <i class="bi bi-arrow-left" style="font-size:16px;"></i>
-        TheDrinkVN
-    </a>
-    <main role="main">
-        @RenderBody()
-    </main>
-}
-else
-{
+    <!-- Main content -->
     <main role="main" class="page-main">
         @RenderBody()
     </main>
-}
 
-@if (!isAuth)
-{
     <!-- Footer -->
     <footer class="site-footer">
         <div class="site-footer__inner">
@@ -159,7 +108,6 @@ else
             </div>
         </div>
     </footer>
-}
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

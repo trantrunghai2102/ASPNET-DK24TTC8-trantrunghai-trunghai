@@ -41,7 +41,7 @@ public class GioHangController : Controller
             })
             .ToListAsync();
 
-        return View(new GioHangViewModel { Items = items });
+        return View("~/Views/Customer/GioHang/Index.cshtml", new GioHangViewModel { Items = items });
     }
 
     // POST /GioHang/Them
