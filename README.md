@@ -232,89 +232,62 @@ dotnet run
 
 ---
 
-### Đang thực hiện — Module Đăng Ký / Đăng Nhập (Auth)
-
-> _Bắt đầu: 08/06/2026_
-
+#### 6. Module Xác Thực (Auth)
 - [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
 - [x] Đăng nhập / Đăng xuất
-- [ ] Đăng nhập bằng Google OAuth
-- [ ] Đăng nhập bằng Facebook OAuth
-- [ ] Đổi mật khẩu
+- [x] Đổi mật khẩu / Quên mật khẩu trực tiếp
 - [x] Phân quyền (Role: Customer / Staff / Admin)
+
+#### 7. Module Sản Phẩm & Danh Mục
+- [x] Trang danh sách sản phẩm (lọc theo danh mục: cà phê, trà sữa, nước ép, sinh tố…)
+- [x] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, tình trạng)
+- [x] Tìm kiếm sản phẩm theo tên
+- [x] Sắp xếp sản phẩm theo giá tăng/giảm và độ phổ biến
+- [x] Lọc sản phẩm theo danh mục
+- [x] CRUD danh mục (Admin)
+- [x] CRUD sản phẩm — thêm/sửa/xóa/cập nhật tồn kho (Admin)
+
+#### 8. Module Giỏ Hàng & Đặt Hàng
+- [x] Thêm sản phẩm vào giỏ hàng
+- [x] Cập nhật số lượng sản phẩm trong giỏ
+- [x] Xóa sản phẩm khỏi giỏ
+- [x] Hiển thị tổng tiền thanh toán
+- [x] Nhập thông tin giao hàng
+- [x] Xác nhận và gửi đơn hàng trực tuyến
+- [x] Xem lịch sử đơn hàng và theo dõi hành trình (phía khách)
+
+#### 9. Module Thanh Toán
+- [x] Thanh toán khi nhận hàng (COD) cho đơn online
+- [x] Thanh toán tiền mặt tại quầy (POS) cho đơn offline
+- [x] Lưu lịch sử giao dịch và xuất hóa đơn
+
+#### 10. Module Nhân Viên
+- [x] Xem danh sách đơn hàng online được phân công
+- [x] Cập nhật trạng thái đơn hàng (chờ xử lý / đang giao / hoàn thành / hủy)
+- [x] Bán hàng tại quầy POS trực tiếp cực kỳ nhanh chóng
+- [x] Xem chi tiết hóa đơn
+- [x] Kiểm tra tồn kho thời gian thực khi bán
+
+#### 11. Module Admin / Quản Trị
+- [x] Dashboard tổng quan với biểu đồ trực quan
+- [x] Lọc báo cáo thống kê linh hoạt (theo tháng/năm, từ ngày đến ngày)
+- [x] Quản lý danh mục (thêm / sửa / xóa)
+- [x] Quản lý sản phẩm (thêm / sửa / xóa / tồn kho / upload nhiều ảnh động)
+- [x] Quản lý người dùng (xem danh sách, cập nhật role, khóa/mở tài khoản)
+- [x] Theo dõi toàn bộ hóa đơn/đơn hàng hệ thống
+
+#### 12. Module Thống Kê Doanh Thu
+- [x] Thống kê doanh thu theo ngày/tháng/năm
+- [x] Báo cáo Top 6 sản phẩm bán chạy nhất
+- [x] Biểu đồ trực quan (chart) doanh thu và đơn hàng
 
 ---
 
-### Chưa thực hiện
+### Khó Khăn & Hạn Chế Còn Tồn Tại
 
-<details>
-<summary><b>7. Module Sản Phẩm & Danh Mục</b></summary>
-
-- [ ] Trang danh sách sản phẩm (lọc theo danh mục: cà phê, trà sữa, nước ép, sinh tố…)
-- [ ] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, tình trạng)
-- [ ] Tìm kiếm sản phẩm theo tên
-- [ ] Lọc sản phẩm theo khoảng giá
-- [ ] CRUD danh mục (Admin)
-- [ ] CRUD sản phẩm — thêm/sửa/xóa/cập nhật tồn kho (Admin)
-
-</details>
-
-<details>
-<summary><b>8. Module Giỏ Hàng & Đặt Hàng</b></summary>
-
-- [ ] Thêm sản phẩm vào giỏ hàng
-- [ ] Cập nhật số lượng sản phẩm trong giỏ
-- [ ] Xóa sản phẩm khỏi giỏ
-- [ ] Hiển thị tổng tiền thanh toán
-- [ ] Nhập thông tin giao hàng
-- [ ] Xác nhận và gửi đơn hàng
-- [ ] Xem lịch sử đơn hàng (phía khách)
-
-</details>
-
-<details>
-<summary><b>9. Module Thanh Toán</b></summary>
-
-- [ ] Thanh toán khi nhận hàng (COD)
-- [ ] Thanh toán trực tuyến (cổng thanh toán điện tử)
-- [ ] Lưu lịch sử giao dịch
-
-</details>
-
-<details>
-<summary><b>10. Module Nhân Viên</b></summary>
-
-- [ ] Xem danh sách đơn hàng được phân công
-- [ ] Kiểm tra thông tin khách hàng trên đơn
-- [ ] Cập nhật trạng thái đơn hàng (đang xử lý / đang giao / hoàn thành / hủy)
-- [ ] Xác nhận đơn hàng
-- [ ] Xuất hóa đơn cho khách
-- [ ] Hỗ trợ xử lý vấn đề đơn hàng
-
-</details>
-
-<details>
-<summary><b>11. Module Admin / Quản Trị</b></summary>
-
-- [ ] Dashboard tổng quan
-- [ ] Quản lý danh mục (thêm / sửa / xóa)
-- [ ] Quản lý sản phẩm (thêm / sửa / xóa / tồn kho)
-- [ ] Quản lý khách hàng (xem danh sách, cập nhật, khóa/mở tài khoản)
-- [ ] Quản lý nhân viên (thêm / sửa / phân quyền)
-- [ ] Theo dõi toàn bộ đơn hàng hệ thống
-
-</details>
-
-<details>
-<summary><b>12. Module Thống Kê Doanh Thu</b></summary>
-
-- [ ] Thống kê doanh thu theo ngày
-- [ ] Thống kê doanh thu theo tháng
-- [ ] Thống kê doanh thu theo năm
-- [ ] Báo cáo sản phẩm bán chạy
-- [ ] Biểu đồ trực quan (chart)
-
-</details>
+- **Xác thực qua Email**: Chưa áp dụng được tính năng gửi email xác thực tài khoản và mã OTP (do khó khăn trong việc thiết lập SMTP Server/SendGrid trong môi trường dev).
+- **Đăng nhập Mạng xã hội**: Chưa tích hợp thành công đăng nhập qua **Google OAuth** và **Facebook OAuth** do các vấn đề liên quan đến cấu hình API Key và HTTPS redirect URIs của bên thứ ba.
+- **Thanh toán trực tuyến**: Chưa liên kết được với các cổng thanh toán điện tử (VNPay, MoMo) do vướng thủ tục đăng ký sandbox doanh nghiệp.
 
 ---
 
