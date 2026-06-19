@@ -144,14 +144,10 @@ Cafe_Website/
 | 3 | `categories` | Danh mục sản phẩm đồ uống, hỗ trợ phân cấp bằng `parent_id` |
 | 4 | `products` | Sản phẩm đồ uống, giá bán, mô tả, tồn kho và trạng thái |
 | 5 | `product_images` | Thư viện hình ảnh sản phẩm, hỗ trợ nhiều ảnh cho mỗi sản phẩm |
-| 6 | `payment_methods` | Danh mục phương thức thanh toán: COD, VNPay, MoMo, ZaloPay |
-| 7 | `shipping_addresses` | Địa chỉ giao hàng đã lưu của khách hàng |
-| 8 | `orders` | Đơn hàng, thông tin giao hàng, tổng tiền, thanh toán và trạng thái xử lý |
-| 9 | `order_items` | Chi tiết sản phẩm trong đơn hàng, lưu snapshot thông tin lúc đặt |
-| 10 | `cart_items` | Giỏ hàng tạm thời cho khách đăng nhập hoặc khách vãng lai |
-| 11 | `vouchers` | Mã giảm giá và chương trình khuyến mãi |
-| 12 | `voucher_usage` | Lịch sử áp dụng mã giảm giá cho đơn hàng |
-| 13 | `invoices` | Hóa đơn bán hàng sau khi đơn hàng giao thành công |
+| 6 | `orders` | Đơn hàng, thông tin giao hàng, tổng tiền, thanh toán và trạng thái xử lý |
+| 7 | `order_items` | Chi tiết sản phẩm trong đơn hàng, lưu snapshot thông tin lúc đặt |
+| 8 | `cart_items` | Giỏ hàng tạm thời cho khách đăng nhập hoặc khách vãng lai |
+| 9 | `invoices` | Hóa đơn bán hàng sau khi đơn hàng giao thành công |
 
 > ERD (Entity Relationship Diagram) chi tiết xem tại file báo cáo: [`thesis/doc/BaoCaoDoAnCafeGiaiKhat.doc`](thesis/doc/BaoCaoDoAnCafeGiaiKhat.doc)
 ---
