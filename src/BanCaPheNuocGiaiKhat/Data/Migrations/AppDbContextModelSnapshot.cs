@@ -314,11 +314,6 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("detail_desc");
 
-                    b.Property<string>("GrindType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("grind_type");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -328,16 +323,6 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                     b.Property<decimal?>("PromotionPrice")
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("promotion_price");
-
-                    b.Property<string>("Region")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("region");
-
-                    b.Property<string>("RoastLevel")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("roast_level");
 
                     b.Property<string>("ShortDesc")
                         .HasMaxLength(500)
@@ -392,14 +377,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 1,
-                            BasePrice = 22.00m,
+                            BasePrice = 220000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Ethiopian Yirgacheffe coffee is dry-processed, bringing out the bright, clean taste profile. Notes of citrus and floral aromas are dominant.",
-                            GrindType = "whole-bean",
                             Name = "Ethiopia Yirgacheffe",
-                            Region = "africa",
-                            RoastLevel = "light",
                             ShortDesc = "Floral notes with hints of jasmine and bright citrus. Light roast.",
                             Slug = "ethiopia-yirgacheffe",
                             Status = "active",
@@ -411,14 +393,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 2,
-                            BasePrice = 19.50m,
+                            BasePrice = 190000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Colombia Supremo beans are carefully selected and roasted to a medium profile to balance the natural acidity with nutty tones.",
-                            GrindType = "whole-bean",
                             Name = "Colombia Supremo",
-                            Region = "south-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Smooth, balanced body with caramel sweetness and a nutty finish. Medium roast.",
                             Slug = "colombia-supremo",
                             Status = "active",
@@ -430,14 +409,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 3,
-                            BasePrice = 21.00m,
+                            BasePrice = 210000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Sumatra Mandheling coffee is known for its heavy body and low acidity, featuring unique cedar wood and herbal notes.",
-                            GrindType = "whole-bean",
                             Name = "Sumatra Mandheling",
-                            Region = "asia-pacific",
-                            RoastLevel = "dark",
                             ShortDesc = "Full-bodied, earthy, and complex with low acidity. Dark roast.",
                             Slug = "sumatra-mandheling",
                             Status = "active",
@@ -449,14 +425,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 4,
-                            BasePrice = 24.00m,
+                            BasePrice = 240000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Our signature espresso blend combines beans from South America and Africa, roasted dark to bring out rich cocoa and toasted nut flavors.",
-                            GrindType = "whole-bean",
                             Name = "Artisan Espresso Blend",
-                            Region = "south-america",
-                            RoastLevel = "espresso",
                             ShortDesc = "Rich crema, notes of dark chocolate and toasted almonds. Espresso roast.",
                             Slug = "artisan-espresso-blend",
                             Status = "active",
@@ -468,14 +441,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 5,
-                            BasePrice = 20.50m,
+                            BasePrice = 200000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Guatemala Antigua beans are grown in volcanic soil, resulting in a unique smoky flavor combined with a light citrus brightness.",
-                            GrindType = "whole-bean",
                             Name = "Guatemala Antigua",
-                            Region = "central-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Spicy and smoky undertones with a crisp apple acidity. Medium roast.",
                             Slug = "guatemala-antigua",
                             Status = "active",
@@ -487,14 +457,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 6,
-                            BasePrice = 23.50m,
+                            BasePrice = 230000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Kenya AA is processed using wet method, offering an exceptionally intense and clean cup.",
-                            GrindType = "whole-bean",
                             Name = "Kenya AA",
-                            Region = "africa",
-                            RoastLevel = "light",
                             ShortDesc = "Bright acidity with blackcurrant and berry notes.",
                             Slug = "kenya-aa",
                             Status = "active",
@@ -506,14 +473,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 7,
-                            BasePrice = 18.00m,
+                            BasePrice = 180000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Classic Brazilian coffee bean, roasted to highlight its natural sweetness.",
-                            GrindType = "whole-bean",
                             Name = "Brazil Santos",
-                            Region = "south-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Low acidity, smooth body with sweet chocolate notes.",
                             Slug = "brazil-santos",
                             Status = "active",
@@ -525,14 +489,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 8,
-                            BasePrice = 20.00m,
+                            BasePrice = 200000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Tarrazu region provides one of the finest beans in Central America.",
-                            GrindType = "whole-bean",
                             Name = "Costa Rica Tarrazu",
-                            Region = "central-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Crisp acidity with sweet honey and citrus flavors.",
                             Slug = "costa-rica-tarrazu",
                             Status = "active",
@@ -544,14 +505,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 9,
-                            BasePrice = 21.50m,
+                            BasePrice = 210000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Ground Ethiopian Sidamo coffee ready for drip brewing.",
-                            GrindType = "medium",
                             Name = "Ethiopian Sidamo Ground",
-                            Region = "africa",
-                            RoastLevel = "light",
                             ShortDesc = "Floral aroma with notes of lemon and cane sugar.",
                             Slug = "ethiopian-sidamo-ground",
                             Status = "active",
@@ -563,14 +521,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 10,
-                            BasePrice = 19.00m,
+                            BasePrice = 190000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Ground French roast ideal for French Press brewing.",
-                            GrindType = "coarse",
                             Name = "French Roast Blend",
-                            Region = "south-america",
-                            RoastLevel = "dark",
                             ShortDesc = "Intensely dark and smoky with a heavy body.",
                             Slug = "french-roast-blend",
                             Status = "active",
@@ -582,14 +537,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 11,
-                            BasePrice = 19.50m,
+                            BasePrice = 190000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Fine ground Italian roast optimized for espresso machines.",
-                            GrindType = "fine",
                             Name = "Italian Roast Espresso Ground",
-                            Region = "south-america",
-                            RoastLevel = "espresso",
                             ShortDesc = "Rich, dark roast optimized for espresso brewing.",
                             Slug = "italian-roast-espresso-ground",
                             Status = "active",
@@ -601,7 +553,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 12,
-                            BasePrice = 25.00m,
+                            BasePrice = 250000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Premium Japanese ceramic pour-over dripper.",
@@ -617,7 +569,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 13,
-                            BasePrice = 45.00m,
+                            BasePrice = 450000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Chemex glass coffeemaker with wood collar and leather tie.",
@@ -633,7 +585,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 14,
-                            BasePrice = 39.99m,
+                            BasePrice = 390000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Aeropress travel version with convenient mug/carrying case.",
@@ -649,14 +601,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 15,
-                            BasePrice = 22.50m,
+                            BasePrice = 220000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Java Preanger beans from West Java volcanic highlands.",
-                            GrindType = "whole-bean",
                             Name = "Java Preanger",
-                            Region = "asia-pacific",
-                            RoastLevel = "medium",
                             ShortDesc = "Traditional Indonesian cup with sweet herbal nuances.",
                             Slug = "java-preanger",
                             Status = "active",
@@ -668,14 +617,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 16,
-                            BasePrice = 16.50m,
+                            BasePrice = 160000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Buon Ma Thuot high-grade robusta beans with strong flavor.",
-                            GrindType = "whole-bean",
                             Name = "Vietnam Robusta Special",
-                            Region = "asia-pacific",
-                            RoastLevel = "dark",
                             ShortDesc = "Bold, high-caffeine Robusta beans from Buon Ma Thuot.",
                             Slug = "vietnam-robusta-special",
                             Status = "active",
@@ -687,14 +633,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 17,
-                            BasePrice = 19.90m,
+                            BasePrice = 190000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Single origin Peru coffee beans.",
-                            GrindType = "whole-bean",
                             Name = "Peru Cajamarca",
-                            Region = "south-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Mellow body with subtle apple acidity and caramel notes.",
                             Slug = "peru-cajamarca",
                             Status = "active",
@@ -706,14 +649,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 18,
-                            BasePrice = 17.50m,
+                            BasePrice = 170000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Ground house blend of South American and African beans.",
-                            GrindType = "medium",
                             Name = "House Blend Ground",
-                            Region = "south-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Our balanced house blend for everyday brewing.",
                             Slug = "house-blend-ground",
                             Status = "active",
@@ -725,7 +665,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 19,
-                            BasePrice = 35.00m,
+                            BasePrice = 350000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Bialetti Moka Express 3-Cup stovetop espresso maker.",
@@ -741,7 +681,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 20,
-                            BasePrice = 30.00m,
+                            BasePrice = 300000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Kalita Wave stainless steel 185 pour-over dripper.",
@@ -757,7 +697,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 21,
-                            BasePrice = 55.00m,
+                            BasePrice = 550000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Porlex Mini stainless steel hand coffee grinder with ceramic burrs.",
@@ -773,7 +713,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 22,
-                            BasePrice = 40.00m,
+                            BasePrice = 400000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Stovetop gooseneck kettle for precise water flow control.",
@@ -789,14 +729,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 23,
-                            BasePrice = 65.00m,
+                            BasePrice = 650000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Authentic Jamaica Blue Mountain coffee with a smooth, clean finish.",
-                            GrindType = "whole-bean",
                             Name = "Jamaica Blue Mountain",
-                            Region = "caribbean",
-                            RoastLevel = "medium",
                             ShortDesc = "Mild flavor, lack of bitterness, and sweet herbal notes.",
                             Slug = "jamaica-blue-mountain",
                             Status = "active",
@@ -808,14 +745,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 24,
-                            BasePrice = 55.00m,
+                            BasePrice = 550000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Grown on the slopes of Hualalai and Mauna Loa in the North and South Kona Districts.",
-                            GrindType = "whole-bean",
                             Name = "Hawaii Kona Extra Fancy",
-                            Region = "hawaii",
-                            RoastLevel = "medium",
                             ShortDesc = "Rich, smooth, and deeply flavorful with a nutty aroma.",
                             Slug = "hawaii-kona-extra-fancy",
                             Status = "active",
@@ -827,14 +761,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 25,
-                            BasePrice = 24.00m,
+                            BasePrice = 240000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Peaberry coffee beans from the slopes of Mount Kilimanjaro.",
-                            GrindType = "whole-bean",
                             Name = "Tanzania Peaberry",
-                            Region = "africa",
-                            RoastLevel = "light",
                             ShortDesc = "Bright acidity with notes of blackcurrant and chocolate.",
                             Slug = "tanzania-peaberry",
                             Status = "active",
@@ -846,14 +777,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 26,
-                            BasePrice = 21.00m,
+                            BasePrice = 210000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Bourbon varietal grown in the high altitudes of Rwanda.",
-                            GrindType = "whole-bean",
                             Name = "Rwanda Bourbon",
-                            Region = "africa",
-                            RoastLevel = "medium",
                             ShortDesc = "Sweet with floral notes and hints of caramelized sugar.",
                             Slug = "rwanda-bourbon",
                             Status = "active",
@@ -865,14 +793,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 27,
-                            BasePrice = 22.00m,
+                            BasePrice = 220000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Sourced from the Ngozi province, featuring bright and juicy fruit notes.",
-                            GrindType = "whole-bean",
                             Name = "Burundi Ngozi",
-                            Region = "africa",
-                            RoastLevel = "light",
                             ShortDesc = "Complex fruit flavors with a clean, sweet finish.",
                             Slug = "burundi-ngozi",
                             Status = "active",
@@ -884,14 +809,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 28,
-                            BasePrice = 35.00m,
+                            BasePrice = 350000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "One of the oldest and most traditional coffees, grown on dry terraces in Yemen.",
-                            GrindType = "whole-bean",
                             Name = "Yemen Mocha Mattari",
-                            Region = "middle-east",
-                            RoastLevel = "medium",
                             ShortDesc = "Earthy, complex with intense chocolate and wine notes.",
                             Slug = "yemen-mocha-mattari",
                             Status = "active",
@@ -903,14 +825,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 29,
-                            BasePrice = 85.00m,
+                            BasePrice = 850000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "A highly sought-after, premium coffee varietal known for its tea-like body and floral aroma.",
-                            GrindType = "whole-bean",
                             Name = "Panama Geisha",
-                            Region = "central-america",
-                            RoastLevel = "light",
                             ShortDesc = "Incredibly delicate with jasmine aroma and bergamot flavors.",
                             Slug = "panama-geisha",
                             Status = "active",
@@ -922,14 +841,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 30,
-                            BasePrice = 20.00m,
+                            BasePrice = 200000m,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Processed using the Swiss Water Method to retain 99.9% of the flavor without the caffeine.",
-                            GrindType = "whole-bean",
                             Name = "Decaf Swiss Water Blend",
-                            Region = "south-america",
-                            RoastLevel = "medium",
                             ShortDesc = "Smooth and rich, decaffeinated without chemicals.",
                             Slug = "decaf-swiss-water",
                             Status = "active",
@@ -941,14 +857,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 31,
-                            BasePrice = 16.00m,
+                            BasePrice = 160000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "A perfectly balanced blend of South American and Central American beans.",
-                            GrindType = "medium",
                             Name = "Breakfast Blend Ground",
-                            Region = "blend",
-                            RoastLevel = "medium",
                             ShortDesc = "A bright, crisp start to the day.",
                             Slug = "breakfast-blend-ground",
                             Status = "active",
@@ -960,14 +873,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 32,
-                            BasePrice = 17.00m,
+                            BasePrice = 170000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Premium ground coffee infused with natural vanilla and hazelnut flavors.",
-                            GrindType = "medium",
                             Name = "Vanilla Nut Ground",
-                            Region = "blend",
-                            RoastLevel = "medium",
                             ShortDesc = "Sweet vanilla and toasted nut aromas.",
                             Slug = "vanilla-nut-ground",
                             Status = "active",
@@ -979,14 +889,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 33,
-                            BasePrice = 17.00m,
+                            BasePrice = 170000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Smooth and aromatic ground coffee with a distinctive hazelnut cream finish.",
-                            GrindType = "medium",
                             Name = "Hazelnut Cream Ground",
-                            Region = "blend",
-                            RoastLevel = "medium",
                             ShortDesc = "Rich, buttery hazelnut flavor.",
                             Slug = "hazelnut-cream-ground",
                             Status = "active",
@@ -998,14 +905,11 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 34,
-                            BasePrice = 19.00m,
+                            BasePrice = 190000m,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "A dark roasted blend ground coarsely for the perfect, smooth cold brew at home.",
-                            GrindType = "coarse",
                             Name = "Cold Brew Coarse Ground",
-                            Region = "blend",
-                            RoastLevel = "dark",
                             ShortDesc = "Specially ground for cold water extraction.",
                             Slug = "cold-brew-coarse-ground",
                             Status = "active",
@@ -1017,7 +921,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 35,
-                            BasePrice = 28.00m,
+                            BasePrice = 280000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "1 Liter capacity French press for a full-bodied coffee experience.",
@@ -1033,7 +937,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 36,
-                            BasePrice = 22.00m,
+                            BasePrice = 220000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Accurate up to 0.1g, perfect for pour-over and espresso dialing in.",
@@ -1049,7 +953,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 37,
-                            BasePrice = 18.00m,
+                            BasePrice = 180000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Sturdy plastic knock box with a removable rubber bar for easy cleaning.",
@@ -1065,7 +969,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 38,
-                            BasePrice = 15.00m,
+                            BasePrice = 150000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Classic stainless steel pitcher with a precision spout for pouring latte art.",
@@ -1081,7 +985,7 @@ namespace BanCaPheNuocGiaiKhat.Data.Migrations
                         new
                         {
                             ProductId = 39,
-                            BasePrice = 25.00m,
+                            BasePrice = 250000m,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2026, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             DetailDesc = "Perfectly balanced 58mm tamper to ensure an even and consistent espresso puck.",

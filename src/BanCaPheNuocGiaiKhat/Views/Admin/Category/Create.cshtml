@@ -1,0 +1,44 @@
+@model BanCaPheNuocGiaiKhat.Models.CategoryViewModel
+@{
+    ViewData["Title"] = "Thêm danh mục mới";
+    Layout = "_AdminLayout";
+}
+
+<header class="admin-topbar" style="margin-bottom: 2rem;">
+    <div>
+        <p class="admin-kicker">MANAGE CATALOG</p>
+        <h1>New Category</h1>
+    </div>
+    <a asp-action="Index" class="admin-btn" style="background:#e9e2db; color:#4e3a2f; text-decoration:none; padding: .6rem 1.2rem; border-radius:4px; font-weight:700; font-size:.85rem;">
+        <i class="bi bi-arrow-left"></i> QUAY LẠI
+    </a>
+</header>
+
+<div class="admin-panel" style="max-width: 600px;">
+    <div class="admin-panel__header">
+        <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">CATEGORY DETAILS</small>
+    </div>
+    <div style="padding: 1.5rem;">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label" style="font-weight:600; font-size:.85rem; color:#4e3a2f;"></label>
+                <input asp-for="Name" class="form-control" style="border: 1px solid #d8c4b7; border-radius: 4px;" />
+                <span asp-validation-for="Name" class="text-danger" style="font-size: .8rem;"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ParentId" class="form-label" style="font-weight:600; font-size:.85rem; color:#4e3a2f;"></label>
+                <select asp-for="ParentId" asp-items="Model.ParentCategories" class="form-control" style="border: 1px solid #d8c4b7; border-radius: 4px;"></select>
+                <span asp-validation-for="ParentId" class="text-danger" style="font-size: .8rem;"></span>
+            </div>
+
+            <button type="submit" style="background:#4e3a2f; color:#fff; border:none; padding:.6rem 1.2rem; border-radius:4px; font-weight:700; font-size:.85rem; width:100%;">
+                LƯU DANH MỤC
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

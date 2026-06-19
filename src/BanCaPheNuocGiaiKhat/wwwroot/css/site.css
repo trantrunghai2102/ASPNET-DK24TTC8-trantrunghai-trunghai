@@ -1124,8 +1124,10 @@ button {
 
 /* Small side product cards */
 .product-card {
-  display: grid;
-  grid-template-rows: 220px auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 420px;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -1141,6 +1143,9 @@ button {
 
 .product-card__img {
   overflow: hidden;
+  height: 260px;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .product-card__img img {
@@ -1156,6 +1161,13 @@ button {
 
 .product-card__body {
   padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-card__body .product-footer {
+  margin-top: auto;
 }
 
 /* Stars */
@@ -1812,4 +1824,40 @@ button {
   .catalog-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--coffee-darkest);
+  color: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 9999;
+}
+
+.toast-notification.show {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.toast-notification.error {
+  background: #dc3545;
+}
+
+.toast-notification i {
+  font-size: 1.2rem;
 }

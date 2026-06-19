@@ -1,7 +1,6 @@
 @model BanCaPheNuocGiaiKhat.Models.BanHangViewModel
 @{
     ViewData["Title"] = "Bán hàng";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
@@ -22,7 +21,7 @@
 }
 .pos-inner {
     display: grid;
-    grid-template-columns: 175px 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 1rem;
 }
 .pos-tree {
@@ -325,9 +324,9 @@
 </style>
 }
 
-<div class="catalog-page">
-    <div class="section-wrapper">
-        <header class="catalog-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+<div class="catalog-page" style="max-width: 100%; padding: 0 1.5rem;">
+    <div style="width: 100%;">
+        <header class="catalog-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem; margin-bottom: 1.5rem;">
             <div>
                 <h1 class="catalog-title">Bán hàng</h1>
                 <p class="catalog-subtitle">Chọn sản phẩm, nhập số lượng và xác nhận đơn hàng.</p>
@@ -337,7 +336,7 @@
                    style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:var(--coffee-dark);color:#fff;border:1px solid var(--coffee-dark);border-radius:var(--radius-md);font-size:.85rem;font-weight:600;text-decoration:none;white-space:nowrap;">
                     <i class="bi bi-box-seam"></i> Đơn hàng online
                 </a>
-                <a asp-controller="HoaDon" asp-action="Index"
+                <a asp-controller="StaffHoaDon" asp-action="Index"
                    style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-md);font-size:.85rem;font-weight:600;text-decoration:none;white-space:nowrap;">
                     <i class="bi bi-receipt"></i> Xem hóa đơn
                 </a>
@@ -356,6 +355,72 @@
                     <!-- Category tree -->
                     <div class="pos-tree" id="posTree">
                         <div class="pos-tree-title">Danh mục</div>
+                        <div class="pos-tree-item active" data-catid="" onclick="setActiveCategory(this, '')">
+                            <i class="bi bi-grid"></i>
+                            <span>Tất cả</span>
+                        </div>
+                        
+                        @{
+                            var categories = ViewBag.Categories as IEnumerable<BanCaPheNuocGiaiKhat.Models.Entities.Category> ?? new List<BanCaPheNuocGiaiKhat.Models.Entities.Category>();
+                        }
+                        
+                        @foreach (var parentCat in categories.Where(c => c.ParentId == null))
+                        {
+                            bool hasChildren = categories.Any(c => c.ParentId == parentCat.CategoryId);
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;" class="pos-tree-item" data-catid="@parentCat.CategoryId" onclick="setActiveCategory(this, '@parentCat.CategoryId')">
+                                    <div style="display: flex; align-items: center; gap: .4rem;">
+                                        <i class="bi bi-tag"></i>
+                                        <span>@parentCat.Name</span>
+                                    </div>
+                                    @if (hasChildren)
+                                    {
+                                        <button type="button" onclick="toggleSubcategoryPOS(event, 'pos-sub-@parentCat.CategoryId', this)" style="background: none; border: none; padding: 0.2rem; cursor: pointer; color: var(--text-muted); display: grid; place-items: center;">
+                                            <i class="bi bi-chevron-down" style="font-size: 0.75rem;"></i>
+                                        </button>
+                                    }
+                                </div>
+                                
+                                @if (hasChildren)
+                                {
+                                    <div id="pos-sub-@parentCat.CategoryId" style="display: flex; flex-direction: column; gap: 0.2rem; padding-left: 1rem; border-left: 2px solid #e2cbb8; margin-left: 0.6rem; margin-top: 0.2rem;">
+                                        @foreach (var childCat in categories.Where(c => c.ParentId == parentCat.CategoryId))
+                                        {
+                                            bool hasGrandchildren = categories.Any(c => c.ParentId == childCat.CategoryId);
+                                            
+                                            <div style="display: flex; flex-direction: column;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center;" class="pos-tree-item" data-catid="@childCat.CategoryId" onclick="setActiveCategory(this, '@childCat.CategoryId')">
+                                                    <div style="display: flex; align-items: center; gap: .4rem;">
+                                                        <i class="bi bi-tag"></i>
+                                                        <span style="font-size: 0.8rem;">@childCat.Name</span>
+                                                    </div>
+                                                    @if (hasGrandchildren)
+                                                    {
+                                                        <button type="button" onclick="toggleSubcategoryPOS(event, 'pos-sub-@childCat.CategoryId', this)" style="background: none; border: none; padding: 0.2rem; cursor: pointer; color: var(--text-muted); display: grid; place-items: center;">
+                                                            <i class="bi bi-chevron-down" style="font-size: 0.65rem;"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                                
+                                                @if (hasGrandchildren)
+                                                {
+                                                    <div id="pos-sub-@childCat.CategoryId" style="display: flex; flex-direction: column; gap: 0.2rem; padding-left: 0.8rem; border-left: 1px dashed #d8c4b7; margin-left: 0.6rem; margin-top: 0.2rem; padding-top: 0.2rem;">
+                                                        @foreach (var grandChild in categories.Where(c => c.ParentId == childCat.CategoryId))
+                                                        {
+                                                            <div class="pos-tree-item" data-catid="@grandChild.CategoryId" onclick="setActiveCategory(this, '@grandChild.CategoryId')">
+                                                                <i class="bi bi-tag" style="font-size: 0.7rem;"></i>
+                                                                <span style="font-size: 0.75rem;">@grandChild.Name</span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
 
                     <!-- Search + grid -->
@@ -381,7 +446,7 @@
                                  data-name="@p.Name"
                                  data-price="@p.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
                                  data-search="@p.Name.ToLower() @(p.CategoryName?.ToLower())"
-                                 data-catname="@(p.CategoryName ?? "")"
+                                 data-catid="@p.CategoryId"
                                  onclick="addToCart(this)">
                                 @if (!string.IsNullOrEmpty(p.ThumbnailUrl))
                                 {
@@ -397,10 +462,11 @@
                                     <div class="cat-badge">@p.CategoryName</div>
                                 }
                                 <div class="prod-name">@p.Name</div>
-                                <div class="prod-price">@p.Price.ToString("N0") đ</div>
+                                <div class="prod-price">@p.Price.ToString("N0") vnđ</div>
                             </div>
                         }
                     </div>
+                    <div id="emptyMsg" style="display:none;text-align:center;color:var(--text-muted);padding:2rem 0;">Không tìm thấy sản phẩm phù hợp.</div>
                 }
                 <div id="posPagination" class="pos-pagination"></div>
             </div><!-- /search+grid -->
@@ -512,14 +578,14 @@ function renderCart() {
                 '<span class="qty-val">' + item.qty + '</span>' +
                 '<button type="button" class="qty-btn" onclick="changeQty(' + item.productId + ', 1)">+</button>' +
             '</div>' +
-            '<div class="cart-item-price">' + (item.price * item.qty).toFixed(3) + ' vnđ</div>' +
+            '<div class="cart-item-price">' + (item.price * item.qty).toLocaleString('vi-VN') + ' vnđ</div>' +
             '<button type="button" class="cart-remove" onclick="removeItem(' + item.productId + ')" title="Xóa"><i class="bi bi-x"></i></button>' +
         '</div>';
     }).join('');
 
     var totalAmount = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
     document.getElementById('cartItemCount').textContent = cart.length;
-    document.getElementById('cartTotal').textContent     = totalAmount.toFixed(3) + ' vnđ';
+    document.getElementById('cartTotal').textContent     = totalAmount.toLocaleString('vi-VN') + ' vnđ';
 
     document.querySelectorAll('.product-card-pos').forEach(function(c) {
         var inCart = cart.some(function(x) { return x.productId === parseInt(c.dataset.id); });
@@ -532,21 +598,64 @@ function renderCart() {
     }).join('');
 }
 
-var activeCategory = '';
+var activeCategoryId = '';
 var currentPage = 1;
 var PAGE_SIZE = 12;
+
+var categoryHierarchyRaw = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    (ViewBag.Categories as IEnumerable<BanCaPheNuocGiaiKhat.Models.Entities.Category> ?? new List<BanCaPheNuocGiaiKhat.Models.Entities.Category>())
+    .Select(c => new { id = c.CategoryId.ToString(), pid = c.ParentId?.ToString() ?? "" })
+));
+var categoryHierarchy = {};
+categoryHierarchyRaw.forEach(function(c) {
+    categoryHierarchy[c.id] = c.pid;
+});
+
+function isDescendantOrSelf(childId, targetId) {
+    if (!targetId) return true; // Target is "Tất cả"
+    if (!childId) return false;
+    if (childId === targetId) return true;
+    var parent = categoryHierarchy[childId];
+    while (parent) {
+        if (parent === targetId) return true;
+        parent = categoryHierarchy[parent];
+    }
+    return false;
+}
+
+function setActiveCategory(element, catId) {
+    activeCategoryId = catId;
+    document.querySelectorAll('.pos-tree-item').forEach(function(i) { i.classList.remove('active'); });
+    element.classList.add('active');
+    applyFilters();
+}
+
+function toggleSubcategoryPOS(event, subId, btn) {
+    event.stopPropagation();
+    var subEl = document.getElementById(subId);
+    var icon = btn.querySelector('i');
+    if (subEl.style.display === 'none') {
+        subEl.style.display = 'flex';
+        icon.classList.remove('bi-chevron-right');
+        icon.classList.add('bi-chevron-down');
+    } else {
+        subEl.style.display = 'none';
+        icon.classList.remove('bi-chevron-down');
+        icon.classList.add('bi-chevron-right');
+    }
+}
 
 function getVisibleCards() {
     var q = document.getElementById('productSearch').value.trim().toLowerCase();
     var all = Array.from(document.querySelectorAll('.product-card-pos'));
     return all.filter(function(card) {
         var matchSearch = !q || card.dataset.search.includes(q);
-        var matchCat = !activeCategory || card.dataset.catname === activeCategory;
+        var matchCat = isDescendantOrSelf(card.dataset.catid, activeCategoryId);
         return matchSearch && matchCat;
     });
 }
 
-    function renderPage() {
+function renderPage() {
     var visible = getVisibleCards();
     var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
     if (currentPage > totalPages) currentPage = totalPages;
@@ -557,6 +666,18 @@ function getVisibleCards() {
     // hide all, then show current page's slice
     document.querySelectorAll('.product-card-pos').forEach(function(c) { c.style.display = 'none'; });
     visible.slice(start, end).forEach(function(c) { c.style.display = ''; });
+
+    var grid = document.getElementById('productGrid');
+    var emptyMsg = document.getElementById('emptyMsg');
+    if (grid && emptyMsg) {
+        if (visible.length === 0) {
+            grid.style.display = 'none';
+            emptyMsg.style.display = 'block';
+        } else {
+            grid.style.display = 'grid';
+            emptyMsg.style.display = 'none';
+        }
+    }
 
     // rebuild pagination buttons
     var pg = document.getElementById('posPagination');
@@ -587,40 +708,7 @@ function applyFilters() {
 
 document.getElementById('productSearch').addEventListener('input', applyFilters);
 
-// Build category tree
-(function buildTree() {
-    var counts = {};
-    document.querySelectorAll('.product-card-pos').forEach(function(card) {
-        var cat = card.dataset.catname || '';
-        counts[cat] = (counts[cat] || 0) + 1;
-    });
-    var total = document.querySelectorAll('.product-card-pos').length;
-    var tree = document.getElementById('posTree');
-
-    function makeItem(label, catVal, count) {
-        var el = document.createElement('div');
-        el.className = 'pos-tree-item' + (catVal === activeCategory ? ' active' : '');
-        el.dataset.cat = catVal;
-        el.innerHTML = '<i class="bi bi-' + (catVal === '' ? 'grid' : 'tag') + '"></i>' +
-            '<span>' + (label || 'Khác') + '</span>' +
-            '<span class="cat-count">' + count + '</span>';
-        el.addEventListener('click', function() {
-            activeCategory = catVal;
-            document.querySelectorAll('.pos-tree-item').forEach(function(i) { i.classList.remove('active'); });
-            el.classList.add('active');
-            applyFilters();
-        });
-        return el;
-    }
-
-    tree.appendChild(makeItem('Tất cả', '', total));
-
-    var sorted = Object.keys(counts).filter(function(k) { return k !== ''; }).sort();
-    sorted.forEach(function(cat) {
-        tree.appendChild(makeItem(cat, cat, counts[cat]));
-    });
-
-    renderPage();
-})();
+// Initial render
+renderPage();
 </script>
 }

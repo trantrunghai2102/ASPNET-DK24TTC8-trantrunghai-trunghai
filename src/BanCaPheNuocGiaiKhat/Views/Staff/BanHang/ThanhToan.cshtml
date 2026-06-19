@@ -1,7 +1,6 @@
 @model BanCaPheNuocGiaiKhat.Models.ThanhToanViewModel
 @{
     ViewData["Title"] = "Thanh toán";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
@@ -174,14 +173,14 @@
                         {
                             <tr>
                                 <td>@item.ProductName</td>
-                                <td class="text-right">@item.UnitPrice.ToString("N0") đ</td>
+                                <td class="text-right">@item.UnitPrice.ToString("N0") vnd</td>
                                 <td class="text-center">@item.Quantity</td>
-                                <td class="text-right">@item.Subtotal.ToString("N0") đ</td>
+                                <td class="text-right">@item.Subtotal.ToString("N0") vnd</td>
                             </tr>
                         }
                         <tr class="total-row">
                             <td colspan="3">Tổng tiền</td>
-                            <td class="text-right">@Model.TotalAmount.ToString("N0") đ</td>
+                            <td class="text-right">@Model.TotalAmount.ToString("N0") vnd</td>
                         </tr>
                     </tbody>
                 </table>
@@ -235,9 +234,7 @@ function calcChange() {
     var btnPay    = document.getElementById('btnPay');
     var cash      = parseFloat(cashInput.value) || 0;
     
-    // Chuyển đổi tiền VND nhập vào thành đơn vị nghìn VND để so khớp với totalAmount trong DB
-    var cashInThousands = cash / 1000;
-    var change          = cashInThousands - totalAmount;
+    var change    = cash - totalAmount;
 
     if (cash <= 0) {
         changeEl.textContent = '—';
@@ -247,13 +244,11 @@ function calcChange() {
     }
 
     if (change < 0) {
-        var changeInVnd = Math.abs(change) * 1000;
-        changeEl.textContent = '−' + changeInVnd.toLocaleString('vi-VN') + ' vnđ (thiếu)';
+        changeEl.textContent = '−' + Math.abs(change).toLocaleString('vi-VN') + ' vnđ (thiếu)';
         changeEl.className   = 'amount negative';
         btnPay.disabled      = true;
     } else {
-        var changeInVnd = change * 1000;
-        changeEl.textContent = changeInVnd.toLocaleString('vi-VN') + ' vnđ';
+        changeEl.textContent = change.toLocaleString('vi-VN') + ' vnđ';
         changeEl.className   = 'amount';
         btnPay.disabled      = false;
     }

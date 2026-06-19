@@ -11,9 +11,6 @@ public class ProductCardViewModel
     public decimal? PromotionPrice { get; set; }
     public string? ShortDesc { get; set; }
     public string? ThumbnailUrl { get; set; }
-    public string? RoastLevel { get; set; }
-    public string? Region { get; set; }
-    public string? GrindType { get; set; }
     public bool IsNew { get; set; }
     public bool IsBestseller { get; set; }
 }
@@ -27,10 +24,6 @@ public class ProductListViewModel
     public int? SelectedCategoryId { get; set; }
     public string? SearchQuery { get; set; }
     public string? SortBy { get; set; }
-
-    public List<string> SelectedRoastLevels { get; set; } = new();
-    public List<string> SelectedRegions { get; set; } = new();
-    public List<string> SelectedGrindTypes { get; set; } = new();
 
     // Pagination
     public int CurrentPage { get; set; }
@@ -57,6 +50,14 @@ public class AdminProductListViewModel
     public string? ThumbnailUrl { get; set; }
 }
 
+public class AdminProductListIndexViewModel
+{
+    public List<AdminProductListViewModel> Products { get; set; } = new();
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
+    public string? SearchQuery { get; set; }
+}
+
 public class AdminProductCreateViewModel
 {
     public string Name { get; set; } = string.Empty;
@@ -67,9 +68,6 @@ public class AdminProductCreateViewModel
     public decimal BasePrice { get; set; }
     public decimal? PromotionPrice { get; set; }
     public int StockQty { get; set; }
-    public string? RoastLevel { get; set; }
-    public string? Region { get; set; }
-    public string? GrindType { get; set; }
     public string Status { get; set; } = "active";
 }
 
@@ -84,9 +82,6 @@ public class AdminProductEditViewModel
     public decimal BasePrice { get; set; }
     public decimal? PromotionPrice { get; set; }
     public int StockQty { get; set; }
-    public string? RoastLevel { get; set; }
-    public string? Region { get; set; }
-    public string? GrindType { get; set; }
     public string Status { get; set; } = "active";
 
     public List<ProductImageViewModel> ExistingImages { get; set; } = new();

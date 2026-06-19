@@ -1,7 +1,6 @@
 @model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
 @{
     ViewData["Title"] = "Quản lý hóa đơn";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
@@ -89,11 +88,20 @@
 </style>
 }
 
-<div class="catalog-page">
-    <div class="section-wrapper">
-        <header class="catalog-header">
-            <h1 class="catalog-title">Quản lý hóa đơn</h1>
-            <p class="catalog-subtitle">Danh sách tất cả hóa đơn đã thanh toán.</p>
+<div class="catalog-page" style="max-width: 100%; padding: 0 1.5rem;">
+    <div style="width: 100%;">
+        <header class="catalog-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+            <div>
+                <h1 class="catalog-title">Quản lý hóa đơn</h1>
+                <p class="catalog-subtitle">Danh sách tất cả hóa đơn đã thanh toán.</p>
+            </div>
+            <form method="get" style="display:flex; gap: .5rem; align-items:center; margin-bottom: 1.5rem;">
+                <select name="type" onchange="this.form.submit()" style="padding: .5rem .8rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--cream-white); font-size: .85rem; font-weight: 600; color: var(--text-primary); outline: none; cursor: pointer;">
+                    <option value="">Tất cả loại đơn</option>
+                    @if (Model.FilterType == "instore") { <option value="instore" selected>Tại quầy (POS)</option> } else { <option value="instore">Tại quầy (POS)</option> }
+                    @if (Model.FilterType == "online") { <option value="online" selected>Trực tuyến (Online)</option> } else { <option value="online">Trực tuyến (Online)</option> }
+                </select>
+            </form>
         </header>
 
         @if (TempData["Success"] != null)
@@ -119,7 +127,9 @@
                 <table class="hoadon-table">
                     <thead>
                         <tr>
-                            <th>Mã hóa đơn</th>
+                            <th>Mã đơn/HD</th>
+                            <th>Loại đơn</th>
+                            <th>Trạng thái</th>
                             <th>Thời gian</th>
                             <th>Tổng tiền</th>
                             <th>Nhân viên</th>
@@ -131,20 +141,37 @@
                         {
                             <tr>
                                 <td><span class="invoice-code-badge">@hd.InvoiceCode</span></td>
-                                <td>@hd.PaidAt.ToLocalTime().ToString("HH:mm — dd/MM/yyyy")</td>
-                                <td class="amount-cell">@hd.TotalAmount.ToString("N3") vnđ</td>
+                                <td>
+                                    @if (hd.OrderType?.ToLower() == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
+                                </td>
+                                <td>
+                                    @switch (hd.Status) {
+                                        case "pending": <span style="color:#ffc107;font-weight:600">Chờ xử lý</span>; break;
+                                        case "processing": <span style="color:#17a2b8;font-weight:600">Đang xử lý</span>; break;
+                                        case "shipping": <span style="color:#007bff;font-weight:600">Đang giao</span>; break;
+                                        case "delivered": <span style="color:#28a745;font-weight:600">Đã giao</span>; break;
+                                        case "paid": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                        case "completed": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                        case "cancelled": <span style="color:#dc3545;font-weight:600">Đã hủy</span>; break;
+                                        default: <span style="font-weight:600;color:var(--text-secondary)">@hd.Status</span>; break;
+                                    }
+                                </td>
+                                <td>@hd.Date.ToLocalTime().ToString("HH:mm — dd/MM/yyyy")</td>
+                                <td class="amount-cell">@hd.TotalAmount.ToString("N0") vnđ</td>
                                 <td>@(hd.StaffName ?? "—")</td>
                                 <td>
                                     <div class="action-cell">
-                                        <a asp-controller="HoaDon" asp-action="ChiTiet"
-                                           asp-route-id="@hd.InvoiceId" class="btn-view">Xem</a>
-                                        <form method="post"
-                                              asp-controller="HoaDon" asp-action="Xoa"
-                                              asp-route-id="@hd.InvoiceId"
-                                              onsubmit="return confirm('Xóa hóa đơn @hd.InvoiceCode?');">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-delete">Xóa</button>
-                                        </form>
+                                        @if (hd.OrderType?.ToLower() == "online")
+                                        {
+                                            <a asp-controller="DonHangOnline" asp-action="ChiTiet"
+                                               asp-route-id="@hd.OrderId" class="btn-view">Xem</a>
+                                        }
+                                        else if (hd.InvoiceId > 0)
+                                        {
+                                            <a asp-controller="StaffHoaDon" asp-action="ChiTiet"
+                                               asp-route-id="@hd.InvoiceId" class="btn-view">Xem</a>
+                                        }
+                                        
                                     </div>
                                 </td>
                             </tr>
@@ -159,17 +186,17 @@
             <div style="display:flex;justify-content:center;gap:.4rem;margin-top:1.5rem;flex-wrap:wrap;">
                 @if (Model.CurrentPage > 1)
                 {
-                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)"
+                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-type="@Model.FilterType"
                        style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--cream-white);color:var(--text-primary);text-decoration:none;font-size:.85rem;">‹</a>
                 }
                 @for (int p = 1; p <= Model.TotalPages; p++)
                 {
-                    <a asp-action="Index" asp-route-page="@p"
+                    <a asp-action="Index" asp-route-page="@p" asp-route-type="@Model.FilterType"
                        style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid @(p == Model.CurrentPage ? "var(--coffee-dark)" : "var(--border)");border-radius:var(--radius-md);background:@(p == Model.CurrentPage ? "var(--coffee-dark)" : "var(--cream-white)");color:@(p == Model.CurrentPage ? "#fff" : "var(--text-primary)");text-decoration:none;font-size:.85rem;font-weight:@(p == Model.CurrentPage ? "700" : "400");">@p</a>
                 }
                 @if (Model.CurrentPage < Model.TotalPages)
                 {
-                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)"
+                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-type="@Model.FilterType"
                        style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--cream-white);color:var(--text-primary);text-decoration:none;font-size:.85rem;">›</a>
                 }
             </div>

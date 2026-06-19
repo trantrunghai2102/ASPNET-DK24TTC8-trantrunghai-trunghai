@@ -21,6 +21,21 @@ public class GioHangController : Controller
     private int GetUserId() =>
         int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
 
+    // GET /GioHang/GetCartCount
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetCartCount()
+    {
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+            return Json(new { count = 0 });
+
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId))
+            return Json(new { count = 0 });
+
+        var count = await _db.CartItems.Where(c => c.UserId == userId).SumAsync(c => c.Quantity);
+        return Json(new { count });
+    }
+
     // GET /GioHang
     public async Task<IActionResult> Index()
     {
@@ -41,7 +56,7 @@ public class GioHangController : Controller
             })
             .ToListAsync();
 
-        return View(new GioHangViewModel { Items = items });
+        return View("~/Views/Customer/GioHang/Index.cshtml", new GioHangViewModel { Items = items });
     }
 
     // POST /GioHang/Them
@@ -99,6 +114,53 @@ public class GioHangController : Controller
         await _db.SaveChangesAsync();
         TempData["Success"] = $"Đã thêm «{product.Name}» vào giỏ hàng.";
         return RedirectToAction(nameof(Index));
+    }
+
+    // POST /GioHang/ThemAjax
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ThemAjax(ThemVaoGioHangInput input)
+    {
+        if (!ModelState.IsValid)
+            return Json(new { success = false, message = "Thông tin không hợp lệ." });
+
+        var product = await _db.Products.FindAsync(input.ProductId);
+        if (product == null || product.Status != "active")
+            return Json(new { success = false, message = "Sản phẩm không tồn tại." });
+
+        if (input.Quantity > product.StockQty)
+            return Json(new { success = false, message = $"Chỉ còn {product.StockQty} sản phẩm trong kho." });
+
+        var userId = GetUserId();
+        var existing = await _db.CartItems
+            .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == input.ProductId);
+
+        var now = DateTime.UtcNow;
+        if (existing != null)
+        {
+            var newQty = existing.Quantity + input.Quantity;
+            if (newQty > product.StockQty)
+                return Json(new { success = false, message = $"Tổng số lượng vượt tồn kho (còn {product.StockQty})." });
+            
+            existing.Quantity  = newQty;
+            existing.UpdatedAt = now;
+        }
+        else
+        {
+            _db.CartItems.Add(new CartItem
+            {
+                UserId    = userId,
+                ProductId = input.ProductId,
+                Quantity  = input.Quantity,
+                CreatedAt = now,
+                UpdatedAt = now
+            });
+        }
+
+        await _db.SaveChangesAsync();
+
+        var newCount = await _db.CartItems.Where(c => c.UserId == userId).SumAsync(c => c.Quantity);
+        return Json(new { success = true, count = newCount, message = $"Đã thêm {product.Name} vào giỏ hàng." });
     }
 
     // POST /GioHang/CapNhat

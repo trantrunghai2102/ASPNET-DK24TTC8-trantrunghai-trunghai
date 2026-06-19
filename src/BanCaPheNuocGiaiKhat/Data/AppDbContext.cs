@@ -1,4 +1,4 @@
-using BanCaPheNuocGiaiKhat.Models.Entities;
+﻿using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Data;
@@ -226,7 +226,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Ethiopia Yirgacheffe",
                     Slug = "ethiopia-yirgacheffe",
-                    BasePrice = 22.00m,
+                    BasePrice = 220000m,
                     PromotionPrice = null,
                     ShortDesc = "Floral notes with hints of jasmine and bright citrus. Light roast.",
                     DetailDesc = "Ethiopian Yirgacheffe coffee is dry-processed, bringing out the bright, clean taste profile. Notes of citrus and floral aromas are dominant.",
@@ -234,9 +234,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -246,7 +246,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Colombia Supremo",
                     Slug = "colombia-supremo",
-                    BasePrice = 19.50m,
+                    BasePrice = 190000m,
                     PromotionPrice = null,
                     ShortDesc = "Smooth, balanced body with caramel sweetness and a nutty finish. Medium roast.",
                     DetailDesc = "Colombia Supremo beans are carefully selected and roasted to a medium profile to balance the natural acidity with nutty tones.",
@@ -254,9 +254,9 @@ public class AppDbContext : DbContext
                     StockQty = 35,
                     ViewCount = 8,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -266,7 +266,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Sumatra Mandheling",
                     Slug = "sumatra-mandheling",
-                    BasePrice = 21.00m,
+                    BasePrice = 210000m,
                     PromotionPrice = null,
                     ShortDesc = "Full-bodied, earthy, and complex with low acidity. Dark roast.",
                     DetailDesc = "Sumatra Mandheling coffee is known for its heavy body and low acidity, featuring unique cedar wood and herbal notes.",
@@ -274,9 +274,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 20,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -286,7 +286,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Artisan Espresso Blend",
                     Slug = "artisan-espresso-blend",
-                    BasePrice = 24.00m,
+                    BasePrice = 240000m,
                     PromotionPrice = null,
                     ShortDesc = "Rich crema, notes of dark chocolate and toasted almonds. Espresso roast.",
                     DetailDesc = "Our signature espresso blend combines beans from South America and Africa, roasted dark to bring out rich cocoa and toasted nut flavors.",
@@ -294,9 +294,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 15,
                     Status = "active",
-                    RoastLevel = "espresso",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -306,7 +306,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Guatemala Antigua",
                     Slug = "guatemala-antigua",
-                    BasePrice = 20.50m,
+                    BasePrice = 200000m,
                     PromotionPrice = null,
                     ShortDesc = "Spicy and smoky undertones with a crisp apple acidity. Medium roast.",
                     DetailDesc = "Guatemala Antigua beans are grown in volcanic soil, resulting in a unique smoky flavor combined with a light citrus brightness.",
@@ -314,9 +314,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 5,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -326,7 +326,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Kenya AA",
                     Slug = "kenya-aa",
-                    BasePrice = 23.50m,
+                    BasePrice = 230000m,
                     PromotionPrice = null,
                     ShortDesc = "Bright acidity with blackcurrant and berry notes.",
                     DetailDesc = "Kenya AA is processed using wet method, offering an exceptionally intense and clean cup.",
@@ -334,9 +334,9 @@ public class AppDbContext : DbContext
                     StockQty = 45,
                     ViewCount = 28,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -346,7 +346,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Brazil Santos",
                     Slug = "brazil-santos",
-                    BasePrice = 18.00m,
+                    BasePrice = 180000m,
                     PromotionPrice = null,
                     ShortDesc = "Low acidity, smooth body with sweet chocolate notes.",
                     DetailDesc = "Classic Brazilian coffee bean, roasted to highlight its natural sweetness.",
@@ -354,9 +354,9 @@ public class AppDbContext : DbContext
                     StockQty = 60,
                     ViewCount = 33,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -366,7 +366,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Costa Rica Tarrazu",
                     Slug = "costa-rica-tarrazu",
-                    BasePrice = 20.00m,
+                    BasePrice = 200000m,
                     PromotionPrice = null,
                     ShortDesc = "Crisp acidity with sweet honey and citrus flavors.",
                     DetailDesc = "Tarrazu region provides one of the finest beans in Central America.",
@@ -374,9 +374,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 19,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -386,7 +386,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Ethiopian Sidamo Ground",
                     Slug = "ethiopian-sidamo-ground",
-                    BasePrice = 21.50m,
+                    BasePrice = 210000m,
                     PromotionPrice = null,
                     ShortDesc = "Floral aroma with notes of lemon and cane sugar.",
                     DetailDesc = "Ground Ethiopian Sidamo coffee ready for drip brewing.",
@@ -394,9 +394,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 14,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -406,7 +406,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "French Roast Blend",
                     Slug = "french-roast-blend",
-                    BasePrice = 19.00m,
+                    BasePrice = 190000m,
                     PromotionPrice = null,
                     ShortDesc = "Intensely dark and smoky with a heavy body.",
                     DetailDesc = "Ground French roast ideal for French Press brewing.",
@@ -414,9 +414,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 11,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "south-america",
-                    GrindType = "coarse",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -426,7 +426,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Italian Roast Espresso Ground",
                     Slug = "italian-roast-espresso-ground",
-                    BasePrice = 19.50m,
+                    BasePrice = 190000m,
                     PromotionPrice = null,
                     ShortDesc = "Rich, dark roast optimized for espresso brewing.",
                     DetailDesc = "Fine ground Italian roast optimized for espresso machines.",
@@ -434,9 +434,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 22,
                     Status = "active",
-                    RoastLevel = "espresso",
-                    Region = "south-america",
-                    GrindType = "fine",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -446,7 +446,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Hario V60 Ceramic",
                     Slug = "hario-v60-ceramic",
-                    BasePrice = 25.00m,
+                    BasePrice = 250000m,
                     PromotionPrice = null,
                     ShortDesc = "Classic ceramic coffee dripper for pour-over brewing.",
                     DetailDesc = "Premium Japanese ceramic pour-over dripper.",
@@ -454,9 +454,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 9,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -466,7 +466,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Chemex 6-Cup",
                     Slug = "chemex-6-cup",
-                    BasePrice = 45.00m,
+                    BasePrice = 450000m,
                     PromotionPrice = null,
                     ShortDesc = "Elegant glass coffee maker for clean and pure flavor.",
                     DetailDesc = "Chemex glass coffeemaker with wood collar and leather tie.",
@@ -474,9 +474,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -486,7 +486,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Aeropress Go",
                     Slug = "aeropress-go",
-                    BasePrice = 39.99m,
+                    BasePrice = 390000m,
                     PromotionPrice = null,
                     ShortDesc = "Compact coffee press for travel and convenience.",
                     DetailDesc = "Aeropress travel version with convenient mug/carrying case.",
@@ -494,9 +494,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 25,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -506,7 +506,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Java Preanger",
                     Slug = "java-preanger",
-                    BasePrice = 22.50m,
+                    BasePrice = 220000m,
                     PromotionPrice = null,
                     ShortDesc = "Traditional Indonesian cup with sweet herbal nuances.",
                     DetailDesc = "Java Preanger beans from West Java volcanic highlands.",
@@ -514,9 +514,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 7,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -526,7 +526,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Vietnam Robusta Special",
                     Slug = "vietnam-robusta-special",
-                    BasePrice = 16.50m,
+                    BasePrice = 160000m,
                     PromotionPrice = null,
                     ShortDesc = "Bold, high-caffeine Robusta beans from Buon Ma Thuot.",
                     DetailDesc = "Buon Ma Thuot high-grade robusta beans with strong flavor.",
@@ -534,9 +534,9 @@ public class AppDbContext : DbContext
                     StockQty = 80,
                     ViewCount = 42,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -546,7 +546,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Peru Cajamarca",
                     Slug = "peru-cajamarca",
-                    BasePrice = 19.90m,
+                    BasePrice = 190000m,
                     PromotionPrice = null,
                     ShortDesc = "Mellow body with subtle apple acidity and caramel notes.",
                     DetailDesc = "Single origin Peru coffee beans.",
@@ -554,9 +554,9 @@ public class AppDbContext : DbContext
                     StockQty = 35,
                     ViewCount = 13,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -566,7 +566,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "House Blend Ground",
                     Slug = "house-blend-ground",
-                    BasePrice = 17.50m,
+                    BasePrice = 170000m,
                     PromotionPrice = null,
                     ShortDesc = "Our balanced house blend for everyday brewing.",
                     DetailDesc = "Ground house blend of South American and African beans.",
@@ -574,9 +574,9 @@ public class AppDbContext : DbContext
                     StockQty = 70,
                     ViewCount = 16,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -586,7 +586,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Moka Pot Bialetti",
                     Slug = "moka-pot-bialetti",
-                    BasePrice = 35.00m,
+                    BasePrice = 350000m,
                     PromotionPrice = null,
                     ShortDesc = "Iconic Italian stovetop espresso maker.",
                     DetailDesc = "Bialetti Moka Express 3-Cup stovetop espresso maker.",
@@ -594,9 +594,9 @@ public class AppDbContext : DbContext
                     StockQty = 18,
                     ViewCount = 21,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -606,7 +606,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Kalita Wave Stainless",
                     Slug = "kalita-wave-stainless",
-                    BasePrice = 30.00m,
+                    BasePrice = 300000m,
                     PromotionPrice = null,
                     ShortDesc = "Flat-bottom coffee dripper for even extraction.",
                     DetailDesc = "Kalita Wave stainless steel 185 pour-over dripper.",
@@ -614,9 +614,9 @@ public class AppDbContext : DbContext
                     StockQty = 12,
                     ViewCount = 10,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -626,7 +626,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Porlex Mini Grinder",
                     Slug = "porlex-mini-grinder",
-                    BasePrice = 55.00m,
+                    BasePrice = 550000m,
                     PromotionPrice = null,
                     ShortDesc = "Portable ceramic burr hand grinder.",
                     DetailDesc = "Porlex Mini stainless steel hand coffee grinder with ceramic burrs.",
@@ -634,9 +634,9 @@ public class AppDbContext : DbContext
                     StockQty = 10,
                     ViewCount = 31,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -646,7 +646,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Gooseneck Kettle",
                     Slug = "gooseneck-kettle",
-                    BasePrice = 40.00m,
+                    BasePrice = 400000m,
                     PromotionPrice = null,
                     ShortDesc = "Stainless steel kettle with precise pour control.",
                     DetailDesc = "Stovetop gooseneck kettle for precise water flow control.",
@@ -654,9 +654,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 17,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -666,7 +666,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Jamaica Blue Mountain",
                     Slug = "jamaica-blue-mountain",
-                    BasePrice = 65.00m,
+                    BasePrice = 650000m,
                     PromotionPrice = null,
                     ShortDesc = "Mild flavor, lack of bitterness, and sweet herbal notes.",
                     DetailDesc = "Authentic Jamaica Blue Mountain coffee with a smooth, clean finish.",
@@ -674,9 +674,9 @@ public class AppDbContext : DbContext
                     StockQty = 10,
                     ViewCount = 50,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "caribbean",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -686,7 +686,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Hawaii Kona Extra Fancy",
                     Slug = "hawaii-kona-extra-fancy",
-                    BasePrice = 55.00m,
+                    BasePrice = 550000m,
                     PromotionPrice = null,
                     ShortDesc = "Rich, smooth, and deeply flavorful with a nutty aroma.",
                     DetailDesc = "Grown on the slopes of Hualalai and Mauna Loa in the North and South Kona Districts.",
@@ -694,9 +694,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 45,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "hawaii",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -706,7 +706,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Tanzania Peaberry",
                     Slug = "tanzania-peaberry",
-                    BasePrice = 24.00m,
+                    BasePrice = 240000m,
                     PromotionPrice = null,
                     ShortDesc = "Bright acidity with notes of blackcurrant and chocolate.",
                     DetailDesc = "Peaberry coffee beans from the slopes of Mount Kilimanjaro.",
@@ -714,9 +714,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -726,7 +726,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Rwanda Bourbon",
                     Slug = "rwanda-bourbon",
-                    BasePrice = 21.00m,
+                    BasePrice = 210000m,
                     PromotionPrice = null,
                     ShortDesc = "Sweet with floral notes and hints of caramelized sugar.",
                     DetailDesc = "Bourbon varietal grown in the high altitudes of Rwanda.",
@@ -734,9 +734,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 20,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -746,7 +746,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Burundi Ngozi",
                     Slug = "burundi-ngozi",
-                    BasePrice = 22.00m,
+                    BasePrice = 220000m,
                     PromotionPrice = null,
                     ShortDesc = "Complex fruit flavors with a clean, sweet finish.",
                     DetailDesc = "Sourced from the Ngozi province, featuring bright and juicy fruit notes.",
@@ -754,9 +754,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -766,7 +766,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Yemen Mocha Mattari",
                     Slug = "yemen-mocha-mattari",
-                    BasePrice = 35.00m,
+                    BasePrice = 350000m,
                     PromotionPrice = null,
                     ShortDesc = "Earthy, complex with intense chocolate and wine notes.",
                     DetailDesc = "One of the oldest and most traditional coffees, grown on dry terraces in Yemen.",
@@ -774,9 +774,9 @@ public class AppDbContext : DbContext
                     StockQty = 12,
                     ViewCount = 35,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "middle-east",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -786,7 +786,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Panama Geisha",
                     Slug = "panama-geisha",
-                    BasePrice = 85.00m,
+                    BasePrice = 850000m,
                     PromotionPrice = null,
                     ShortDesc = "Incredibly delicate with jasmine aroma and bergamot flavors.",
                     DetailDesc = "A highly sought-after, premium coffee varietal known for its tea-like body and floral aroma.",
@@ -794,9 +794,9 @@ public class AppDbContext : DbContext
                     StockQty = 5,
                     ViewCount = 80,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -806,7 +806,7 @@ public class AppDbContext : DbContext
                     CategoryId = 1,
                     Name = "Decaf Swiss Water Blend",
                     Slug = "decaf-swiss-water",
-                    BasePrice = 20.00m,
+                    BasePrice = 200000m,
                     PromotionPrice = null,
                     ShortDesc = "Smooth and rich, decaffeinated without chemicals.",
                     DetailDesc = "Processed using the Swiss Water Method to retain 99.9% of the flavor without the caffeine.",
@@ -814,9 +814,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 15,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -826,7 +826,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Breakfast Blend Ground",
                     Slug = "breakfast-blend-ground",
-                    BasePrice = 16.00m,
+                    BasePrice = 160000m,
                     PromotionPrice = null,
                     ShortDesc = "A bright, crisp start to the day.",
                     DetailDesc = "A perfectly balanced blend of South American and Central American beans.",
@@ -834,9 +834,9 @@ public class AppDbContext : DbContext
                     StockQty = 60,
                     ViewCount = 22,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -846,7 +846,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Vanilla Nut Ground",
                     Slug = "vanilla-nut-ground",
-                    BasePrice = 17.00m,
+                    BasePrice = 170000m,
                     PromotionPrice = null,
                     ShortDesc = "Sweet vanilla and toasted nut aromas.",
                     DetailDesc = "Premium ground coffee infused with natural vanilla and hazelnut flavors.",
@@ -854,9 +854,9 @@ public class AppDbContext : DbContext
                     StockQty = 45,
                     ViewCount = 30,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -866,7 +866,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Hazelnut Cream Ground",
                     Slug = "hazelnut-cream-ground",
-                    BasePrice = 17.00m,
+                    BasePrice = 170000m,
                     PromotionPrice = null,
                     ShortDesc = "Rich, buttery hazelnut flavor.",
                     DetailDesc = "Smooth and aromatic ground coffee with a distinctive hazelnut cream finish.",
@@ -874,9 +874,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 28,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -886,7 +886,7 @@ public class AppDbContext : DbContext
                     CategoryId = 2,
                     Name = "Cold Brew Coarse Ground",
                     Slug = "cold-brew-coarse-ground",
-                    BasePrice = 19.00m,
+                    BasePrice = 190000m,
                     PromotionPrice = null,
                     ShortDesc = "Specially ground for cold water extraction.",
                     DetailDesc = "A dark roasted blend ground coarsely for the perfect, smooth cold brew at home.",
@@ -894,9 +894,9 @@ public class AppDbContext : DbContext
                     StockQty = 55,
                     ViewCount = 42,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "blend",
-                    GrindType = "coarse",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -906,7 +906,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "French Press Maker (1L)",
                     Slug = "french-press-maker-1l",
-                    BasePrice = 28.00m,
+                    BasePrice = 280000m,
                     PromotionPrice = null,
                     ShortDesc = "Classic glass French Press with stainless steel filter.",
                     DetailDesc = "1 Liter capacity French press for a full-bodied coffee experience.",
@@ -914,9 +914,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -926,7 +926,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Digital Coffee Scale",
                     Slug = "digital-coffee-scale",
-                    BasePrice = 22.00m,
+                    BasePrice = 220000m,
                     PromotionPrice = null,
                     ShortDesc = "Precision scale with built-in timer.",
                     DetailDesc = "Accurate up to 0.1g, perfect for pour-over and espresso dialing in.",
@@ -934,9 +934,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 34,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -946,7 +946,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Coffee Knock Box",
                     Slug = "coffee-knock-box",
-                    BasePrice = 18.00m,
+                    BasePrice = 180000m,
                     PromotionPrice = null,
                     ShortDesc = "Durable knock box for espresso pucks.",
                     DetailDesc = "Sturdy plastic knock box with a removable rubber bar for easy cleaning.",
@@ -954,9 +954,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -966,7 +966,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Milk Frothing Pitcher",
                     Slug = "milk-frothing-pitcher",
-                    BasePrice = 15.00m,
+                    BasePrice = 150000m,
                     PromotionPrice = null,
                     ShortDesc = "Stainless steel pitcher (350ml) for latte art.",
                     DetailDesc = "Classic stainless steel pitcher with a precision spout for pouring latte art.",
@@ -974,9 +974,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 21,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -986,7 +986,7 @@ public class AppDbContext : DbContext
                     CategoryId = 3,
                     Name = "Espresso Tamper (58mm)",
                     Slug = "espresso-tamper-58mm",
-                    BasePrice = 25.00m,
+                    BasePrice = 250000m,
                     PromotionPrice = null,
                     ShortDesc = "Solid stainless steel tamper with ergonomic handle.",
                     DetailDesc = "Perfectly balanced 58mm tamper to ensure an even and consistent espresso puck.",
@@ -994,9 +994,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 26,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 }

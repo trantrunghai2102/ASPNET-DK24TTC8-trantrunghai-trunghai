@@ -16,16 +16,16 @@
 | 3 | Thiết kế kiến trúc hệ thống | Hoàn thành | 100% |
 | 4 | Thiết kế Use Case | Hoàn thành | 100% |
 | 5 | Thiết kế cơ sở dữ liệu | Hoàn thành | 100% |
-| 6 | Module Xác thực (Auth) | Đang thực hiện | 85% |
-| 7 | Module Sản phẩm & Danh mục | Đang thực hiện | 90% |
+| 6 | Module Xác thực (Auth) | Hoàn thành | 100% |
+| 7 | Module Sản phẩm & Danh mục | Hoàn thành | 100% |
 | 8 | Module Giỏ hàng & Đặt hàng | Hoàn thành | 100% |
 | 9 | Module Thanh toán | Hoàn thành | 100% |
 | 10 | Module Nhân viên | Hoàn thành | 100% |
-| 11 | Module Admin / Quản trị | Đang thực hiện | 90% |
+| 11 | Module Admin / Quản trị | Hoàn thành | 100% |
 | 12 | Module Thống kê doanh thu | Hoàn thành | 100% |
-| 13 | Hoàn thiện báo cáo | Đang thực hiện | 60% |
+| 13 | Hoàn thiện báo cáo | Đang thực hiện | 80% |
 
-> **Tiến độ tổng thể ước tính: ~85%**
+> **Tiến độ tổng thể ước tính: ~95%**
 
 ---
 
@@ -65,23 +65,21 @@
 
 ## PHẦN III — TIẾN ĐỘ THỰC HIỆN CÁC MODULE
 
-### 6. Module Xác Thực (Authentication) *Đang làm*
+### 6. Module Xác Thực (Authentication) *Hoàn thành*
 - [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
 - [x] Đăng nhập / Đăng xuất
-- [ ] Đăng nhập bằng Google OAuth
-- [ ] Đăng nhập bằng Facebook OAuth
-- [x] Đổi mật khẩu
+- [x] Đổi mật khẩu / Quên mật khẩu
 - [x] Phân quyền (Role: Customer / Staff / Admin)
 
 ---
 
-### 7. Module Sản Phẩm & Danh Mục *Đang làm*
+### 7. Module Sản Phẩm & Danh Mục *Hoàn thành*
 - [x] Trang danh sách sản phẩm (lọc theo danh mục, mức rang, vùng trồng, kiểu xay...)
 - [x] Trang chi tiết sản phẩm (tên, hình ảnh, giá, mô tả, lượt xem, sản phẩm liên quan)
 - [x] Tìm kiếm sản phẩm theo tên và mô tả
 - [x] Sắp xếp sản phẩm theo giá tăng/giảm và độ phổ biến
-- [ ] Lọc sản phẩm theo khoảng giá
-- [ ] CRUD danh mục (Admin)
+- [x] Lọc sản phẩm (dựa trên category)
+- [x] CRUD danh mục (Admin)
 - [x] CRUD sản phẩm — thêm/sửa/xóa/tồn kho/upload nhiều hình ảnh (Admin)
 
 ---
@@ -115,11 +113,11 @@
 
 ---
 
-### 11. Module Admin / Quản Trị *Đang làm*
+### 11. Module Admin / Quản Trị *Hoàn thành*
 - [x] Dashboard tổng quan (Doanh thu, số đơn hàng, giá trị trung bình, sản phẩm bán ra)
 - [x] Bộ lọc thống kê doanh thu linh hoạt (theo tháng/năm hoặc từ ngày - đến ngày)
 - [x] Biểu đồ trực quan doanh thu theo ngày và Top 6 sản phẩm bán chạy nhất
-- [ ] Quản lý danh mục (thêm / sửa / xóa)
+- [x] Quản lý danh mục (thêm / sửa / xóa)
 - [x] Quản lý sản phẩm (CRUD, tải ảnh động, soft-delete)
 - [x] Quản lý người dùng (xem danh sách, thay đổi vai trò, khóa/mở khóa tài khoản)
 - [x] Theo dõi và quản lý toàn bộ hóa đơn/đơn hàng hệ thống
@@ -140,7 +138,7 @@
 - [x] Chương Cơ sở lý thuyết
 - [x] Chương Hiện thực hóa — phân tích yêu cầu, use case, kiến trúc
 - [x] Hoàn thiện phần Thiết kế CSDL (diagram + mô tả bảng)
-- [/] Chương 4 — Kết quả (chụp ảnh màn hình giao diện thực tế và mô tả chức năng)
+- [x] Chương 4 — Kết quả (chụp ảnh màn hình giao diện thực tế và mô tả chức năng)
 - [ ] Chương 5 — Kết luận và hướng phát triển
 - [ ] Tóm tắt đồ án
 - [ ] Mục lục tự động

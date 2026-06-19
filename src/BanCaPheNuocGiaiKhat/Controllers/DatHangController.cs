@@ -56,7 +56,7 @@ public class DatHangController : Controller
             DeliveryAddress = user?.Address ?? string.Empty
         };
 
-        return View(vm);
+        return View("~/Views/Customer/DatHang/ThongTin.cshtml", vm);
     }
 
     // POST /DatHang/XacNhan
@@ -89,7 +89,7 @@ public class DatHangController : Controller
                 Quantity     = c.Quantity,
                 StockQty     = c.Product?.StockQty ?? 0
             }).ToList();
-            return View("ThongTin", input);
+            return View("~/Views/Customer/DatHang/ThongTin.cshtml", input);
         }
 
         // B9: Kiểm tra tồn kho
@@ -181,7 +181,7 @@ public class DatHangController : Controller
             })
             .ToListAsync();
 
-        return View(new DonHangCuaToiListViewModel
+        return View("~/Views/Customer/DatHang/DonHangCuaToi.cshtml", new DonHangCuaToiListViewModel
         {
             Orders       = orders,
             FilterStatus = status,
@@ -222,7 +222,7 @@ public class DatHangController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Customer/DatHang/TheoDoi.cshtml", vm);
     }
 
     // GET /DatHang/ThanhCong/{orderId}
@@ -253,6 +253,6 @@ public class DatHangController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Customer/DatHang/ThanhCong.cshtml", vm);
     }
 }

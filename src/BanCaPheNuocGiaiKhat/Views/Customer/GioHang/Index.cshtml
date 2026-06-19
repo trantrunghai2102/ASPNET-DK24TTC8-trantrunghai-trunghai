@@ -45,7 +45,7 @@
 
                         <div style="flex:1;">
                             <p style="font-weight:600;color:var(--text-primary);margin:0 0 .25rem;">@item.ProductName</p>
-                            <p style="color:var(--coffee-mid);font-weight:600;margin:0 0 .75rem;">@item.UnitPrice.ToString("N3") vnđ</p>
+                            <p style="color:var(--coffee-mid);font-weight:600;margin:0 0 .75rem;">@item.UnitPrice.ToString("N0") vnđ</p>
 
                             <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
                                 <form asp-action="CapNhat" method="post" style="display:flex;align-items:center;gap:.5rem;">
@@ -71,7 +71,7 @@
                         </div>
 
                         <div style="text-align:right;min-width:100px;">
-                            <p style="font-weight:700;color:var(--coffee-darkest);font-size:1rem;margin:0;">@item.Subtotal.ToString("N3") vnđ</p>
+                            <p style="font-weight:700;color:var(--coffee-darkest);font-size:1rem;margin:0;">@item.Subtotal.ToString("N0") vnđ</p>
                             <p style="font-size:.78rem;color:var(--text-muted);margin:.25rem 0 0;">x @item.Quantity</p>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
             <div style="background:var(--cream-white);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;margin-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;box-shadow:var(--shadow-sm);">
                 <div>
                     <p style="font-size:.9rem;color:var(--text-secondary);margin:0;">Tổng cộng</p>
-                    <p style="font-size:1.5rem;font-weight:700;color:var(--coffee-darkest);margin:.25rem 0 0;">@Model.TotalAmount.ToString("N3") vnđ</p>
+                    <p style="font-size:1.5rem;font-weight:700;color:var(--coffee-darkest);margin:.25rem 0 0;">@Model.TotalAmount.ToString("N0") vnđ</p>
                 </div>
                 <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
                     <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);">

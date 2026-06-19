@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BanCaPheNuocGiaiKhat.Data;
 using BanCaPheNuocGiaiKhat.Models;
+using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,7 @@ public class DonHangOnlineController : Controller
             })
             .ToListAsync();
 
-        return View(new DonHangOnlineListViewModel
+        return View("~/Views/Staff/DonHangOnline/Index.cshtml", new DonHangOnlineListViewModel
         {
             Orders       = orders,
             FilterStatus = status,
@@ -98,7 +99,7 @@ public class DonHangOnlineController : Controller
             }).ToList()
         };
 
-        return View(vm);
+        return View("~/Views/Staff/DonHangOnline/ChiTiet.cshtml", vm);
     }
 
     // POST /DonHangOnline/CapNhatTrangThai
@@ -116,7 +117,21 @@ public class DonHangOnlineController : Controller
         {
             order.Status        = "delivered";
             order.PaymentStatus = "paid";
-            order.UpdatedAt     = DateTime.UtcNow;
+            order.UpdatedAt     =  DateTime.UtcNow;
+
+            // Generate Invoice for online order
+            var invoice = new Invoice
+            {
+                OrderId      = order.OrderId,
+                InvoiceCode  = $"HD-{order.OrderId:D6}",
+                TotalAmount  = order.TotalAmount,
+                CashGiven    = order.TotalAmount,
+                ChangeAmount = 0,
+                PaidAt       =  DateTime.UtcNow,
+                CreatedAt    =  DateTime.UtcNow
+            };
+            _db.Invoices.Add(invoice);
+
             await _db.SaveChangesAsync();
             TempData["Success"] = "Đã xác nhận thanh toán — đơn hàng hoàn tất.";
             return RedirectToAction(nameof(ChiTiet), new { id = input.OrderId });

@@ -1,20 +1,19 @@
 @{
     ViewData["Title"] = "Home";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <section class="hero" aria-label="Hero banner">
     <div class="hero__bg"></div>
     <div class="hero__overlay"></div>
     <div class="hero__content">
-        <p class="hero__eyebrow">Single-Origin · Artisan Roasted</p>
-        <h1 class="hero__title">Crafted for the true aficionado.</h1>
+        <p class="hero__eyebrow">Nguyên Bản · Rang Thủ Công</p>
+        <h1 class="hero__title">Chế tác dành riêng cho người sành điệu.</h1>
         <p class="hero__desc">
-            Experience the finest single-origin beans, roasted to perfection
-            in our boutique roastery. Elevate your daily ritual.
+            Trải nghiệm những hạt cà phê nguyên bản tốt nhất, được rang tới độ hoàn hảo
+            tại xưởng rang thủ công của chúng tôi. Nâng tầm thói quen hàng ngày của bạn.
         </p>
         <a href="#signature-roasts" class="hero__cta">
-            Shop Now
+            Mua Ngay
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
     </div>
@@ -24,87 +23,100 @@
     <div class="section-wrapper">
         <div class="section-header">
             <div class="section-header__left">
-                <h2>Signature Roasts</h2>
-                <p>Our most celebrated flavor profiles.</p>
+                <h2>Sản Phẩm Nổi Bật</h2>
+                <p>Những hương vị được yêu thích nhất của chúng tôi.</p>
             </div>
             <a asp-controller="SanPham" asp-action="Index" class="view-all-link">
-                View all
+                Xem tất cả
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
         </div>
 
         <div class="roasts-grid">
+            @{
+                var newProducts = ViewBag.NewProducts as List<BanCaPheNuocGiaiKhat.Models.ProductCardViewModel>;
+                var bestSeller = ViewBag.BestSeller as BanCaPheNuocGiaiKhat.Models.ProductCardViewModel;
+
+                var leftProduct = newProducts != null && newProducts.Count > 0 ? newProducts[0] : null;
+                var rightProduct = newProducts != null && newProducts.Count > 1 ? newProducts[1] : null;
+            }
 
             <!-- Left small card -->
-            <div class="product-card">
-                <div class="product-card__img">
-                    <img src="~/images/product-ethiopian.png" alt="Ethiopian Yirgacheffe" loading="lazy" />
-                </div>
-                <div class="product-card__body">
-                    <p class="product-tag">Single Origin</p>
-                    <p class="product-name">Ethiopian Yirgacheffe</p>
-                    <p class="product-desc">Light and floral with bright acidity, featuring delicate notes of jasmine and bergamot.</p>
-                    <div class="product-footer">
-                        <span class="product-price sm">260,000 đ</span>
-                        <button class="btn-add-cart" aria-label="Add to cart" title="Add to cart">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                        </button>
+            @if (leftProduct != null)
+            {
+                <div class="product-card">
+                    <div class="product-card__img">
+                        <img src="@(leftProduct.ThumbnailUrl ?? "/images/product-ethiopian.png")" alt="@leftProduct.Name" loading="lazy" />
+                    </div>
+                    <div class="product-card__body">
+                        <p class="product-tag">Hàng Mới</p>
+                        <a href="/SanPham/Detail/@leftProduct.Slug" class="no-underline">
+                            <p class="product-name">@leftProduct.Name</p>
+                        </a>
+                        <p class="product-desc">@leftProduct.ShortDesc</p>
+                        <div class="product-footer">
+                            <span class="product-price sm">@leftProduct.BasePrice.ToString("N0") vnđ</span>
+                            <button class="btn-add-cart" aria-label="Thêm vào giỏ" title="Thêm vào giỏ" onclick="addToCartGlobal(@leftProduct.ProductId)">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
             <!-- Center featured card -->
-            <div class="product-card-featured">
-                <div class="product-card-featured__img">
-                    <span class="badge-bestseller">Best Seller</span>
-                    <img src="~/images/product-artisan-dark-roast.png" alt="Artisan Dark Roast" loading="eager" />
-                </div>
-                <div class="product-card-featured__body">
-                    <div class="product-stars">
-                        <div class="stars">
-                            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
-                            <span class="star">★</span><span class="star">★</span>
-                        </div>
-                        <span>(124)</span>
+            @if (bestSeller != null)
+            {
+                <div class="product-card-featured">
+                    <div class="product-card-featured__img">
+                        <span class="badge-bestseller">Bán Chạy Nhất</span>
+                        <img src="@(bestSeller.ThumbnailUrl ?? "/images/product-artisan-dark-roast.png")" alt="@bestSeller.Name" loading="eager" />
                     </div>
-                    <p class="product-brand">TheDrinkVN</p>
-                    <p class="product-name">Artisan Dark Roast</p>
-                    <p class="product-desc">A bold, full-bodied espresso blend with notes of dark chocolate, toasted almond, and a hint of smoky molasses. Perfect for intense mornings.</p>
-                    <div class="product-meta">
-                        <span>Roast</span>
-                        <div class="roast-dots">
-                            <span class="roast-dot filled"></span>
-                            <span class="roast-dot filled"></span>
-                            <span class="roast-dot filled"></span>
-                            <span class="roast-dot"></span>
+                    <div class="product-card-featured__body">
+                        <div class="product-stars">
+                            <div class="stars">
+                                <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                                <span class="star">★</span><span class="star">★</span>
+                            </div>
+                            <span>(124)</span>
                         </div>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">220,000 đ</span>
-                        <button class="btn-add-cart" aria-label="Add to cart" title="Add to cart">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                        </button>
+                        <p class="product-brand">TheDrinkVN</p>
+                        <a href="/SanPham/Detail/@bestSeller.Slug" class="no-underline">
+                            <p class="product-name">@bestSeller.Name</p>
+                        </a>
+                        <p class="product-desc">@bestSeller.ShortDesc</p>
+                        <div class="product-footer">
+                            <span class="product-price">@bestSeller.BasePrice.ToString("N0") vnđ</span>
+                            <button class="btn-add-cart" aria-label="Thêm vào giỏ" title="Thêm vào giỏ" onclick="addToCartGlobal(@bestSeller.ProductId)">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
             <!-- Right small card -->
-            <div class="product-card">
-                <div class="product-card__img">
-                    <img src="~/images/hero-coffee-beans.png" alt="Sumatra Mandheling" loading="lazy" />
-                </div>
-                <div class="product-card__body">
-                    <p class="product-tag">Limited Edition</p>
-                    <p class="product-name">Sumatra Mandheling</p>
-                    <p class="product-desc">Earthy and full-bodied with low acidity. Rich notes of dark chocolate, cedar, and a lingering herbal finish.</p>
-                    <div class="product-footer">
-                        <span class="product-price sm">240,000 đ</span>
-                        <button class="btn-add-cart" aria-label="Add to cart" title="Add to cart">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                        </button>
+            @if (rightProduct != null)
+            {
+                <div class="product-card">
+                    <div class="product-card__img">
+                        <img src="@(rightProduct.ThumbnailUrl ?? "/images/hero-coffee-beans.png")" alt="@rightProduct.Name" loading="lazy" />
+                    </div>
+                    <div class="product-card__body">
+                        <p class="product-tag">Hàng Mới</p>
+                        <a href="/SanPham/Detail/@rightProduct.Slug" class="no-underline">
+                            <p class="product-name">@rightProduct.Name</p>
+                        </a>
+                        <p class="product-desc">@rightProduct.ShortDesc</p>
+                        <div class="product-footer">
+                            <span class="product-price sm">@rightProduct.BasePrice.ToString("N0") vnđ</span>
+                            <button class="btn-add-cart" aria-label="Thêm vào giỏ" title="Thêm vào giỏ" onclick="addToCartGlobal(@rightProduct.ProductId)">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
         </div>
     </div>
@@ -113,44 +125,44 @@
 <section class="explore" aria-label="Explore collection">
     <div class="section-wrapper">
         <div class="section-header">
-            <h2>Explore the Collection</h2>
-            <p>Find exactly what your routine needs.</p>
+            <h2>Khám phá Bộ sưu tập</h2>
+            <p>Tìm chính xác những gì thói quen của bạn cần.</p>
         </div>
 
         <div class="category-grid">
             <div class="category-card">
                 <div class="category-card__img">
-                    <img src="~/images/category-whole-bean.png" alt="Whole Bean coffee" loading="lazy" />
+                    <img src="~/images/category-whole-bean.png" alt="Cà phê hạt" loading="lazy" />
                 </div>
                 <div class="category-card__overlay">
                     <div class="category-card__icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2z"/><path d="M12 12v10M8 16l4 4 4-4"/></svg>
                     </div>
-                    <span class="category-card__label">Whole Bean</span>
+                    <span class="category-card__label">Cà phê hạt</span>
                 </div>
             </div>
 
             <div class="category-card">
                 <div class="category-card__img">
-                    <img src="~/images/category-ground.png" alt="Ground coffee" loading="lazy" />
+                    <img src="~/images/category-ground.png" alt="Cà phê bột" loading="lazy" />
                 </div>
                 <div class="category-card__overlay">
                     <div class="category-card__icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/><path d="M8 6V4M16 6V4"/></svg>
                     </div>
-                    <span class="category-card__label">Ground</span>
+                    <span class="category-card__label">Cà phê bột</span>
                 </div>
             </div>
 
             <div class="category-card">
                 <div class="category-card__img">
-                    <img src="~/images/category-accessories.png" alt="Coffee accessories" loading="lazy" />
+                    <img src="~/images/category-accessories.png" alt="Dụng cụ pha chế" loading="lazy" />
                 </div>
                 <div class="category-card__overlay">
                     <div class="category-card__icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
                     </div>
-                    <span class="category-card__label">Accessories</span>
+                    <span class="category-card__label">Dụng cụ pha chế</span>
                 </div>
             </div>
         </div>
