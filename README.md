@@ -181,8 +181,8 @@ dotnet run
 
 ## Tiến Độ Thực Hiện
 
-> **Cập nhật lần cuối:** 08/06/2026  
-> **Tiến độ tổng thể:** ~35%
+> **Cập nhật lần cuối:** 19/06/2026  
+> **Tiến độ tổng thể:** ~95%
 
 | # | Module / Hạng mục | Trạng thái | Tiến độ |
 |---|---|---|---|
@@ -191,14 +191,14 @@ dotnet run
 | 3 | Thiết kế kiến trúc hệ thống | Hoàn thành | 100% |
 | 4 | Thiết kế Use Case | Hoàn thành | 100% |
 | 5 | Thiết kế cơ sở dữ liệu | Hoàn thành | 100% |
-| 6 | **Module Xác thực (Auth)** | **Đang thực hiện** | **0% → Đang bắt đầu** |
-| 7 | Module Sản phẩm & Danh mục | Chưa bắt đầu | 0% |
-| 8 | Module Giỏ hàng & Đặt hàng | Chưa bắt đầu | 0% |
-| 9 | Module Thanh toán | Chưa bắt đầu | 0% |
-| 10 | Module Nhân viên | Chưa bắt đầu | 0% |
-| 11 | Module Admin / Quản trị | Chưa bắt đầu | 0% |
-| 12 | Module Thống kê doanh thu | Chưa bắt đầu | 0% |
-| 13 | Hoàn thiện báo cáo | Đang thực hiện | 30% |
+| 6 | Module Xác thực (Auth)| **Hoàn thành** | **100%** |
+| 7 | Module Sản phẩm & Danh mục | Hoàn thành | 100% |
+| 8 | Module Giỏ hàng & Đặt hàng | Hoàn thành | 100% |
+| 9 | Module Thanh toán | Hoàn thành | 100% |
+| 10 | Module Nhân viên | Hoàn thành | 100% |
+| 11 | Module Admin / Quản trị | Hoàn thành | 100% |
+| 12 | Module Thống kê doanh thu | Hoàn thành | 100% |
+| 13 | Hoàn thiện báo cáo | Đang thực hiện | 80% |
 
 ---
 
@@ -328,6 +328,8 @@ dotnet run
 |---|---|
 | 04/06/2026 | Hoàn thiện Cơ sở lý thuyết, phân tích yêu cầu hệ thống, thiết kế kiến trúc hệ thống, thiết kế Use Case, thiết kế cơ sở dữ liệu  |
 | 08/06/2026 | Hoàn thiện tài liệu (CSDL, Use Case), cập nhật báo cáo, Hoàn thành module đăng ký/đăng nhập |
+| 09/06/2026 - 15/06/2026 | Phát triển và hoàn thiện các module cốt lõi: Quản lý Sản phẩm & Danh mục, Giỏ hàng, Đặt hàng, Thanh toán, Admin Dashboard, Thống kê doanh thu và phân hệ Nhân viên. |
+| 16/06/2026 - 21/06/2026 | Giai đoạn Refactor: Đồng bộ giao diện tiếng Việt, chuẩn hóa định dạng tiền tệ VNĐ (từ 25.00 sang 250,000), hoàn thiện toàn bộ tính năng Admin (Thống kê, Quản lý), Staff (Bán hàng POS, Quản lý đơn), Customer (Đặt hàng), và tối ưu UX (Toast notification, đổi mật khẩu trực tiếp). |
 
 ---
 
@@ -341,5 +343,5 @@ dotnet run
 
 <p align="center">
   <b>The Drink VN</b> · Đồ án Website Bán Cà Phê & Nước Giải Khát<br>
-  <i>C# ASP.NET MVC · MySQL · Bootstrap</i>
+  <i>C# ASP.NET MVC · SQL Server · Bootstrap</i>
 </p>
