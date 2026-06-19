@@ -56,11 +56,11 @@ public class SanPhamController : Controller
             "price-asc" => query.OrderBy(p => p.BasePrice),
             "price-desc" => query.OrderByDescending(p => p.BasePrice),
             "popularity" => query.OrderByDescending(p => p.ViewCount),
-            _ => query.OrderByDescending(p => p.ViewCount) // default to popularity
+            _ => query.OrderByDescending(p => p.ViewCount) 
         };
 
         // Pagination
-        int pageSize = 6; 
+        int pageSize = 10; 
         int totalItems = await query.CountAsync();
         int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 

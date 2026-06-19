@@ -19,7 +19,7 @@
             <a asp-controller="Home" asp-action="Index" class="site-nav__brand">TheDrinkVN</a>
 
             <ul class="site-nav__links">
-                <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Shop</a></li>
+                <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Cửa hàng</a></li>
                 <li>
                     <a asp-controller="DatHang"
                        asp-action="DonHangCuaToi"
@@ -32,7 +32,7 @@
             <div class="site-nav__right">
                 <div class="site-nav__search">
                     <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Search coffees..." aria-label="Search" />
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" />
                 </div>
 
                 <a asp-controller="GioHang" asp-action="Index" class="site-nav__icon-btn" aria-label="Cart" title="Giỏ hàng" style="position:relative;">
@@ -83,33 +83,33 @@
         <div class="site-footer__inner">
             <div>
                 <div class="footer-brand">TheDrinkVN</div>
-                <p class="footer-desc">Crafting exceptional coffee<br>experiences for the modern enthusiast.</p>
-                <p class="footer-copy">© 2026 TheDrinkVN Boutique. All rights reserved.</p>
+                <p class="footer-desc">Mang đến trải nghiệm cà phê tuyệt vời<br>cho những người đam mê phong cách sống hiện đại.</p>
+                <p class="footer-copy">© 2026 TheDrinkVN. Mọi quyền được bảo lưu.</p>
             </div>
 
             <div class="footer-col">
-                <h4>Shop</h4>
+                <h4>Cửa hàng</h4>
                 <ul>
-                    <li><a href="#">Whole Bean</a></li>
-                    <li><a href="#">Ground</a></li>
-                    <li><a href="#">Equipment</a></li>
+                    <li><a href="#">Cà phê hạt</a></li>
+                    <li><a href="#">Cà phê bột</a></li>
+                    <li><a href="#">Dụng cụ pha chế</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Support</h4>
+                <h4>Hỗ trợ</h4>
                 <ul>
-                    <li><a href="#">Shipping Info</a></li>
-                    <li><a href="#">Returns</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Thông tin giao hàng</a></li>
+                    <li><a href="#">Hoàn trả sản phẩm</a></li>
+                    <li><a href="#">Liên hệ với chúng tôi</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Legal</h4>
+                <h4>Pháp lý</h4>
                 <ul>
-                    <li><a asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
+                    <li><a asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a></li>
+                    <li><a href="#">Điều khoản dịch vụ</a></li>
                 </ul>
             </div>
         </div>

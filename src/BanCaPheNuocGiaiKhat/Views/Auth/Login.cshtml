@@ -14,11 +14,11 @@
         <div class="auth-entry-panel">
             <div class="brand-mark" aria-hidden="true">☕</div>
             <h1>TheDrinkVN</h1>
-            <p class="auth-entry-subtitle">Welcome back to your coffee journey.</p>
+            <p class="auth-entry-subtitle">Chào mừng trở lại hành trình cà phê của bạn.</p>
 
             <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
-                <a asp-action="Login" class="auth-tab active" role="tab" aria-selected="true">Login</a>
-                <a asp-action="Register" class="auth-tab" role="tab" aria-selected="false">Create Account</a>
+                <a asp-action="Login" class="auth-tab active" role="tab" aria-selected="true">Đăng nhập</a>
+                <a asp-action="Register" class="auth-tab" role="tab" aria-selected="false">Tạo tài khoản</a>
             </div>
 
             <form asp-action="Login" asp-route-returnUrl="@returnUrl" method="post" class="auth-entry-form" novalidate>
@@ -26,15 +26,15 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger small" style="margin-bottom:.75rem"></div>
 
                 <div class="field-block">
-                    <label asp-for="LoginName">Username or Email</label>
-                    <input asp-for="LoginName" placeholder="you@example.com" autocomplete="username" id="login-name" />
+                    <label asp-for="LoginName">Tên đăng nhập hoặc Email</label>
+                    <input asp-for="LoginName" placeholder="bạn@example.com" autocomplete="username" id="login-name" />
                     <span asp-validation-for="LoginName" class="text-danger small"></span>
                 </div>
 
                 <div class="field-block">
                     <div class="label-row">
-                        <label asp-for="Password">Password</label>
-                        <a href="#" tabindex="-1" aria-disabled="true">Forgot password?</a>
+                        <label asp-for="Password">Mật khẩu</label>
+                        <a asp-action="ForgotPassword" tabindex="-1">Quên mật khẩu?</a>
                     </div>
                     <div style="position:relative;">
                         <input asp-for="Password" placeholder="••••••••" autocomplete="current-password" id="login-password" style="padding-right:2.75rem;" />
@@ -47,13 +47,13 @@
 
                 <label class="remember-row">
                     <input asp-for="RememberMe" id="login-remember" />
-                    <span>Remember me</span>
+                    <span>Ghi nhớ đăng nhập</span>
                 </label>
 
-                <button type="submit" class="auth-entry-submit" id="login-submit">SIGN IN</button>
+                <button type="submit" class="auth-entry-submit" id="login-submit">ĐĂNG NHẬP</button>
             </form>
 
-            <div class="social-divider"><span>OR CONTINUE WITH</span></div>
+            <div class="social-divider"><span>HOẶC TIẾP TỤC VỚI</span></div>
             <div class="social-stack">
                 <button type="button" class="social-button" id="btn-google-login">
                     <img src="~/images/google.png" alt="" class="social-logo" />

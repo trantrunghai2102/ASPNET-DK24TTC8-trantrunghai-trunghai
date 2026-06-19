@@ -4,11 +4,11 @@
 }
 
 <div class="catalog-page">
-    <div class="section-wrapper">
+    <div class="section-wrapper" style="max-width: 100%; padding: 0 2rem;">
         
         <header class="catalog-header">
-            <h1 class="catalog-title">Our Coffees</h1>
-            <p class="catalog-subtitle">Explore our curated selection of single-origin beans and expertly crafted blends.</p>
+            <h1 class="catalog-title">Sản Phẩm</h1>
+            <p class="catalog-subtitle">Khám phá bộ sưu tập cà phê nguyên bản và pha trộn thủ công tinh tế của chúng tôi.</p>
         </header>
 
         <form id="filterForm" method="get" asp-controller="SanPham" asp-action="Index">
@@ -21,14 +21,14 @@
                     <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                     </svg>
-                    <input type="text" name="search" value="@Model.SearchQuery" placeholder="Search coffees..." class="toolbar-search-input" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }" />
+                    <input type="text" name="search" value="@Model.SearchQuery" placeholder="Tìm kiếm sản phẩm..." class="toolbar-search-input" onkeypress="if(event.key === 'Enter') { document.getElementById('filterForm').submit(); }" />
                 </div>
 
                 <div class="toolbar-sort">
                     <select name="sortBy" class="toolbar-sort-select" onchange="document.getElementById('filterForm').submit();">
-                        <option value="popularity" selected="@(Model.SortBy == "popularity" ? "selected" : null)">Sort by: Popularity</option>
-                        <option value="price-asc" selected="@(Model.SortBy == "price-asc" ? "selected" : null)">Price: Low to High</option>
-                        <option value="price-desc" selected="@(Model.SortBy == "price-desc" ? "selected" : null)">Price: High to Low</option>
+                        <option value="popularity" selected="@(Model.SortBy == "popularity" ? "selected" : null)">Sắp xếp: Phổ biến nhất</option>
+                        <option value="price-asc" selected="@(Model.SortBy == "price-asc" ? "selected" : null)">Giá: Thấp đến Cao</option>
+                        <option value="price-desc" selected="@(Model.SortBy == "price-desc" ? "selected" : null)">Giá: Cao xuống Thấp</option>
                     </select>
                 </div>
             </div>
@@ -139,8 +139,8 @@
                                         <p class="product-desc">@product.ShortDesc</p>
                                         <!-- Removed RoastLevel meta -->
                                         <div class="product-footer">
-                                            <span class="product-price sm">@product.BasePrice.ToString("N0") vnd</span>
-                                            <button type="button" class="btn-add-cart" aria-label="Add to cart" title="Add to cart" onclick="addToCartGlobal(@product.ProductId)">
+                                            <span class="product-price sm">@product.BasePrice.ToString("N0") vnđ</span>
+                                            <button type="button" class="btn-add-cart" aria-label="Thêm vào giỏ" title="Thêm vào giỏ" onclick="addToCartGlobal(@product.ProductId)">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                     <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -160,7 +160,7 @@
                                 <ul class="pagination">
                                     <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
                                         <button type="submit" name="page" value="@(Model.CurrentPage - 1)" class="page-link" @(Model.CurrentPage == 1 ? "disabled" : "")>
-                                            &laquo; Prev
+                                            &laquo; Trước
                                         </button>
                                     </li>
                                     
@@ -175,7 +175,7 @@
 
                                     <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
                                         <button type="submit" name="page" value="@(Model.CurrentPage + 1)" class="page-link" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
-                                            Next &raquo;
+                                            Sau &raquo;
                                         </button>
                                     </li>
                                 </ul>

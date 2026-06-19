@@ -1,4 +1,4 @@
-using BanCaPheNuocGiaiKhat.Models.Entities;
+﻿using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Data;
@@ -234,9 +234,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -254,9 +254,9 @@ public class AppDbContext : DbContext
                     StockQty = 35,
                     ViewCount = 8,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -274,9 +274,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 20,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -294,9 +294,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 15,
                     Status = "active",
-                    RoastLevel = "espresso",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -314,9 +314,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 5,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -334,9 +334,9 @@ public class AppDbContext : DbContext
                     StockQty = 45,
                     ViewCount = 28,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -354,9 +354,9 @@ public class AppDbContext : DbContext
                     StockQty = 60,
                     ViewCount = 33,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -374,9 +374,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 19,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -394,9 +394,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 14,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -414,9 +414,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 11,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "south-america",
-                    GrindType = "coarse",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -434,9 +434,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 22,
                     Status = "active",
-                    RoastLevel = "espresso",
-                    Region = "south-america",
-                    GrindType = "fine",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -454,9 +454,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 9,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -474,9 +474,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -494,9 +494,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 25,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -514,9 +514,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 7,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -534,9 +534,9 @@ public class AppDbContext : DbContext
                     StockQty = 80,
                     ViewCount = 42,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "asia-pacific",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -554,9 +554,9 @@ public class AppDbContext : DbContext
                     StockQty = 35,
                     ViewCount = 13,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -574,9 +574,9 @@ public class AppDbContext : DbContext
                     StockQty = 70,
                     ViewCount = 16,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -594,9 +594,9 @@ public class AppDbContext : DbContext
                     StockQty = 18,
                     ViewCount = 21,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -614,9 +614,9 @@ public class AppDbContext : DbContext
                     StockQty = 12,
                     ViewCount = 10,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -634,9 +634,9 @@ public class AppDbContext : DbContext
                     StockQty = 10,
                     ViewCount = 31,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -654,9 +654,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 17,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -674,9 +674,9 @@ public class AppDbContext : DbContext
                     StockQty = 10,
                     ViewCount = 50,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "caribbean",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -694,9 +694,9 @@ public class AppDbContext : DbContext
                     StockQty = 15,
                     ViewCount = 45,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "hawaii",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -714,9 +714,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -734,9 +734,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 20,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -754,9 +754,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "africa",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -774,9 +774,9 @@ public class AppDbContext : DbContext
                     StockQty = 12,
                     ViewCount = 35,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "middle-east",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -794,9 +794,9 @@ public class AppDbContext : DbContext
                     StockQty = 5,
                     ViewCount = 80,
                     Status = "active",
-                    RoastLevel = "light",
-                    Region = "central-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -814,9 +814,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 15,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "south-america",
-                    GrindType = "whole-bean",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -834,9 +834,9 @@ public class AppDbContext : DbContext
                     StockQty = 60,
                     ViewCount = 22,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -854,9 +854,9 @@ public class AppDbContext : DbContext
                     StockQty = 45,
                     ViewCount = 30,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -874,9 +874,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 28,
                     Status = "active",
-                    RoastLevel = "medium",
-                    Region = "blend",
-                    GrindType = "medium",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -894,9 +894,9 @@ public class AppDbContext : DbContext
                     StockQty = 55,
                     ViewCount = 42,
                     Status = "active",
-                    RoastLevel = "dark",
-                    Region = "blend",
-                    GrindType = "coarse",
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -914,9 +914,9 @@ public class AppDbContext : DbContext
                     StockQty = 25,
                     ViewCount = 18,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -934,9 +934,9 @@ public class AppDbContext : DbContext
                     StockQty = 30,
                     ViewCount = 34,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -954,9 +954,9 @@ public class AppDbContext : DbContext
                     StockQty = 40,
                     ViewCount = 12,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -974,9 +974,9 @@ public class AppDbContext : DbContext
                     StockQty = 50,
                     ViewCount = 21,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 },
@@ -994,9 +994,9 @@ public class AppDbContext : DbContext
                     StockQty = 20,
                     ViewCount = 26,
                     Status = "active",
-                    RoastLevel = null,
-                    Region = null,
-                    GrindType = null,
+                    
+                    
+                    
                     CreatedAt = now,
                     UpdatedAt = now
                 }

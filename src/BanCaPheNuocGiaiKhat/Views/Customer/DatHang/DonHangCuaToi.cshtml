@@ -89,7 +89,7 @@
                                 @StatusLabel(order.Status)
                             </span>
                             <span style="font-weight:700;color:var(--coffee-darkest);white-space:nowrap;">
-                                @order.TotalAmount.ToString("N3") vnđ
+                                @order.TotalAmount.ToString("N0") vnđ
                             </span>
                             <a asp-action="TheoDoi" asp-route-id="@order.OrderId"
                                style="display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .8rem;border-radius:var(--radius-sm);background:var(--cream-deep);color:var(--text-primary);font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid var(--border);">

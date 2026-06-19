@@ -28,30 +28,30 @@
                     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
                 }
                 <a asp-controller="AdminDashboard" asp-action="Index" class="@(currentController == "AdminDashboard" ? "active" : "")">
-                    <i class="bi bi-grid"></i> DASHBOARD
+                    <i class="bi bi-grid"></i> BẢNG ĐIỀU KHIỂN
                 </a>
                 <a asp-controller="AdminHoaDon" asp-action="Index" class="@(currentController == "AdminHoaDon" ? "active" : "")">
-                    <i class="bi bi-receipt"></i> ORDERS
+                    <i class="bi bi-receipt"></i> ĐƠN HÀNG
                 </a>
                 <a asp-controller="AdminSanPham" asp-action="Index" class="@(currentController == "AdminSanPham" || (currentController == "AdminSanPham" && currentAction == "Create") ? "active" : "")">
-                    <i class="bi bi-cup"></i> PRODUCTS
+                    <i class="bi bi-cup"></i> SẢN PHẨM
                 </a>
                 <a asp-controller="AdminCategory" asp-action="Index" class="@(currentController == "AdminCategory" ? "active" : "")">
-                    <i class="bi bi-tags"></i> CATEGORIES
+                    <i class="bi bi-tags"></i> DANH MỤC
                 </a>
                 @if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Admin))
                 {
                     <a asp-controller="NguoiDung" asp-action="Index" class="@(currentController == "NguoiDung" ? "active" : "")">
-                        <i class="bi bi-people"></i> USERS
+                        <i class="bi bi-people"></i> NGƯỜI DÙNG
                     </a>
                 }
             </nav>
 
             <div class="admin-sidebar__footer">
-                <a asp-controller="Auth" asp-action="ChangePassword"><i class="bi bi-gear"></i> SETTINGS</a>
+                <a asp-controller="Auth" asp-action="ChangePassword"><i class="bi bi-gear"></i> CÀI ĐẶT</a>
                 <form asp-controller="Auth" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
-                    <button type="submit"><i class="bi bi-box-arrow-left"></i> LOGOUT</button>
+                    <button type="submit"><i class="bi bi-box-arrow-left"></i> ĐĂNG XUẤT</button>
                 </form>
             </div>
         </aside>

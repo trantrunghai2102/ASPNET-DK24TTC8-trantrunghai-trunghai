@@ -199,7 +199,66 @@ public class AuthController : Controller
     [AllowAnonymous]
     public IActionResult AccessDenied() => View();
 
-    // ── Private helpers ───────────────────────────────────────────────────
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword()
+    {
+        return View(new ForgotPasswordViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+        if (user != null)
+        {
+            return RedirectToAction(nameof(ResetPassword), new { email = model.Email });
+        }
+
+        ModelState.AddModelError(nameof(model.Email), "Email không tồn tại trong hệ thống.");
+        return View(model);
+    }
+
+    // ── GET /Auth/ResetPassword ──────────────────────────────────────────
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ResetPassword(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return RedirectToAction(nameof(ForgotPassword));
+
+        return View(new ResetPasswordViewModel { Email = email });
+    }
+
+    // ── POST /Auth/ResetPassword ─────────────────────────────────────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "Không tìm thấy người dùng.");
+            return View(model);
+        }
+
+        user.PasswordHash = PasswordHasher.Hash(model.NewPassword);
+        user.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Khôi phục mật khẩu thành công. Bạn có thể đăng nhập bằng mật khẩu mới.";
+        return RedirectToAction(nameof(Login));
+    }
+
 
     private async Task SignInAsync(AuthenticatedUser user, bool isPersistent)
     {

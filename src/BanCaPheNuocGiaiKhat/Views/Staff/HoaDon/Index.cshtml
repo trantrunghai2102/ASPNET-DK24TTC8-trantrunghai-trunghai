@@ -172,16 +172,6 @@
                                                asp-route-id="@hd.InvoiceId" class="btn-view">Xem</a>
                                         }
                                         
-                                        @if (hd.InvoiceId > 0)
-                                        {
-                                            <form method="post"
-                                                  asp-controller="StaffHoaDon" asp-action="Xoa"
-                                                  asp-route-id="@hd.InvoiceId"
-                                                  onsubmit="return confirm('Xóa hóa đơn @hd.InvoiceCode?');">
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn-delete">Xóa</button>
-                                            </form>
-                                        }
                                     </div>
                                 </td>
                             </tr>

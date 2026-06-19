@@ -20,6 +20,14 @@ namespace BanCaPheNuocGiaiKhat.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Admin))
+                    return RedirectToAction("Index", "AdminDashboard");
+                if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Staff))
+                    return RedirectToAction("Index", "BanHang");
+            }
+
             // Fetch 3 newest products
             var newProducts = await _db.Products
                 .Where(p => p.Status == "active")
