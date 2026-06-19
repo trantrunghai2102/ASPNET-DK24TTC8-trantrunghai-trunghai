@@ -1,4 +1,4 @@
-@model BanCaPheNuocGiaiKhat.Models.HoaDonChiTietViewModel
+﻿@model BanCaPheNuocGiaiKhat.Models.HoaDonChiTietViewModel
 @{
     ViewData["Title"] = "Hóa đơn " + Model.InvoiceCode;
 }
@@ -183,9 +183,9 @@
                         {
                             <tr>
                                 <td>@item.ProductName</td>
-                                <td class="text-right">@item.UnitPrice.ToString("N0") đ</td>
+                                <td class="text-right">@item.UnitPrice.ToString("N0") vnd</td>
                                 <td class="text-center">@item.Quantity</td>
-                                <td class="text-right">@item.Subtotal.ToString("N0") đ</td>
+                                <td class="text-right">@item.Subtotal.ToString("N0") vnd</td>
                             </tr>
                         }
                     </tbody>
@@ -194,15 +194,15 @@
                 <div class="invoice-totals">
                     <div class="totals-row grand-total">
                         <span>Tổng thanh toán</span>
-                        <span>@Model.TotalAmount.ToString("N0") đ</span>
+                        <span>@Model.TotalAmount.ToString("N0") vnd</span>
                     </div>
                     <div class="totals-row">
                         <span>Tiền khách đưa</span>
-                        <span>@Model.CashGiven.ToString("N0") đ</span>
+                        <span>@Model.CashGiven.ToString("N0") vnd</span>
                     </div>
                     <div class="totals-row change">
                         <span>Tiền thừa trả lại</span>
-                        <span>@Model.ChangeAmount.ToString("N0") đ</span>
+                        <span>@Model.ChangeAmount.ToString("N0") vnd</span>
                     </div>
                 </div>
 

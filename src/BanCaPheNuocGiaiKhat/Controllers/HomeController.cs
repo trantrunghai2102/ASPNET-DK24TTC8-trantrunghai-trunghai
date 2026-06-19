@@ -1,5 +1,7 @@
 using BanCaPheNuocGiaiKhat.Models;
+using BanCaPheNuocGiaiKhat.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace BanCaPheNuocGiaiKhat.Controllers
@@ -8,13 +10,56 @@ namespace BanCaPheNuocGiaiKhat.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDbContext _db;
+
+        public HomeController(ILogger<HomeController> logger, AppDbContext db)
         {
             _logger = logger;
+            _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            // Fetch 3 newest products
+            var newProducts = await _db.Products
+                .Where(p => p.Status == "active")
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(3)
+                .Select(p => new ProductCardViewModel
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    Slug = p.Slug,
+                    BasePrice = p.BasePrice,
+                    PromotionPrice = p.PromotionPrice,
+                    ShortDesc = p.ShortDesc,
+                    ThumbnailUrl = p.ThumbnailUrl,
+                    IsNew = true,
+                    IsBestseller = false
+                })
+                .ToListAsync();
+
+            // Fetch 1 best seller (most viewed)
+            var bestSeller = await _db.Products
+                .Where(p => p.Status == "active")
+                .OrderByDescending(p => p.ViewCount)
+                .Select(p => new ProductCardViewModel
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    Slug = p.Slug,
+                    BasePrice = p.BasePrice,
+                    PromotionPrice = p.PromotionPrice,
+                    ShortDesc = p.ShortDesc,
+                    ThumbnailUrl = p.ThumbnailUrl,
+                    IsNew = false,
+                    IsBestseller = true
+                })
+                .FirstOrDefaultAsync();
+
+            ViewBag.NewProducts = newProducts;
+            ViewBag.BestSeller = bestSeller;
+
             return View();
         }
 

@@ -1,4 +1,4 @@
-@model BanCaPheNuocGiaiKhat.Models.ProductDetailViewModel
+﻿@model BanCaPheNuocGiaiKhat.Models.ProductDetailViewModel
 
 @{
     ViewData["Title"] = Model.Product.Name;
@@ -73,12 +73,12 @@
             <div class="detail-price">
                 @if (Model.Product.PromotionPrice.HasValue)
                 {
-                    <span class="old-price">@Model.Product.BasePrice.ToString("N0") đ</span>
-                    <span class="current-price promotion">@Model.Product.PromotionPrice.Value.ToString("N0") đ</span>
+                    <span class="old-price">@Model.Product.BasePrice.ToString("N0") vnd</span>
+                    <span class="current-price promotion">@Model.Product.PromotionPrice.Value.ToString("N0") vnd</span>
                 }
                 else
                 {
-                    <span class="current-price">@Model.Product.BasePrice.ToString("N0") đ</span>
+                    <span class="current-price">@Model.Product.BasePrice.ToString("N0") vnd</span>
                 }
             </div>
 
@@ -96,16 +96,16 @@
             <div class="detail-actions">
                   @if (User.IsInRole("customer"))
                 {
-                    <form id="gioHangForm" asp-controller="GioHang" asp-action="Them" method="post" hidden>
+                    <form id="gioHangForm" asp-controller="GioHang" asp-action="ThemAjax" method="post" hidden>
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="ProductId" value="@Model.Product.ProductId" />
                     </form>
                     <div class="quantity-selector">
-                        <button type="button" class="qty-btn minus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-                        <input type="number" name="Quantity" form="gioHangForm" class="qty-input" value="1" min="1" max="@Model.Product.StockQty" />
-                        <button type="button" class="qty-btn plus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                        <button type="button" class="qty-btn minus" onclick="updateQty(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                        <input type="number" id="detailQtyInput" name="Quantity" form="gioHangForm" class="qty-input" value="1" min="1" max="@Model.Product.StockQty" />
+                        <button type="button" class="qty-btn plus" onclick="updateQty(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                     </div>
-                    <button type="submit" form="gioHangForm" class="add-to-cart-btn">
+                    <button type="button" id="btnAddToCart" class="add-to-cart-btn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         Thêm vào giỏ hàng
                     </button>
@@ -137,16 +137,11 @@
             <div class="accordion-group">
                 <details class="accordion-item" open>
                     <summary class="accordion-header">
-                        Coffee Details
+                        Product Details
                         <svg class="icon-plus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         <svg class="icon-minus" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </summary>
                     <div class="accordion-content">
-                        <ul class="detail-list">
-                            <li><strong>Region:</strong> <span class="capitalize">@(Model.Product.Region ?? "Blend")</span></li>
-                            <li><strong>Roast:</strong> <span class="capitalize">@(Model.Product.RoastLevel ?? "Medium")</span></li>
-                            <li><strong>Grind:</strong> <span class="capitalize">@(Model.Product.GrindType ?? "Whole Bean")</span></li>
-                        </ul>
                         <div class="long-desc mt-3">@Html.Raw(Model.Product.DetailDesc)</div>
                     </div>
                 </details>
@@ -201,7 +196,7 @@
                             <p class="product-desc">@item.ShortDesc</p>
                             
                             <div class="product-footer">
-                                <span class="product-price sm">@item.BasePrice.ToString("N0") đ</span>
+                                <span class="product-price sm">@item.BasePrice.ToString("N0") vnd</span>
                                 <button type="button" class="btn-add-cart" aria-label="Add to cart">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                 </button>
@@ -220,6 +215,90 @@
             document.getElementById('mainImage').src = src;
             document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
+        }
+
+        function updateQty(delta) {
+            var input = document.getElementById('detailQtyInput');
+            if (!input) return;
+            var val = parseInt(input.value) || 1;
+            var max = parseInt(input.max) || 999;
+            var min = parseInt(input.min) || 1;
+            
+            var newVal = val + delta;
+            if (newVal < min) newVal = min;
+            if (newVal > max) newVal = max;
+            
+            input.value = newVal;
+        }
+
+        var btnAdd = document.getElementById('btnAddToCart');
+        if (btnAdd) {
+            btnAdd.addEventListener('click', function() {
+                var form = document.getElementById('gioHangForm');
+                var formData = new FormData(form);
+                formData.set('Quantity', document.getElementById('detailQtyInput').value);
+
+                var originalContent = btnAdd.innerHTML;
+                btnAdd.innerHTML = 'Đang xử lý...';
+                btnAdd.disabled = true;
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                        throw new Error('Redirecting');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    btnAdd.innerHTML = originalContent;
+                    btnAdd.disabled = false;
+                    
+                    if (data.success) {
+                        var badge = document.getElementById('cartCountBadge');
+                        if (badge) {
+                            badge.textContent = data.count;
+                            badge.style.display = 'inline-block';
+                        }
+                        
+                        var toastContainer = document.getElementById('toastContainer');
+                        if (!toastContainer) {
+                            toastContainer = document.createElement('div');
+                            toastContainer.id = 'toastContainer';
+                            toastContainer.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;';
+                            document.body.appendChild(toastContainer);
+                        }
+                        
+                        var toast = document.createElement('div');
+                        toast.style.cssText = 'background:#4c3a30; color:white; padding:12px 20px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2); opacity:0; transform:translateY(20px); transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size:0.95rem; font-weight:500; display:flex; align-items:center; gap:10px;';
+                        toast.innerHTML = '<i class="bi bi-check-circle-fill" style="color:#d1e7dd; font-size:1.1rem;"></i> <span>' + data.message + '</span>';
+                        toastContainer.appendChild(toast);
+                        
+                        setTimeout(() => {
+                            toast.style.opacity = '1';
+                            toast.style.transform = 'translateY(0)';
+                        }, 10);
+                        
+                        setTimeout(() => {
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translateY(10px)';
+                            setTimeout(() => toast.remove(), 300);
+                        }, 3000);
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+                })
+                .catch(err => {
+                    if (err.message === 'Redirecting') return;
+                    console.error(err);
+                    btnAdd.innerHTML = originalContent;
+                    btnAdd.disabled = false;
+                    window.location.href = '/Auth/Login';
+                });
+            });
         }
     </script>
 }

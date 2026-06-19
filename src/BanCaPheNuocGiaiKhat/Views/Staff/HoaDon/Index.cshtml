@@ -88,8 +88,8 @@
 </style>
 }
 
-<div class="catalog-page">
-    <div class="section-wrapper">
+<div class="catalog-page" style="max-width: 100%; padding: 0 1.5rem;">
+    <div style="width: 100%;">
         <header class="catalog-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
             <div>
                 <h1 class="catalog-title">Quản lý hóa đơn</h1>
@@ -127,8 +127,9 @@
                 <table class="hoadon-table">
                     <thead>
                         <tr>
-                            <th>Mã hóa đơn</th>
+                            <th>Mã đơn/HD</th>
                             <th>Loại đơn</th>
+                            <th>Trạng thái</th>
                             <th>Thời gian</th>
                             <th>Tổng tiền</th>
                             <th>Nhân viên</th>
@@ -141,22 +142,46 @@
                             <tr>
                                 <td><span class="invoice-code-badge">@hd.InvoiceCode</span></td>
                                 <td>
-                                    @if (hd.OrderType == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
+                                    @if (hd.OrderType?.ToLower() == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
                                 </td>
-                                <td>@hd.PaidAt.ToLocalTime().ToString("HH:mm — dd/MM/yyyy")</td>
-                                <td class="amount-cell">@hd.TotalAmount.ToString("N3") vnđ</td>
+                                <td>
+                                    @switch (hd.Status) {
+                                        case "pending": <span style="color:#ffc107;font-weight:600">Chờ xử lý</span>; break;
+                                        case "processing": <span style="color:#17a2b8;font-weight:600">Đang xử lý</span>; break;
+                                        case "shipping": <span style="color:#007bff;font-weight:600">Đang giao</span>; break;
+                                        case "delivered": <span style="color:#28a745;font-weight:600">Đã giao</span>; break;
+                                        case "paid": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                        case "completed": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                        case "cancelled": <span style="color:#dc3545;font-weight:600">Đã hủy</span>; break;
+                                        default: <span style="font-weight:600;color:var(--text-secondary)">@hd.Status</span>; break;
+                                    }
+                                </td>
+                                <td>@hd.Date.ToLocalTime().ToString("HH:mm — dd/MM/yyyy")</td>
+                                <td class="amount-cell">@hd.TotalAmount.ToString("N0") vnđ</td>
                                 <td>@(hd.StaffName ?? "—")</td>
                                 <td>
                                     <div class="action-cell">
-                                        <a asp-controller="StaffHoaDon" asp-action="ChiTiet"
-                                           asp-route-id="@hd.InvoiceId" class="btn-view">Xem</a>
-                                        <form method="post"
-                                              asp-controller="StaffHoaDon" asp-action="Xoa"
-                                              asp-route-id="@hd.InvoiceId"
-                                              onsubmit="return confirm('Xóa hóa đơn @hd.InvoiceCode?');">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn-delete">Xóa</button>
-                                        </form>
+                                        @if (hd.OrderType?.ToLower() == "online")
+                                        {
+                                            <a asp-controller="DonHangOnline" asp-action="ChiTiet"
+                                               asp-route-id="@hd.OrderId" class="btn-view">Xem</a>
+                                        }
+                                        else if (hd.InvoiceId > 0)
+                                        {
+                                            <a asp-controller="StaffHoaDon" asp-action="ChiTiet"
+                                               asp-route-id="@hd.InvoiceId" class="btn-view">Xem</a>
+                                        }
+                                        
+                                        @if (hd.InvoiceId > 0)
+                                        {
+                                            <form method="post"
+                                                  asp-controller="StaffHoaDon" asp-action="Xoa"
+                                                  asp-route-id="@hd.InvoiceId"
+                                                  onsubmit="return confirm('Xóa hóa đơn @hd.InvoiceCode?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-delete">Xóa</button>
+                                            </form>
+                                        }
                                     </div>
                                 </td>
                             </tr>

@@ -4,8 +4,8 @@
     ViewData["Title"] = "Quản lý đơn hàng online";
 }
 
-<div class="catalog-page">
-    <div class="section-wrapper">
+<div class="catalog-page" style="max-width: 100%; padding: 0 1.5rem;">
+    <div style="width: 100%;">
         <header class="catalog-header">
             <h1 class="catalog-title">Đơn hàng online</h1>
             <p class="catalog-subtitle">Tiếp nhận và xử lý đơn hàng đặt trực tuyến từ khách hàng.</p>
@@ -76,7 +76,7 @@
                                 <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.CustomerName ?? "—")</td>
                                 <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientName ?? "—")</td>
                                 <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientPhone ?? "—")</td>
-                                <td style="padding:.7rem 1rem;text-align:right;font-weight:600;color:var(--coffee-darkest);font-size:.88rem;">@o.TotalAmount.ToString("N3") vnđ</td>
+                                <td style="padding:.7rem 1rem;text-align:right;font-weight:600;color:var(--coffee-darkest);font-size:.88rem;">@o.TotalAmount.ToString("N0") vnđ</td>
                                 <td style="padding:.7rem 1rem;text-align:center;">
                                     @{
                                         var (bg, fg) = o.Status switch

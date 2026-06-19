@@ -19,9 +19,6 @@ public class SanPhamController : Controller
         int? categoryId,
         string? search,
         string? sortBy,
-        List<string>? roast,
-        List<string>? region,
-        List<string>? grind,
         int page = 1)
     {
         var categories = await _db.Categories.OrderBy(c => c.Name).ToListAsync();
@@ -31,7 +28,18 @@ public class SanPhamController : Controller
         // Category Filter
         if (categoryId.HasValue && categoryId.Value > 0)
         {
-            query = query.Where(p => p.CategoryId == categoryId.Value);
+            var targetIds = new List<int> { categoryId.Value };
+            
+            var children = categories.Where(c => c.ParentId == categoryId.Value).Select(c => c.CategoryId).ToList();
+            targetIds.AddRange(children);
+            
+            foreach (var childId in children)
+            {
+                var grandChildren = categories.Where(c => c.ParentId == childId).Select(c => c.CategoryId).ToList();
+                targetIds.AddRange(grandChildren);
+            }
+            
+            query = query.Where(p => p.CategoryId.HasValue && targetIds.Contains(p.CategoryId.Value));
         }
 
         // Search Filter
@@ -40,24 +48,6 @@ public class SanPhamController : Controller
             var searchClean = search.Trim().ToLower();
             query = query.Where(p => p.Name.ToLower().Contains(searchClean) || 
                                      (p.ShortDesc != null && p.ShortDesc.ToLower().Contains(searchClean)));
-        }
-
-        // Roast level Filter
-        if (roast != null && roast.Any())
-        {
-            query = query.Where(p => p.RoastLevel != null && roast.Contains(p.RoastLevel));
-        }
-
-        // Region Filter
-        if (region != null && region.Any())
-        {
-            query = query.Where(p => p.Region != null && region.Contains(p.Region));
-        }
-
-        // Grind type Filter
-        if (grind != null && grind.Any())
-        {
-            query = query.Where(p => p.GrindType != null && grind.Contains(p.GrindType));
         }
 
         // Sorting
@@ -70,7 +60,7 @@ public class SanPhamController : Controller
         };
 
         // Pagination
-        int pageSize = 3; 
+        int pageSize = 6; 
         int totalItems = await query.CountAsync();
         int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
@@ -89,9 +79,6 @@ public class SanPhamController : Controller
                 PromotionPrice = p.PromotionPrice,
                 ShortDesc = p.ShortDesc,
                 ThumbnailUrl = p.ThumbnailUrl,
-                RoastLevel = p.RoastLevel,
-                Region = p.Region,
-                GrindType = p.GrindType,
                 IsNew = p.ProductId == 1, 
                 IsBestseller = p.ProductId == 3 
             })
@@ -104,9 +91,6 @@ public class SanPhamController : Controller
             SelectedCategoryId = categoryId,
             SearchQuery = search,
             SortBy = sortBy ?? "popularity",
-            SelectedRoastLevels = roast ?? new List<string>(),
-            SelectedRegions = region ?? new List<string>(),
-            SelectedGrindTypes = grind ?? new List<string>(),
             CurrentPage = page,
             TotalPages = totalPages,
             PageSize = pageSize,
@@ -151,9 +135,6 @@ public class SanPhamController : Controller
                 PromotionPrice = p.PromotionPrice,
                 ShortDesc = p.ShortDesc,
                 ThumbnailUrl = p.ThumbnailUrl,
-                RoastLevel = p.RoastLevel,
-                Region = p.Region,
-                GrindType = p.GrindType,
                 IsNew = p.ProductId == 1,
                 IsBestseller = p.ProductId == 3
             })

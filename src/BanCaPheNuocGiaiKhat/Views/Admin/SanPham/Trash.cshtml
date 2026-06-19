@@ -1,0 +1,167 @@
+@model BanCaPheNuocGiaiKhat.Models.AdminProductListIndexViewModel
+@{
+    ViewData["Title"] = "Thùng rác sản phẩm";
+}
+
+<header class="admin-topbar">
+    <div>
+        <p class="admin-kicker">MANAGE INVENTORY</p>
+        <h1>Thùng Rác Sản Phẩm</h1>
+    </div>
+    <div>
+        <a asp-action="Index" class="admin-secondary-btn" style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #d8c4b7; background: #fff; color: #4e3a2f; text-decoration: none; font-weight: 600;">
+            <i class="bi bi-arrow-left"></i> Quay lại Catalog
+        </a>
+    </div>
+</header>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="font-size: .88rem; font-weight: 600; padding: .75rem 1rem;">@TempData["Success"]</div>
+}
+
+<section class="admin-panel">
+    <div class="admin-panel__header">
+        <small style="font-weight: 800; color: #b02a37; letter-spacing: .05em;">SẢN PHẨM ĐÃ XÓA MỀM (INACTIVE)</small>
+        <form method="get" style="display:flex; align-items:center; gap: .5rem;">
+            <input type="text" name="search" value="@Model.SearchQuery" placeholder="Tìm kiếm trong thùng rác..." style="padding:.4rem .8rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.8rem; outline:none; min-width:250px;">
+            <button type="submit" class="admin-secondary-btn" style="padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: 4px; border: 1px solid #d8c4b7; background: #fff; cursor: pointer; color: #4e3a2f; font-weight: 600;">Tìm kiếm</button>
+            @if (!string.IsNullOrEmpty(Model.SearchQuery))
+            {
+                <a asp-action="Trash" style="font-size: .8rem; color: #888; text-decoration: none; margin-left: .5rem;">Xóa lọc</a>
+            }
+        </form>
+    </div>
+    
+    <div class="admin-product-table">
+        <div class="admin-product-table__head" style="grid-template-columns: 80px minmax(200px, 1fr) 150px 100px 100px 150px;">
+            <span>Image</span>
+            <span>Product</span>
+            <span>Category</span>
+            <span>Price</span>
+            <span>Status</span>
+            <span style="text-align: right;">Actions</span>
+        </div>
+        
+        @if (!Model.Products.Any())
+        {
+            <div style="padding: 3rem; text-align: center; color: #6d5a4d; font-size: .85rem;">
+                Thùng rác trống.
+            </div>
+        }
+        else
+        {
+            foreach (var p in Model.Products)
+            {
+                <div class="admin-product-table__row" style="grid-template-columns: 80px minmax(200px, 1fr) 150px 100px 100px 150px; align-items:center;">
+                    <div>
+                        @if (!string.IsNullOrEmpty(p.ThumbnailUrl))
+                        {
+                            <img src="@p.ThumbnailUrl" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #eadbd2; filter: grayscale(100%); opacity: 0.7;" />
+                        }
+                        else
+                        {
+                            <div style="width: 50px; height: 50px; border-radius: 6px; background: #eee2dc; display:grid; place-items:center; color:#6d5a4d;">
+                                <i class="bi bi-image"></i>
+                            </div>
+                        }
+                    </div>
+                    <div style="opacity: 0.7;">
+                        <strong style="display:block; font-size:.9rem; color:#231a15; text-decoration: line-through;">@p.Name</strong>
+                        <small style="color:#6d5a4d; font-size:.75rem;">Stock: @p.StockQty</small>
+                    </div>
+                    <div style="font-size:.85rem; color:#6d5a4d; opacity: 0.7;">@p.CategoryName</div>
+                    <div style="font-size:.85rem; font-weight:700; color:#231a15; opacity: 0.7;">@p.BasePrice.ToString("N0") vnd</div>
+                    <div>
+                        <span class="admin-status admin-status--orange" style="background:#fce8e6; color:#b02a37;">Deleted</span>
+                    </div>
+                    <div style="text-align: right; display:flex; gap:.3rem; justify-content:flex-end;">
+                        <form method="post" asp-action="Restore" asp-route-id="@p.ProductId" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-light" style="font-size:.75rem; color: #198754;" title="Khôi phục">
+                                <i class="bi bi-arrow-counterclockwise"></i> Khôi phục
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-sm btn-light text-danger perm-delete-btn" data-id="@p.ProductId" data-name="@p.Name" style="font-size:.75rem;" title="Xóa vĩnh viễn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div style="padding: 1rem 1.5rem; display:flex; gap:.5rem; justify-content:center; border-top: 1px solid #eee6de;">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#4e3a2f; color:#fff; border-radius:4px; font-size:.85rem; font-weight:700;">@i</span>
+                }
+                else
+                {
+                    <a asp-action="Trash" asp-route-page="@i" asp-route-search="@Model.SearchQuery" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#f4f0ec; color:#4e3a2f; text-decoration:none; border-radius:4px; font-size:.85rem; font-weight:600;">@i</a>
+                }
+            }
+        </div>
+    }
+</section>
+
+<!-- Custom Permanent Delete Modal -->
+<div id="permDeleteModal" class="custom-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(35,26,21,0.6); z-index:9999; backdrop-filter: blur(4px); justify-content:center; align-items:center;">
+    <div class="custom-modal-card" style="background:#fff; border-radius:12px; border:1px solid #eadbd2; width:90%; max-width:400px; padding:1.5rem; box-shadow:0 10px 25px rgba(0,0,0,0.15); transform: translateY(-20px); transition: transform 0.2s ease;">
+        <h3 style="font-size:1.1rem; color:#b02a37; margin-bottom:0.75rem; font-weight:700;"><i class="bi bi-exclamation-triangle-fill"></i> Cảnh báo: Xóa vĩnh viễn</h3>
+        <p style="font-size:0.88rem; color:#6d5a4d; margin-bottom:1.5rem; line-height:1.4;">Bạn chuẩn bị xóa vĩnh viễn sản phẩm <strong id="permDeleteProductName" style="color:#231a15;"></strong>. Hành động này sẽ thay đổi trạng thái sang "deleted" (ẩn hoàn toàn) và không thể khôi phục lại từ giao diện. Bạn có chắc chắn không?</p>
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+            <button type="button" onclick="closePermDeleteModal()" class="admin-secondary-btn" style="padding:0.4rem 1rem; font-size:0.8rem; border-radius:6px; cursor:pointer;">Hủy bỏ</button>
+            <form id="permDeleteForm" method="post" action="">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="admin-primary-btn" style="background:#b02a37; border-color:#b02a37; padding:0.4rem 1rem; font-size:0.8rem; border-radius:6px; cursor:pointer; color:#fff;">Xóa vĩnh viễn</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openPermDeleteModal(productId, productName) {
+            const modal = document.getElementById('permDeleteModal');
+            const nameEl = document.getElementById('permDeleteProductName');
+            const form = document.getElementById('permDeleteForm');
+            
+            nameEl.textContent = productName;
+            form.action = `/AdminSanPham/PermanentDelete/${productId}`;
+            
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.querySelector('.custom-modal-card').style.transform = 'translateY(0)';
+            }, 10);
+        }
+        
+        function closePermDeleteModal() {
+            const modal = document.getElementById('permDeleteModal');
+            modal.querySelector('.custom-modal-card').style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 200);
+        }
+
+        // Bind buttons
+        document.querySelectorAll('.perm-delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                openPermDeleteModal(id, name);
+            });
+        });
+
+        // Close modal on background click
+        window.onclick = function(event) {
+            const modal = document.getElementById('permDeleteModal');
+            if (event.target == modal) {
+                closePermDeleteModal();
+            }
+        }
+    </script>
+}

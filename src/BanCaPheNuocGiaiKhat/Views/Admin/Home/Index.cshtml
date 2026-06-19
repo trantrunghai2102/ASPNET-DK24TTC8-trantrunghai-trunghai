@@ -1,4 +1,4 @@
-@model BanCaPheNuocGiaiKhat.Models.AdminDashboardViewModel
+﻿@model BanCaPheNuocGiaiKhat.Models.AdminDashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
     var maxRevenue = Model.RevenueByDay.Count == 0 ? 0 : Model.RevenueByDay.Max(x => x.Revenue);
@@ -41,7 +41,7 @@
             <span class="admin-stat-card__icon" style="background:#e8dfd8; color:#6d5a4d"><i class="bi bi-cash-stack"></i></span>
         </div>
         <div>
-            <strong>@Model.TotalRevenue.ToString("N0") đ</strong>
+            <strong>@Model.TotalRevenue.ToString("N0") vnd</strong>
             <span class="admin-stat-card__trend admin-stat-card__trend--up"><i class="bi bi-arrow-up-right"></i> +12.5% vs last month</span>
         </div>
     </article>
@@ -51,7 +51,7 @@
             <span class="admin-stat-card__icon" style="background:#eee6dd; color:#6d5a4d"><i class="bi bi-receipt"></i></span>
         </div>
         <div>
-            <strong>@Model.AverageOrderValue.ToString("N0") đ</strong>
+            <strong>@Model.AverageOrderValue.ToString("N0") vnd</strong>
             <span class="admin-stat-card__trend admin-stat-card__trend--up"><i class="bi bi-arrow-up-right"></i> +3.2% vs last month</span>
         </div>
     </article>
@@ -98,7 +98,7 @@
                 @foreach (var item in Model.RevenueByDay)
                 {
                     var height = maxRevenue <= 0 ? 4 : Math.Max(8, (int)(item.Revenue / maxRevenue * 250));
-                    <div class="admin-revenue-bar" title="@item.Date.ToString("MMM dd"): @item.Revenue.ToString("N0") đ">
+                    <div class="admin-revenue-bar" title="@item.Date.ToString("MMM dd"): @item.Revenue.ToString("N0") vnd">
                         <span style="height:@(height)px"></span>
                     </div>
                 }
@@ -163,7 +163,7 @@
                     <div>
                         <strong style="display:block; font-size:.85rem; color:#231a15;">@inv.InvoiceCode</strong>
                     </div>
-                    <div style="font-size:.85rem; font-weight:700; color:#231a15;">@inv.TotalAmount.ToString("N0") đ</div>
+                    <div style="font-size:.85rem; font-weight:700; color:#231a15;">@inv.TotalAmount.ToString("N0") vnd</div>
                     <div style="font-size:.8rem; color:#6d5a4d;">@inv.PaidAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</div>
                 </div>
             }

@@ -13,17 +13,7 @@
 
         <form id="filterForm" method="get" asp-controller="SanPham" asp-action="Index">
             
-            <!-- Category Selector (horizontal tags at the top) -->
-            <div class="category-tabs">
-                <a href="@Url.Action("Index", "SanPham", new { search = Model.SearchQuery, sortBy = Model.SortBy })" 
-                   class="category-tab-btn @(Model.SelectedCategoryId == null ? "active" : "")">Tất cả</a>
-                @foreach (var cat in Model.Categories)
-                {
-                    <a href="@Url.Action("Index", "SanPham", new { categoryId = cat.CategoryId, search = Model.SearchQuery, sortBy = Model.SortBy })" 
-                       class="category-tab-btn @(Model.SelectedCategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
-                }
-                <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
-            </div>
+            <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
 
             <!-- Toolbar: Search and Sort -->
             <div class="catalog-toolbar">
@@ -48,64 +38,76 @@
                 
                 <!-- Sidebar Filters -->
                 <aside class="catalog-sidebar">
-                    
-                    <!-- Roast Level Filter -->
-                    <div class="filter-group">
-                        <h3 class="filter-title">Roast Level</h3>
-                        <div class="filter-options">
-                            @{
-                                var roastLevels = new[] { ("light", "Light Roast"), ("medium", "Medium Roast"), ("dark", "Dark Roast"), ("espresso", "Espresso Roast") };
-                            }
-                            @foreach (var (val, label) in roastLevels)
-                            {
-                                <label class="filter-option">
-                                    <input type="checkbox" name="roast" value="@val" 
-                                           checked="@(Model.SelectedRoastLevels.Contains(val) ? "checked" : null)" 
-                                           onchange="document.getElementById('filterForm').submit();" />
-                                    <span>@label</span>
-                                </label>
-                            }
-                        </div>
-                    </div>
+                    <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--coffee-darkest); margin-bottom: 1.2rem; letter-spacing: -0.02em;">Danh mục</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <a href="@Url.Action("Index", "SanPham", new { search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                           style="text-decoration: none; font-weight: @(Model.SelectedCategoryId == null ? "800" : "500"); color: @(Model.SelectedCategoryId == null ? "var(--coffee-darkest)" : "var(--text-secondary)");">Tất cả</a>
+                        
+                        @foreach (var parentCat in Model.Categories.Where(c => c.ParentId == null))
+                        {
+                            bool hasChildren = Model.Categories.Any(c => c.ParentId == parentCat.CategoryId);
+                            bool isParentActive = Model.SelectedCategoryId == parentCat.CategoryId ||
+                                (Model.SelectedCategoryId != null && (
+                                    Model.Categories.Any(c => c.ParentId == parentCat.CategoryId && c.CategoryId == Model.SelectedCategoryId) ||
+                                    Model.Categories.Any(c => c.ParentId != null && Model.Categories.Any(p => p.CategoryId == c.ParentId && p.ParentId == parentCat.CategoryId) && c.CategoryId == Model.SelectedCategoryId)
+                                ));
 
-                    <!-- Region Filter -->
-                    <div class="filter-group">
-                        <h3 class="filter-title">Region</h3>
-                        <div class="filter-options">
-                            @{
-                                var regions = new[] { ("south-america", "South America"), ("central-america", "Central America"), ("africa", "Africa"), ("asia-pacific", "Asia Pacific") };
-                            }
-                            @foreach (var (val, label) in regions)
-                            {
-                                <label class="filter-option">
-                                    <input type="checkbox" name="region" value="@val" 
-                                           checked="@(Model.SelectedRegions.Contains(val) ? "checked" : null)" 
-                                           onchange="document.getElementById('filterForm').submit();" />
-                                    <span>@label</span>
-                                </label>
-                            }
-                        </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <a href="@Url.Action("Index", "SanPham", new { categoryId = parentCat.CategoryId, search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                                       style="text-decoration: none; font-weight: @(Model.SelectedCategoryId == parentCat.CategoryId ? "800" : "600"); color: @(Model.SelectedCategoryId == parentCat.CategoryId ? "var(--coffee-darkest)" : "var(--text-secondary)");">
+                                        @parentCat.Name
+                                    </a>
+                                    @if (hasChildren)
+                                    {
+                                        <button type="button" onclick="toggleSubcategory('sub-@parentCat.CategoryId', this)" style="background: none; border: none; padding: 0.2rem; cursor: pointer; color: var(--text-muted); display: grid; place-items: center;">
+                                            <i class="bi @(isParentActive ? "bi-chevron-down" : "bi-chevron-right")" style="font-size: 0.75rem;"></i>
+                                        </button>
+                                    }
+                                </div>
+                                
+                                @if (hasChildren)
+                                {
+                                    <div id="sub-@parentCat.CategoryId" style="display: @(isParentActive ? "flex" : "none"); flex-direction: column; gap: 0.4rem; padding-left: 1rem; border-left: 2px solid #e2cbb8; margin-left: 0.2rem; margin-top: 0.4rem;">
+                                        @foreach (var childCat in Model.Categories.Where(c => c.ParentId == parentCat.CategoryId))
+                                        {
+                                            bool hasGrandchildren = Model.Categories.Any(c => c.ParentId == childCat.CategoryId);
+                                            bool isChildActive = Model.SelectedCategoryId == childCat.CategoryId || 
+                                                (Model.SelectedCategoryId != null && Model.Categories.Any(c => c.ParentId == childCat.CategoryId && c.CategoryId == Model.SelectedCategoryId));
+                                                
+                                            <div style="display: flex; flex-direction: column;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                    <a href="@Url.Action("Index", "SanPham", new { categoryId = childCat.CategoryId, search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                                                       style="text-decoration: none; font-size: 0.95rem; font-weight: @(Model.SelectedCategoryId == childCat.CategoryId ? "800" : "500"); color: @(Model.SelectedCategoryId == childCat.CategoryId ? "var(--coffee-mid)" : "var(--text-muted)");">
+                                                        @childCat.Name
+                                                    </a>
+                                                    @if (hasGrandchildren)
+                                                    {
+                                                        <button type="button" onclick="toggleSubcategory('sub-@childCat.CategoryId', this)" style="background: none; border: none; padding: 0.2rem; cursor: pointer; color: var(--text-muted); display: grid; place-items: center;">
+                                                            <i class="bi @(isChildActive ? "bi-chevron-down" : "bi-chevron-right")" style="font-size: 0.65rem;"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                                
+                                                @if (hasGrandchildren)
+                                                {
+                                                    <div id="sub-@childCat.CategoryId" style="display: @(isChildActive ? "flex" : "none"); flex-direction: column; gap: 0.4rem; padding-left: 0.8rem; border-left: 1px dashed #d8c4b7; margin-left: 0.4rem; margin-top: 0.4rem; padding-top: 0.2rem;">
+                                                        @foreach (var grandChild in Model.Categories.Where(c => c.ParentId == childCat.CategoryId))
+                                                        {
+                                                            <a href="@Url.Action("Index", "SanPham", new { categoryId = grandChild.CategoryId, search = Model.SearchQuery, sortBy = Model.SortBy })" 
+                                                               style="text-decoration: none; font-size: 0.85rem; font-weight: @(Model.SelectedCategoryId == grandChild.CategoryId ? "800" : "500"); color: @(Model.SelectedCategoryId == grandChild.CategoryId ? "var(--coffee-mid)" : "var(--text-muted)");">
+                                                                @grandChild.Name
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
-
-                    <!-- Grind Type Filter -->
-                    <div class="filter-group">
-                        <h3 class="filter-title">Grind Type</h3>
-                        <div class="filter-options">
-                            @{
-                                var grindTypes = new[] { ("whole-bean", "Whole Bean"), ("coarse", "Coarse (French Press)"), ("medium", "Medium (Drip)"), ("fine", "Fine (Espresso)") };
-                            }
-                            @foreach (var (val, label) in grindTypes)
-                            {
-                                <label class="filter-option">
-                                    <input type="checkbox" name="grind" value="@val" 
-                                           checked="@(Model.SelectedGrindTypes.Contains(val) ? "checked" : null)" 
-                                           onchange="document.getElementById('filterForm').submit();" />
-                                    <span>@label</span>
-                                </label>
-                            }
-                        </div>
-                    </div>
-
                 </aside>
 
                 <!-- Product List and Pagination -->
@@ -135,32 +137,10 @@
                                             <p class="product-name">@product.Name</p>
                                         </a>
                                         <p class="product-desc">@product.ShortDesc</p>
-                                        
-                                        @if (product.RoastLevel != null)
-                                        {
-                                            <div class="product-meta">
-                                                <span>Roast</span>
-                                                <div class="roast-dots">
-                                                    @{
-                                                        var filledDots = product.RoastLevel switch {
-                                                            "light" => 1,
-                                                            "medium" => 2,
-                                                            "dark" => 3,
-                                                            "espresso" => 4,
-                                                            _ => 0
-                                                        };
-                                                    }
-                                                    @for (int i = 1; i <= 4; i++)
-                                                    {
-                                                        <span class="roast-dot @(i <= filledDots ? "filled" : "")"></span>
-                                                    }
-                                                </div>
-                                            </div>
-                                        }
-
+                                        <!-- Removed RoastLevel meta -->
                                         <div class="product-footer">
-                                            <span class="product-price sm">@product.BasePrice.ToString("N0") đ</span>
-                                            <button type="button" class="btn-add-cart" aria-label="Add to cart" title="Add to cart">
+                                            <span class="product-price sm">@product.BasePrice.ToString("N0") vnd</span>
+                                            <button type="button" class="btn-add-cart" aria-label="Add to cart" title="Add to cart" onclick="addToCartGlobal(@product.ProductId)">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                     <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                                                     <line x1="3" y1="6" x2="21" y2="6"/>
@@ -221,3 +201,21 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleSubcategory(id, btn) {
+            const el = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            if (el.style.display === 'none') {
+                el.style.display = 'flex';
+                icon.classList.remove('bi-chevron-right');
+                icon.classList.add('bi-chevron-down');
+            } else {
+                el.style.display = 'none';
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-right');
+            }
+        }
+    </script>
+}

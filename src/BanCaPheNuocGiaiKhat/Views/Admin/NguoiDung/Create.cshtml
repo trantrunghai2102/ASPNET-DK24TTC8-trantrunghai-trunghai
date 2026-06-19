@@ -1,0 +1,64 @@
+@model BanCaPheNuocGiaiKhat.Models.UserCreateViewModel
+@{
+    ViewData["Title"] = "Thêm người dùng";
+}
+
+<header class="admin-topbar">
+    <div>
+        <p class="admin-kicker">USER MANAGEMENT</p>
+        <h1>Thêm Người Dùng Mới</h1>
+    </div>
+</header>
+
+<section class="admin-panel" style="max-width: 600px;">
+    <div class="admin-panel__header">
+        <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">THÔNG TIN TÀI KHOẢN</small>
+    </div>
+    <div style="padding: 1.5rem;">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom: 1rem; font-size:.85rem; color:#c0392b;"></div>
+
+            <div style="margin-bottom: 1rem;">
+                <label asp-for="FullName" style="display:block; font-size:.8rem; font-weight:700; color:#4e3a2f; margin-bottom:.4rem;">Họ và Tên *</label>
+                <input asp-for="FullName" class="form-control" style="width:100%; padding:.6rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.9rem;" placeholder="Nhập họ tên đầy đủ" />
+                <span asp-validation-for="FullName" style="color:#c0392b; font-size:.75rem; display:block; margin-top:.3rem;"></span>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label asp-for="Email" style="display:block; font-size:.8rem; font-weight:700; color:#4e3a2f; margin-bottom:.4rem;">Email đăng nhập *</label>
+                <input asp-for="Email" type="email" class="form-control" style="width:100%; padding:.6rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.9rem;" placeholder="example@gmail.com" />
+                <span asp-validation-for="Email" style="color:#c0392b; font-size:.75rem; display:block; margin-top:.3rem;"></span>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label asp-for="Password" style="display:block; font-size:.8rem; font-weight:700; color:#4e3a2f; margin-bottom:.4rem;">Mật khẩu *</label>
+                <input asp-for="Password" type="password" class="form-control" style="width:100%; padding:.6rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.9rem;" placeholder="Mật khẩu ít nhất 6 ký tự" />
+                <span asp-validation-for="Password" style="color:#c0392b; font-size:.75rem; display:block; margin-top:.3rem;"></span>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label asp-for="Phone" style="display:block; font-size:.8rem; font-weight:700; color:#4e3a2f; margin-bottom:.4rem;">Số điện thoại</label>
+                <input asp-for="Phone" class="form-control" style="width:100%; padding:.6rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.9rem;" placeholder="Nhập số điện thoại (nếu có)" />
+                <span asp-validation-for="Phone" style="color:#c0392b; font-size:.75rem; display:block; margin-top:.3rem;"></span>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label asp-for="RoleId" style="display:block; font-size:.8rem; font-weight:700; color:#4e3a2f; margin-bottom:.4rem;">Phân quyền *</label>
+                <select asp-for="RoleId" asp-items="ViewBag.Roles" class="form-control" style="width:100%; padding:.6rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.9rem;"></select>
+                <span asp-validation-for="RoleId" style="color:#c0392b; font-size:.75rem; display:block; margin-top:.3rem;"></span>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="admin-primary-btn" style="padding: .6rem 1.2rem; border-radius:4px; font-weight:700; border:none; cursor:pointer;">
+                    <i class="bi bi-save"></i> TẠO MỚI
+                </button>
+                <a asp-action="Index" class="admin-secondary-btn" style="padding: .6rem 1.2rem; border-radius:4px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center;">HỦY</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

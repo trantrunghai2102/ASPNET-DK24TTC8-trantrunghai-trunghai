@@ -30,11 +30,13 @@ public class BanHangController : Controller
                 Name         = p.Name,
                 Price        = p.PromotionPrice ?? p.BasePrice,
                 ThumbnailUrl = p.ThumbnailUrl,
+                CategoryId   = p.CategoryId,
                 CategoryName = p.Category != null ? p.Category.Name : null
             })
             .OrderBy(p => p.Name)
             .ToListAsync();
 
+        ViewBag.Categories = await _db.Categories.OrderBy(c => c.Name).ToListAsync();
         return View("~/Views/Staff/BanHang/Index.cshtml", new BanHangViewModel { Products = products });
     }
 
@@ -152,9 +154,6 @@ public class BanHangController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> XacNhanThanhToan(int orderId, decimal cashGiven)
     {
-        // Chuyển đổi từ tiền VND nhập vào (ví dụ 100000) về đơn vị nghìn VND trong DB (ví dụ 100.00)
-        cashGiven = cashGiven / 1000m;
-
         var order = await _db.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.OrderId == orderId && o.Status == "pending");

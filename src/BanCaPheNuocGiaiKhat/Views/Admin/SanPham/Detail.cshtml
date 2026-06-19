@@ -1,0 +1,103 @@
+@model BanCaPheNuocGiaiKhat.Models.Entities.Product
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<header class="admin-topbar">
+    <div>
+        <p class="admin-kicker">PRODUCT DETAILS</p>
+        <h1>@Model.Name</h1>
+    </div>
+    <div>
+        <a asp-action="Index" class="admin-secondary-btn" style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #d8c4b7; background: #fff; color: #4e3a2f; text-decoration: none; font-weight: 600;">
+            <i class="bi bi-arrow-left"></i> Quay lại Catalog
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.ProductId" class="admin-primary-btn" style="padding: 0.5rem 1rem; border-radius: 4px; margin-left: 0.5rem; text-decoration: none; color: #fff;">
+            <i class="bi bi-pencil"></i> Sửa Sản Phẩm
+        </a>
+    </div>
+</header>
+
+<section class="admin-panel" style="padding: 2rem;">
+    <div style="display: grid; grid-template-columns: 350px 1fr; gap: 2.5rem; align-items: start;">
+        
+        <!-- Image Gallery -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
+            {
+                <img src="@Model.ThumbnailUrl" alt="@Model.Name" style="width: 100%; border-radius: 8px; border: 1px solid #eadbd2; object-fit: cover; aspect-ratio: 1/1;" />
+            }
+            else
+            {
+                <div style="width: 100%; aspect-ratio: 1/1; background: #eee2dc; border-radius: 8px; display: grid; place-items: center; color: #6d5a4d;">
+                    <i class="bi bi-image" style="font-size: 3rem;"></i>
+                </div>
+            }
+
+            @if (Model.ProductImages != null && Model.ProductImages.Any())
+            {
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+                    @foreach (var img in Model.ProductImages.OrderBy(i => i.SortOrder))
+                    {
+                        <img src="@img.Url" alt="Gallery Image" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; border: 1px solid #eadbd2;" />
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Details Info -->
+        <div>
+            <div style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #231a15; margin-bottom: 0.5rem;">@Model.Name</h2>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span style="font-size: 1.25rem; font-weight: 700; color: #b02a37;">@Model.BasePrice.ToString("N0") vnd</span>
+                    <span style="font-size: 0.9rem; padding: 0.2rem 0.6rem; border-radius: 4px; background: @(Model.Status == "active" ? "#d1e7dd" : "#f8d7da"); color: @(Model.Status == "active" ? "#0f5132" : "#842029"); font-weight: 600;">
+                        @(Model.Status == "active" ? "Active" : Model.Status == "inactive" ? "Hidden (Trash)" : "Deleted")
+                    </span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 1rem; margin-bottom: 2rem; border-top: 1px solid #eee2dc; padding-top: 1.5rem;">
+                <strong style="color: #6d5a4d;">Danh mục:</strong>
+                <span style="color: #231a15;">@(Model.Category != null ? Model.Category.Name : "—")</span>
+
+                <strong style="color: #6d5a4d;">Đường dẫn (Slug):</strong>
+                <span style="color: #231a15;">@Model.Slug</span>
+
+                <strong style="color: #6d5a4d;">Số lượng tồn (Stock):</strong>
+                <span style="color: #231a15; font-weight: 600;">@Model.StockQty</span>
+
+                <strong style="color: #6d5a4d;">Lượt xem:</strong>
+                <span style="color: #231a15;">@Model.ViewCount</span>
+
+                <strong style="color: #6d5a4d;">Ngày tạo:</strong>
+                <span style="color: #231a15;">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+
+                <strong style="color: #6d5a4d;">Ngày cập nhật:</strong>
+                <span style="color: #231a15;">@Model.UpdatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #4e3a2f; margin-bottom: 0.5rem; border-bottom: 1px solid #eee2dc; padding-bottom: 0.3rem;">Mô tả ngắn</h3>
+                <p style="color: #4e3a2f; line-height: 1.6; font-size: 0.95rem;">
+                    @(string.IsNullOrEmpty(Model.ShortDesc) ? "Chưa có mô tả ngắn." : Model.ShortDesc)
+                </p>
+            </div>
+
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #4e3a2f; margin-bottom: 0.5rem; border-bottom: 1px solid #eee2dc; padding-bottom: 0.3rem;">Mô tả chi tiết</h3>
+                <div style="color: #231a15; line-height: 1.6; font-size: 0.95rem; background: #faf8f6; padding: 1rem; border-radius: 6px; border: 1px solid #eadbd2;">
+                    @if (string.IsNullOrEmpty(Model.DetailDesc))
+                    {
+                        <span style="color: #888; font-style: italic;">Chưa có nội dung mô tả chi tiết.</span>
+                    }
+                    else
+                    {
+                        @Html.Raw(Model.DetailDesc)
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

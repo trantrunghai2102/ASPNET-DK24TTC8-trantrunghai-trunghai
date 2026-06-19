@@ -17,12 +17,31 @@ public class AdminSanPhamController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, string? search = null)
     {
-        var products = await _db.Products
+        const int pageSize = 10;
+        var query = _db.Products
             .Where(p => p.Status != "deleted")
             .Include(p => p.Category)
-            .OrderByDescending(p => p.ProductId)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchClean = search.Trim().ToLower();
+            query = query.Where(p => p.Name.ToLower().Contains(searchClean) || 
+                                     (p.ShortDesc != null && p.ShortDesc.ToLower().Contains(searchClean)));
+        }
+
+        query = query.OrderByDescending(p => p.ProductId);
+
+        int totalItems = await query.CountAsync();
+        int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+        if (page < 1) page = 1;
+        if (totalPages > 0 && page > totalPages) page = totalPages;
+
+        var productsData = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(p => new AdminProductListViewModel
             {
                 ProductId = p.ProductId,
@@ -35,8 +54,16 @@ public class AdminSanPhamController : Controller
                 ThumbnailUrl = p.ThumbnailUrl
             })
             .ToListAsync();
+
+        var model = new AdminProductListIndexViewModel
+        {
+            Products = productsData,
+            CurrentPage = page,
+            TotalPages = Math.Max(1, totalPages),
+            SearchQuery = search
+        };
         
-        return View("~/Views/Admin/SanPham/Index.cshtml", products);
+        return View("~/Views/Admin/SanPham/Index.cshtml", model);
     }
 
     [HttpGet]
@@ -66,9 +93,6 @@ public class AdminSanPhamController : Controller
             BasePrice = model.BasePrice,
             PromotionPrice = model.PromotionPrice,
             StockQty = model.StockQty,
-            RoastLevel = model.RoastLevel,
-            Region = model.Region,
-            GrindType = model.GrindType,
             Status = model.Status,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -119,6 +143,22 @@ public class AdminSanPhamController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> Detail(int id)
+    {
+        var product = await _db.Products
+            .Include(p => p.Category)
+            .Include(p => p.ProductImages)
+            .FirstOrDefaultAsync(p => p.ProductId == id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View("~/Views/Admin/SanPham/Detail.cshtml", product);
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var product = await _db.Products
@@ -143,9 +183,6 @@ public class AdminSanPhamController : Controller
             BasePrice = product.BasePrice,
             PromotionPrice = product.PromotionPrice,
             StockQty = product.StockQty,
-            RoastLevel = product.RoastLevel,
-            Region = product.Region,
-            GrindType = product.GrindType,
             Status = product.Status,
             ExistingImages = product.ProductImages
                 .OrderBy(img => img.SortOrder)
@@ -197,9 +234,6 @@ public class AdminSanPhamController : Controller
         product.BasePrice = model.BasePrice;
         product.PromotionPrice = model.PromotionPrice;
         product.StockQty = model.StockQty;
-        product.RoastLevel = model.RoastLevel;
-        product.Region = model.Region;
-        product.GrindType = model.GrindType;
         product.Status = model.Status;
         product.UpdatedAt = DateTime.UtcNow;
 
@@ -296,11 +330,97 @@ public class AdminSanPhamController : Controller
             return NotFound();
         }
 
-        product.Status = "deleted";
+        product.Status = "inactive";
         product.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
         TempData["Success"] = $"Đã xóa sản phẩm {product.Name} thành công.";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Trash(int page = 1, string? search = null)
+    {
+        const int pageSize = 10;
+        var query = _db.Products
+            .Where(p => p.Status == "inactive")
+            .Include(p => p.Category)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchClean = search.Trim().ToLower();
+            query = query.Where(p => p.Name.ToLower().Contains(searchClean) || 
+                                     (p.ShortDesc != null && p.ShortDesc.ToLower().Contains(searchClean)));
+        }
+
+        query = query.OrderByDescending(p => p.UpdatedAt);
+
+        int totalItems = await query.CountAsync();
+        int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+        if (page < 1) page = 1;
+        if (totalPages > 0 && page > totalPages) page = totalPages;
+
+        var productsData = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(p => new AdminProductListViewModel
+            {
+                ProductId = p.ProductId,
+                Name = p.Name,
+                Slug = p.Slug,
+                CategoryName = p.Category != null ? p.Category.Name : "—",
+                BasePrice = p.BasePrice,
+                StockQty = p.StockQty,
+                Status = p.Status,
+                ThumbnailUrl = p.ThumbnailUrl
+            })
+            .ToListAsync();
+
+        var model = new AdminProductListIndexViewModel
+        {
+            Products = productsData,
+            CurrentPage = page,
+            TotalPages = Math.Max(1, totalPages),
+            SearchQuery = search
+        };
+        
+        return View("~/Views/Admin/SanPham/Trash.cshtml", model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Restore(int id)
+    {
+        var product = await _db.Products.FindAsync(id);
+        if (product == null || product.Status != "inactive")
+        {
+            return NotFound();
+        }
+
+        product.Status = "active";
+        product.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = $"Đã khôi phục sản phẩm {product.Name} thành công.";
+        return RedirectToAction(nameof(Trash));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> PermanentDelete(int id)
+    {
+        var product = await _db.Products.FindAsync(id);
+        if (product == null || product.Status != "inactive")
+        {
+            return NotFound();
+        }
+
+        product.Status = "deleted";
+        product.UpdatedAt = DateTime.UtcNow;
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = $"Đã xóa vĩnh viễn sản phẩm {product.Name}.";
+        return RedirectToAction(nameof(Trash));
     }
 }

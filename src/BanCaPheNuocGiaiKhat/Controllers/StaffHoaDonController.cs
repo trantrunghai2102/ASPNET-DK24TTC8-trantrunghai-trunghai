@@ -21,16 +21,17 @@ public class StaffHoaDonController : Controller
     {
         const int pageSize = 10;
 
-        var query = _db.Invoices
-            .Include(i => i.Order).ThenInclude(o => o.Staff)
+        var query = _db.Orders
+            .Include(o => o.Staff)
+            .Include(o => o.Invoice)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(type))
         {
-            query = query.Where(i => i.Order.OrderType == type);
+            query = query.Where(o => o.OrderType.ToLower() == type.ToLower());
         }
 
-        query = query.OrderByDescending(i => i.PaidAt);
+        query = query.OrderByDescending(o => o.CreatedAt);
 
         int totalItems = await query.CountAsync();
         int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
@@ -40,14 +41,16 @@ public class StaffHoaDonController : Controller
         var invoices = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(i => new HoaDonTomTatViewModel
+            .Select(o => new HoaDonTomTatViewModel
             {
-                InvoiceId   = i.InvoiceId,
-                InvoiceCode = i.InvoiceCode,
-                PaidAt      = i.PaidAt,
-                TotalAmount = i.TotalAmount,
-                StaffName   = i.Order.Staff != null ? i.Order.Staff.FullName : null,
-                OrderType   = i.Order.OrderType
+                InvoiceId   = o.Invoice != null ? o.Invoice.InvoiceId : 0,
+                OrderId     = o.OrderId,
+                InvoiceCode = o.Invoice != null ? o.Invoice.InvoiceCode : $"ORD-{o.OrderId:D6}",
+                Date        = o.Invoice != null ? o.Invoice.PaidAt : o.CreatedAt,
+                TotalAmount = o.TotalAmount,
+                StaffName   = o.Staff != null ? o.Staff.FullName : null,
+                OrderType   = o.OrderType,
+                Status      = o.Status
             })
             .ToListAsync();
 

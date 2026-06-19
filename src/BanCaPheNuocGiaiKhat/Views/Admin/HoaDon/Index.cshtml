@@ -1,4 +1,4 @@
-@model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
+﻿@model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
 @{
     ViewData["Title"] = "Quản lý hóa đơn";
 }
@@ -18,7 +18,7 @@
 <section class="admin-orders-layout">
     <div class="admin-panel">
         <div class="admin-panel__header">
-            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ALL INVOICES</small>
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ALL ORDERS</small>
             <form method="get" style="display:flex; gap: .5rem; align-items:center;">
                 <select name="type" onchange="this.form.submit()" style="padding: .4rem .6rem; border: 1px solid #d8c4b7; border-radius: 4px; background: #fff; font-size: .8rem; font-weight: 600; color: #4e3a2f; outline: none; cursor: pointer;">
                     <option value="">Tất cả loại đơn</option>
@@ -29,9 +29,10 @@
         </div>
         
         <div class="admin-product-table">
-            <div class="admin-product-table__head" style="grid-template-columns: 110px 100px 130px minmax(120px, 1fr) 100px;">
+            <div class="admin-product-table__head" style="grid-template-columns: 110px 100px 110px 130px minmax(100px, 1fr) 100px;">
                 <span>Code</span>
                 <span>Loại đơn</span>
+                <span>Trạng thái</span>
                 <span>Date</span>
                 <span>Staff</span>
                 <span style="text-align: right;">Amount</span>
@@ -39,24 +40,52 @@
             
             @if (!Model.Invoices.Any())
             {
-                <div style="padding: 3rem; text-align: center; color: #6d5a4d; font-size: .85rem;">Chưa có hóa đơn nào.</div>
+                <div style="padding: 3rem; text-align: center; color: #6d5a4d; font-size: .85rem;">Chưa có đơn hàng nào.</div>
             }
             else
             {
                 foreach (var hd in Model.Invoices)
                 {
-                    <div class="admin-product-table__row" style="grid-template-columns: 110px 100px 130px minmax(120px, 1fr) 100px;">
+                    <div class="admin-product-table__row" style="grid-template-columns: 110px 100px 110px 130px minmax(100px, 1fr) 100px;">
                         <div><span class="admin-status">@hd.InvoiceCode</span></div>
                         <div style="font-size:.8rem; color:#6d5a4d;">
-                            @if (hd.OrderType == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
+                            @if (hd.OrderType?.ToLower() == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
                         </div>
-                        <div style="font-size:.8rem; font-weight:600; color:#231a15;">@hd.PaidAt.ToLocalTime().ToString("MMM dd, HH:mm")</div>
+                        <div style="font-size:.8rem;">
+                            @switch (hd.Status) {
+                                case "pending": <span style="color:#ffc107;font-weight:600">Chờ xử lý</span>; break;
+                                case "processing": <span style="color:#17a2b8;font-weight:600">Đang xử lý</span>; break;
+                                case "shipping": <span style="color:#007bff;font-weight:600">Đang giao</span>; break;
+                                case "delivered": <span style="color:#28a745;font-weight:600">Đã giao</span>; break;
+                                case "paid": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                case "completed": <span style="color:#28a745;font-weight:600">Hoàn tất</span>; break;
+                                case "cancelled": <span style="color:#dc3545;font-weight:600">Đã hủy</span>; break;
+                                default: <span style="font-weight:600;color:#6d5a4d">@hd.Status</span>; break;
+                            }
+                        </div>
+                        <div style="font-size:.8rem; font-weight:600; color:#231a15;">@hd.Date.ToLocalTime().ToString("MMM dd, HH:mm")</div>
                         <div style="font-size:.8rem; color:#6d5a4d;">@(hd.StaffName ?? "—")</div>
-                        <div style="font-size:.85rem; font-weight:700; color:#231a15; text-align: right;">@hd.TotalAmount.ToString("N0") đ</div>
+                        <div style="font-size:.85rem; font-weight:700; color:#231a15; text-align: right;">@hd.TotalAmount.ToString("N0") vnd</div>
                     </div>
                 }
             }
         </div>
+        @if (Model.TotalPages > 1)
+        {
+            <div style="padding: 1rem 1.5rem; display:flex; gap:.5rem; justify-content:center; border-top: 1px solid #eee6de;">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#4e3a2f; color:#fff; border-radius:4px; font-size:.85rem; font-weight:700;">@i</span>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" asp-route-page="@i" asp-route-type="@Model.FilterType" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; background:#f4f0ec; color:#4e3a2f; text-decoration:none; border-radius:4px; font-size:.85rem; font-weight:600;">@i</a>
+                    }
+                }
+            </div>
+        }
     </div>
 
     <div>
@@ -99,8 +128,8 @@
                     <div class="admin-activity-item">
                         <div class="admin-activity-item__icon" style="background:#e2efd9; color:#41652e"><i class="bi bi-check-lg"></i></div>
                         <div class="admin-activity-item__content">
-                            <p>Invoice @hd.InvoiceCode paid</p>
-                            <small>@hd.PaidAt.ToLocalTime().ToString("MMM dd, yyyy - HH:mm")</small>
+                            <p>Order @hd.InvoiceCode updated</p>
+                            <small>@hd.Date.ToLocalTime().ToString("MMM dd, yyyy - HH:mm")</small>
                         </div>
                     </div>
                 }

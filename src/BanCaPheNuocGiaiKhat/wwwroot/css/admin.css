@@ -284,6 +284,9 @@
 }
 
 /* TABLES */
+.admin-product-table {
+  height: 780px;
+}
 .admin-product-table__head,
 .admin-product-table__row {
   display: grid;

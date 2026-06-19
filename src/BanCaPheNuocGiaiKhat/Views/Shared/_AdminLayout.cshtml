@@ -21,10 +21,6 @@
                 </div>
             </div>
 
-            <a asp-controller="AdminSanPham" asp-action="Create" class="admin-new-product">
-                <i class="bi bi-plus-lg"></i>
-                NEW PRODUCT
-            </a>
 
             <nav class="admin-nav">
                 @{
@@ -40,10 +36,13 @@
                 <a asp-controller="AdminSanPham" asp-action="Index" class="@(currentController == "AdminSanPham" || (currentController == "AdminSanPham" && currentAction == "Create") ? "active" : "")">
                     <i class="bi bi-cup"></i> PRODUCTS
                 </a>
+                <a asp-controller="AdminCategory" asp-action="Index" class="@(currentController == "AdminCategory" ? "active" : "")">
+                    <i class="bi bi-tags"></i> CATEGORIES
+                </a>
                 @if (User.IsInRole(BanCaPheNuocGiaiKhat.Models.UserRoles.Admin))
                 {
                     <a asp-controller="NguoiDung" asp-action="Index" class="@(currentController == "NguoiDung" ? "active" : "")">
-                        <i class="bi bi-people"></i> CUSTOMERS
+                        <i class="bi bi-people"></i> USERS
                     </a>
                 }
             </nav>

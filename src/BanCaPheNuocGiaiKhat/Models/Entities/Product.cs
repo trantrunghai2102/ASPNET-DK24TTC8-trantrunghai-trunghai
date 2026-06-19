@@ -52,18 +52,6 @@ public class Product
     [StringLength(50)]
     public string Status { get; set; } = "active";
 
-    [Column("roast_level")]
-    [StringLength(50)]
-    public string? RoastLevel { get; set; }
-
-    [Column("region")]
-    [StringLength(50)]
-    public string? Region { get; set; }
-
-    [Column("grind_type")]
-    [StringLength(50)]
-    public string? GrindType { get; set; }
-
     [Column("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

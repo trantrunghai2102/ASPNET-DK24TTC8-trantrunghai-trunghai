@@ -4,11 +4,13 @@ namespace BanCaPheNuocGiaiKhat.Models;
 public class HoaDonTomTatViewModel
 {
     public int InvoiceId { get; set; }
-    public string InvoiceCode { get; set; } = string.Empty;
-    public DateTime PaidAt { get; set; }
+    public int OrderId { get; set; }
+    public string? InvoiceCode { get; set; }
+    public DateTime Date { get; set; }
     public decimal TotalAmount { get; set; }
     public string? StaffName { get; set; }
     public string OrderType { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
 }
 
 public class DanhSachHoaDonViewModel
