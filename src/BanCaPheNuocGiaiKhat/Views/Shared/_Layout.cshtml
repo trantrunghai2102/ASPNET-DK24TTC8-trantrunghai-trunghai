@@ -238,8 +238,8 @@
         })
         .catch(err => {
             if (err.message === 'Redirecting') return;
-            console.error(err);
-            window.location.href = '/Auth/Login';
+            console.error("Fetch error:", err);
+            showToast('Có lỗi hệ thống xảy ra khi thêm vào giỏ. Vui lòng tải lại trang.', true);
         });
     }
 </script>

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BanCaPheNuocGiaiKhat.Data;
+using BanCaPheNuocGiaiKhat.Helpers;
 using BanCaPheNuocGiaiKhat.Models;
 using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Customer)]
 public class DatHangController : Controller
 {
     private readonly AppDbContext _db;
@@ -18,18 +18,64 @@ public class DatHangController : Controller
         _db = db;
     }
 
-    private int GetUserId() =>
-        int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+    private int? GetUserId()
+    {
+        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return claim != null ? int.Parse(claim) : null;
+    }
+
+    private async Task<List<GioHangItemViewModel>> LoadCartItemsAsync(int? userId)
+    {
+        if (userId.HasValue)
+        {
+            return await _db.CartItems
+                .Where(c => c.UserId == userId.Value)
+                .Include(c => c.Product)
+                .Select(c => new GioHangItemViewModel
+                {
+                    CartItemId   = c.CartItemId,
+                    ProductId    = c.ProductId,
+                    ProductName  = c.Product != null ? c.Product.Name : "(Sản phẩm không còn)",
+                    ThumbnailUrl = c.Product != null ? c.Product.ThumbnailUrl : null,
+                    UnitPrice    = c.Product != null ? (c.Product.PromotionPrice ?? c.Product.BasePrice) : 0,
+                    Quantity     = c.Quantity,
+                    StockQty     = c.Product != null ? c.Product.StockQty : 0
+                })
+                .ToListAsync();
+        }
+
+        var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+        if (!sessionItems.Any()) return new();
+
+        var productIds = sessionItems.Select(s => s.ProductId).ToList();
+        var products = await _db.Products
+            .Where(p => productIds.Contains(p.ProductId))
+            .ToDictionaryAsync(p => p.ProductId);
+
+        return sessionItems
+            .Where(s => products.ContainsKey(s.ProductId))
+            .Select(s =>
+            {
+                var p = products[s.ProductId];
+                return new GioHangItemViewModel
+                {
+                    CartItemId   = s.ProductId,
+                    ProductId    = s.ProductId,
+                    ProductName  = p.Name,
+                    ThumbnailUrl = p.ThumbnailUrl,
+                    UnitPrice    = p.PromotionPrice ?? p.BasePrice,
+                    Quantity     = s.Quantity,
+                    StockQty     = p.StockQty
+                };
+            })
+            .ToList();
+    }
 
     // GET /DatHang/ThongTin
     public async Task<IActionResult> ThongTin()
     {
         var userId = GetUserId();
-
-        var cartItems = await _db.CartItems
-            .Where(c => c.UserId == userId)
-            .Include(c => c.Product)
-            .ToListAsync();
+        var cartItems = await LoadCartItemsAsync(userId);
 
         if (!cartItems.Any())
         {
@@ -37,24 +83,15 @@ public class DatHangController : Controller
             return RedirectToAction("Index", "GioHang");
         }
 
-        var user = await _db.Users.FindAsync(userId);
+        var vm = new DatHangViewModel { Items = cartItems };
 
-        var vm = new DatHangViewModel
+        if (userId.HasValue)
         {
-            Items = cartItems.Select(c => new GioHangItemViewModel
-            {
-                CartItemId   = c.CartItemId,
-                ProductId    = c.ProductId,
-                ProductName  = c.Product?.Name ?? "(Sản phẩm không còn)",
-                ThumbnailUrl = c.Product?.ThumbnailUrl,
-                UnitPrice    = c.Product != null ? (c.Product.PromotionPrice ?? c.Product.BasePrice) : 0,
-                Quantity     = c.Quantity,
-                StockQty     = c.Product?.StockQty ?? 0
-            }).ToList(),
-            RecipientName   = user?.FullName ?? string.Empty,
-            RecipientPhone  = user?.Phone ?? string.Empty,
-            DeliveryAddress = user?.Address ?? string.Empty
-        };
+            var user = await _db.Users.FindAsync(userId.Value);
+            vm.RecipientName   = user?.FullName ?? string.Empty;
+            vm.RecipientPhone  = user?.Phone ?? string.Empty;
+            vm.DeliveryAddress = user?.Address ?? string.Empty;
+        }
 
         return View("~/Views/Customer/DatHang/ThongTin.cshtml", vm);
     }
@@ -65,11 +102,7 @@ public class DatHangController : Controller
     public async Task<IActionResult> XacNhan(DatHangViewModel input)
     {
         var userId = GetUserId();
-
-        var cartItems = await _db.CartItems
-            .Where(c => c.UserId == userId)
-            .Include(c => c.Product)
-            .ToListAsync();
+        var cartItems = await LoadCartItemsAsync(userId);
 
         if (!cartItems.Any())
         {
@@ -79,23 +112,14 @@ public class DatHangController : Controller
 
         if (!ModelState.IsValid)
         {
-            input.Items = cartItems.Select(c => new GioHangItemViewModel
-            {
-                CartItemId   = c.CartItemId,
-                ProductId    = c.ProductId,
-                ProductName  = c.Product?.Name ?? "(Sản phẩm không còn)",
-                ThumbnailUrl = c.Product?.ThumbnailUrl,
-                UnitPrice    = c.Product != null ? (c.Product.PromotionPrice ?? c.Product.BasePrice) : 0,
-                Quantity     = c.Quantity,
-                StockQty     = c.Product?.StockQty ?? 0
-            }).ToList();
+            input.Items = cartItems;
             return View("~/Views/Customer/DatHang/ThongTin.cshtml", input);
         }
 
-        // B9: Kiểm tra tồn kho
+        // Kiểm tra tồn kho
         var stockErrors = cartItems
-            .Where(c => c.Product != null && c.Quantity > c.Product.StockQty)
-            .Select(c => $"{c.Product!.Name} (còn {c.Product.StockQty})")
+            .Where(c => c.Quantity > c.StockQty)
+            .Select(c => $"{c.ProductName} (còn {c.StockQty})")
             .ToList();
 
         if (stockErrors.Any())
@@ -105,8 +129,6 @@ public class DatHangController : Controller
         }
 
         var now = DateTime.UtcNow;
-
-        // B11: Tạo đơn hàng với trạng thái Pending
         var order = new Order
         {
             CustomerId      = userId,
@@ -122,37 +144,47 @@ public class DatHangController : Controller
         };
 
         decimal total = 0;
-        foreach (var ci in cartItems.Where(c => c.Product != null))
+        foreach (var item in cartItems.Where(c => c.ProductId.HasValue))
         {
-            var price    = ci.Product!.PromotionPrice ?? ci.Product.BasePrice;
-            var subtotal = price * ci.Quantity;
+            var subtotal = item.UnitPrice * item.Quantity;
             total += subtotal;
-
             order.OrderItems.Add(new OrderItem
             {
-                ProductId   = ci.ProductId,
-                ProductName = ci.Product.Name,
-                UnitPrice   = price,
-                Quantity    = ci.Quantity,
+                ProductId   = item.ProductId!.Value,
+                ProductName = item.ProductName,
+                UnitPrice   = item.UnitPrice,
+                Quantity    = item.Quantity,
                 Subtotal    = subtotal
             });
         }
-
         order.TotalAmount = total;
 
         _db.Orders.Add(order);
-        _db.CartItems.RemoveRange(cartItems);
+
+        if (userId.HasValue)
+        {
+            var dbCart = await _db.CartItems.Where(c => c.UserId == userId.Value).ToListAsync();
+            _db.CartItems.RemoveRange(dbCart);
+        }
+        else
+        {
+            SessionCartHelper.ClearCart(HttpContext.Session);
+        }
 
         await _db.SaveChangesAsync();
+
+        if (!userId.HasValue)
+            HttpContext.Session.SetInt32("GuestOrderId", order.OrderId);
 
         return RedirectToAction(nameof(ThanhCong), new { orderId = order.OrderId });
     }
 
     // GET /DatHang/DonHangCuaToi
+    [Authorize(Roles = UserRoles.Customer)]
     public async Task<IActionResult> DonHangCuaToi(string? status, int page = 1)
     {
         const int pageSize = 10;
-        var userId = GetUserId();
+        var userId = GetUserId()!.Value;
 
         var query = _db.Orders
             .Where(o => o.CustomerId == userId && o.OrderType == "online")
@@ -194,10 +226,23 @@ public class DatHangController : Controller
     public async Task<IActionResult> TheoDoi(int id)
     {
         var userId = GetUserId();
+        Order? order;
 
-        var order = await _db.Orders
-            .Include(o => o.OrderItems)
-            .FirstOrDefaultAsync(o => o.OrderId == id && o.CustomerId == userId && o.OrderType == "online");
+        if (userId.HasValue)
+        {
+            order = await _db.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id && o.CustomerId == userId.Value && o.OrderType == "online");
+        }
+        else
+        {
+            var sessionOrderId = HttpContext.Session.GetInt32("GuestOrderId");
+            if (sessionOrderId != id) return NotFound();
+
+            order = await _db.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == id && o.CustomerId == null);
+        }
 
         if (order == null) return NotFound();
 
@@ -229,10 +274,24 @@ public class DatHangController : Controller
     public async Task<IActionResult> ThanhCong(int orderId)
     {
         var userId = GetUserId();
+        Order? order;
 
-        var order = await _db.Orders
-            .Include(o => o.OrderItems)
-            .FirstOrDefaultAsync(o => o.OrderId == orderId && o.CustomerId == userId);
+        if (userId.HasValue)
+        {
+            order = await _db.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.CustomerId == userId.Value);
+        }
+        else
+        {
+            // Guest: xác minh qua session để tránh order enumeration
+            var sessionOrderId = HttpContext.Session.GetInt32("GuestOrderId");
+            if (sessionOrderId != orderId) return NotFound();
+
+            order = await _db.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.CustomerId == null);
+        }
 
         if (order == null) return NotFound();
 
@@ -244,6 +303,7 @@ public class DatHangController : Controller
             RecipientPhone  = order.RecipientPhone ?? string.Empty,
             DeliveryAddress = order.DeliveryAddress ?? string.Empty,
             CreatedAt       = order.CreatedAt,
+            IsGuest         = !userId.HasValue,
             Items           = order.OrderItems.Select(i => new DatHangItemViewModel
             {
                 ProductName = i.ProductName,

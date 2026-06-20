@@ -82,6 +82,8 @@ public class AuthController : Controller
             model.Role),
             isPersistent: false);
 
+        await SyncGuestDataToUserAsync(newUser.UserId);
+
         return RedirectByRole(model.Role);
     }
 
@@ -138,6 +140,8 @@ public class AuthController : Controller
             user.Email,
             roleName),
             model.RememberMe);
+
+        await SyncGuestDataToUserAsync(user.UserId);
 
         if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
@@ -343,6 +347,53 @@ public class AuthController : Controller
     {
         var normalized = role?.Trim().ToLowerInvariant();
         return UserRoles.All.Contains(normalized) ? normalized! : UserRoles.Customer;
+    }
+
+    private async Task SyncGuestDataToUserAsync(int userId)
+    {
+        // 1. Sync Guest Order
+        var guestOrderId = HttpContext.Session.GetInt32("GuestOrderId");
+        if (guestOrderId.HasValue)
+        {
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == guestOrderId.Value && o.CustomerId == null);
+            if (order != null)
+            {
+                order.CustomerId = userId;
+                await _db.SaveChangesAsync();
+            }
+            HttpContext.Session.Remove("GuestOrderId");
+        }
+
+        // 2. Sync Guest Cart
+        var sessionItems = BanCaPheNuocGiaiKhat.Helpers.SessionCartHelper.GetCart(HttpContext.Session);
+        if (sessionItems.Any())
+        {
+            var existingDbCart = await _db.CartItems.Where(c => c.UserId == userId).ToListAsync();
+            var now = DateTime.UtcNow;
+
+            foreach (var sessionItem in sessionItems)
+            {
+                var existing = existingDbCart.FirstOrDefault(c => c.ProductId == sessionItem.ProductId);
+                if (existing != null)
+                {
+                    existing.Quantity += sessionItem.Quantity;
+                    existing.UpdatedAt = now;
+                }
+                else
+                {
+                    _db.CartItems.Add(new CartItem
+                    {
+                        UserId = userId,
+                        ProductId = sessionItem.ProductId,
+                        Quantity = sessionItem.Quantity,
+                        CreatedAt = now,
+                        UpdatedAt = now
+                    });
+                }
+            }
+            await _db.SaveChangesAsync();
+            BanCaPheNuocGiaiKhat.Helpers.SessionCartHelper.ClearCart(HttpContext.Session);
+        }
     }
 
     private sealed record AuthenticatedUser(int UserId, string FullName, string Email, string RoleName);

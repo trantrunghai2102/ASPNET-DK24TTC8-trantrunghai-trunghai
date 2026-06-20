@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BanCaPheNuocGiaiKhat.Data;
+using BanCaPheNuocGiaiKhat.Helpers;
 using BanCaPheNuocGiaiKhat.Models;
 using BanCaPheNuocGiaiKhat.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Customer)]
 public class GioHangController : Controller
 {
     private readonly AppDbContext _db;
@@ -18,43 +18,82 @@ public class GioHangController : Controller
         _db = db;
     }
 
-    private int GetUserId() =>
-        int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+    private int? GetUserId()
+    {
+        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return claim != null ? int.Parse(claim) : null;
+    }
 
     // GET /GioHang/GetCartCount
     [HttpGet]
-    [AllowAnonymous]
     public async Task<IActionResult> GetCartCount()
     {
-        if (User.Identity == null || !User.Identity.IsAuthenticated)
-            return Json(new { count = 0 });
-
-        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int userId))
-            return Json(new { count = 0 });
-
-        var count = await _db.CartItems.Where(c => c.UserId == userId).SumAsync(c => c.Quantity);
-        return Json(new { count });
+        var userId = GetUserId();
+        if (userId.HasValue)
+        {
+            var count = await _db.CartItems.Where(c => c.UserId == userId.Value).SumAsync(c => c.Quantity);
+            return Json(new { count });
+        }
+        else
+        {
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            var count = sessionItems.Sum(s => s.Quantity);
+            return Json(new { count });
+        }
     }
 
     // GET /GioHang
     public async Task<IActionResult> Index()
     {
         var userId = GetUserId();
+        List<GioHangItemViewModel> items = new();
 
-        var items = await _db.CartItems
-            .Where(c => c.UserId == userId)
-            .Include(c => c.Product)
-            .Select(c => new GioHangItemViewModel
+        if (userId.HasValue)
+        {
+            items = await _db.CartItems
+                .Where(c => c.UserId == userId.Value)
+                .Include(c => c.Product)
+                .Select(c => new GioHangItemViewModel
+                {
+                    CartItemId   = c.CartItemId,
+                    ProductId    = c.ProductId,
+                    ProductName  = c.Product != null ? c.Product.Name : "(Sản phẩm không còn)",
+                    ThumbnailUrl = c.Product != null ? c.Product.ThumbnailUrl : null,
+                    UnitPrice    = c.Product != null ? (c.Product.PromotionPrice ?? c.Product.BasePrice) : 0,
+                    Quantity     = c.Quantity,
+                    StockQty     = c.Product != null ? c.Product.StockQty : 0
+                })
+                .ToListAsync();
+        }
+        else
+        {
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            if (sessionItems.Any())
             {
-                CartItemId   = c.CartItemId,
-                ProductId    = c.ProductId,
-                ProductName  = c.Product != null ? c.Product.Name : "(Sản phẩm không còn)",
-                ThumbnailUrl = c.Product != null ? c.Product.ThumbnailUrl : null,
-                UnitPrice    = c.Product != null ? (c.Product.PromotionPrice ?? c.Product.BasePrice) : 0,
-                Quantity     = c.Quantity,
-                StockQty     = c.Product != null ? c.Product.StockQty : 0
-            })
-            .ToListAsync();
+                var productIds = sessionItems.Select(s => s.ProductId).ToList();
+                var products = await _db.Products
+                    .Where(p => productIds.Contains(p.ProductId))
+                    .ToDictionaryAsync(p => p.ProductId);
+
+                items = sessionItems
+                    .Where(s => products.ContainsKey(s.ProductId))
+                    .Select(s =>
+                    {
+                        var p = products[s.ProductId];
+                        return new GioHangItemViewModel
+                        {
+                            CartItemId   = s.ProductId, // Use ProductId as dummy CartItemId
+                            ProductId    = s.ProductId,
+                            ProductName  = p.Name,
+                            ThumbnailUrl = p.ThumbnailUrl,
+                            UnitPrice    = p.PromotionPrice ?? p.BasePrice,
+                            Quantity     = s.Quantity,
+                            StockQty     = p.StockQty
+                        };
+                    })
+                    .ToList();
+            }
+        }
 
         return View("~/Views/Customer/GioHang/Index.cshtml", new GioHangViewModel { Items = items });
     }
@@ -84,34 +123,57 @@ public class GioHangController : Controller
         }
 
         var userId = GetUserId();
-        var existing = await _db.CartItems
-            .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == input.ProductId);
-
-        var now = DateTime.UtcNow;
-        if (existing != null)
+        if (userId.HasValue)
         {
-            var newQty = existing.Quantity + input.Quantity;
-            if (newQty > product.StockQty)
+            var existing = await _db.CartItems
+                .FirstOrDefaultAsync(c => c.UserId == userId.Value && c.ProductId == input.ProductId);
+
+            var now = DateTime.UtcNow;
+            if (existing != null)
             {
-                TempData["Error"] = $"Tổng số lượng vượt tồn kho (còn {product.StockQty}).";
-                return RedirectToAction("Detail", "SanPham", new { slug = product.Slug });
+                var newQty = existing.Quantity + input.Quantity;
+                if (newQty > product.StockQty)
+                {
+                    TempData["Error"] = $"Tổng số lượng vượt tồn kho (còn {product.StockQty}).";
+                    return RedirectToAction("Detail", "SanPham", new { slug = product.Slug });
+                }
+                existing.Quantity  = newQty;
+                existing.UpdatedAt = now;
             }
-            existing.Quantity  = newQty;
-            existing.UpdatedAt = now;
+            else
+            {
+                _db.CartItems.Add(new CartItem
+                {
+                    UserId    = userId.Value,
+                    ProductId = input.ProductId,
+                    Quantity  = input.Quantity,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                });
+            }
+            await _db.SaveChangesAsync();
         }
         else
         {
-            _db.CartItems.Add(new CartItem
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            var existing = sessionItems.FirstOrDefault(s => s.ProductId == input.ProductId);
+            if (existing != null)
             {
-                UserId    = userId,
-                ProductId = input.ProductId,
-                Quantity  = input.Quantity,
-                CreatedAt = now,
-                UpdatedAt = now
-            });
+                var newQty = existing.Quantity + input.Quantity;
+                if (newQty > product.StockQty)
+                {
+                    TempData["Error"] = $"Tổng số lượng vượt tồn kho (còn {product.StockQty}).";
+                    return RedirectToAction("Detail", "SanPham", new { slug = product.Slug });
+                }
+                existing.Quantity = newQty;
+            }
+            else
+            {
+                sessionItems.Add(new SessionCartItem { ProductId = input.ProductId, Quantity = input.Quantity });
+            }
+            SessionCartHelper.SaveCart(HttpContext.Session, sessionItems);
         }
 
-        await _db.SaveChangesAsync();
         TempData["Success"] = $"Đã thêm «{product.Name}» vào giỏ hàng.";
         return RedirectToAction(nameof(Index));
     }
@@ -132,34 +194,57 @@ public class GioHangController : Controller
             return Json(new { success = false, message = $"Chỉ còn {product.StockQty} sản phẩm trong kho." });
 
         var userId = GetUserId();
-        var existing = await _db.CartItems
-            .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == input.ProductId);
+        int newCount = 0;
 
-        var now = DateTime.UtcNow;
-        if (existing != null)
+        if (userId.HasValue)
         {
-            var newQty = existing.Quantity + input.Quantity;
-            if (newQty > product.StockQty)
-                return Json(new { success = false, message = $"Tổng số lượng vượt tồn kho (còn {product.StockQty})." });
-            
-            existing.Quantity  = newQty;
-            existing.UpdatedAt = now;
+            var existing = await _db.CartItems
+                .FirstOrDefaultAsync(c => c.UserId == userId.Value && c.ProductId == input.ProductId);
+
+            var now = DateTime.UtcNow;
+            if (existing != null)
+            {
+                var newQty = existing.Quantity + input.Quantity;
+                if (newQty > product.StockQty)
+                    return Json(new { success = false, message = $"Tổng số lượng vượt tồn kho (còn {product.StockQty})." });
+                
+                existing.Quantity  = newQty;
+                existing.UpdatedAt = now;
+            }
+            else
+            {
+                _db.CartItems.Add(new CartItem
+                {
+                    UserId    = userId.Value,
+                    ProductId = input.ProductId,
+                    Quantity  = input.Quantity,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                });
+            }
+            await _db.SaveChangesAsync();
+            newCount = await _db.CartItems.Where(c => c.UserId == userId.Value).SumAsync(c => c.Quantity);
         }
         else
         {
-            _db.CartItems.Add(new CartItem
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            var existing = sessionItems.FirstOrDefault(s => s.ProductId == input.ProductId);
+            if (existing != null)
             {
-                UserId    = userId,
-                ProductId = input.ProductId,
-                Quantity  = input.Quantity,
-                CreatedAt = now,
-                UpdatedAt = now
-            });
+                var newQty = existing.Quantity + input.Quantity;
+                if (newQty > product.StockQty)
+                    return Json(new { success = false, message = $"Tổng số lượng vượt tồn kho (còn {product.StockQty})." });
+                
+                existing.Quantity = newQty;
+            }
+            else
+            {
+                sessionItems.Add(new SessionCartItem { ProductId = input.ProductId, Quantity = input.Quantity });
+            }
+            SessionCartHelper.SaveCart(HttpContext.Session, sessionItems);
+            newCount = sessionItems.Sum(s => s.Quantity);
         }
 
-        await _db.SaveChangesAsync();
-
-        var newCount = await _db.CartItems.Where(c => c.UserId == userId).SumAsync(c => c.Quantity);
         return Json(new { success = true, count = newCount, message = $"Đã thêm {product.Name} vào giỏ hàng." });
     }
 
@@ -169,21 +254,41 @@ public class GioHangController : Controller
     public async Task<IActionResult> CapNhat(CapNhatGioHangInput input)
     {
         var userId = GetUserId();
-        var item = await _db.CartItems
-            .Include(c => c.Product)
-            .FirstOrDefaultAsync(c => c.CartItemId == input.CartItemId && c.UserId == userId);
 
-        if (item == null) return NotFound();
-
-        if (item.Product != null && input.Quantity > item.Product.StockQty)
+        if (userId.HasValue)
         {
-            TempData["Error"] = $"Chỉ còn {item.Product.StockQty} sản phẩm trong kho.";
-            return RedirectToAction(nameof(Index));
-        }
+            var item = await _db.CartItems
+                .Include(c => c.Product)
+                .FirstOrDefaultAsync(c => c.CartItemId == input.CartItemId && c.UserId == userId.Value);
 
-        item.Quantity  = input.Quantity;
-        item.UpdatedAt = DateTime.UtcNow;
-        await _db.SaveChangesAsync();
+            if (item == null) return NotFound();
+
+            if (item.Product != null && input.Quantity > item.Product.StockQty)
+            {
+                TempData["Error"] = $"Chỉ còn {item.Product.StockQty} sản phẩm trong kho.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            item.Quantity  = input.Quantity;
+            item.UpdatedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+        else
+        {
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            var item = sessionItems.FirstOrDefault(s => s.ProductId == input.CartItemId); // For guest, CartItemId is ProductId
+            if (item != null)
+            {
+                var product = await _db.Products.FindAsync(item.ProductId);
+                if (product != null && input.Quantity > product.StockQty)
+                {
+                    TempData["Error"] = $"Chỉ còn {product.StockQty} sản phẩm trong kho.";
+                    return RedirectToAction(nameof(Index));
+                }
+                item.Quantity = input.Quantity;
+                SessionCartHelper.SaveCart(HttpContext.Session, sessionItems);
+            }
+        }
 
         TempData["Success"] = "Đã cập nhật số lượng.";
         return RedirectToAction(nameof(Index));
@@ -195,14 +300,29 @@ public class GioHangController : Controller
     public async Task<IActionResult> Xoa(int cartItemId)
     {
         var userId = GetUserId();
-        var item = await _db.CartItems
-            .FirstOrDefaultAsync(c => c.CartItemId == cartItemId && c.UserId == userId);
 
-        if (item != null)
+        if (userId.HasValue)
         {
-            _db.CartItems.Remove(item);
-            await _db.SaveChangesAsync();
-            TempData["Success"] = "Đã xóa sản phẩm khỏi giỏ hàng.";
+            var item = await _db.CartItems
+                .FirstOrDefaultAsync(c => c.CartItemId == cartItemId && c.UserId == userId.Value);
+
+            if (item != null)
+            {
+                _db.CartItems.Remove(item);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "Đã xóa sản phẩm khỏi giỏ hàng.";
+            }
+        }
+        else
+        {
+            var sessionItems = SessionCartHelper.GetCart(HttpContext.Session);
+            var item = sessionItems.FirstOrDefault(s => s.ProductId == cartItemId);
+            if (item != null)
+            {
+                sessionItems.Remove(item);
+                SessionCartHelper.SaveCart(HttpContext.Session, sessionItems);
+                TempData["Success"] = "Đã xóa sản phẩm khỏi giỏ hàng.";
+            }
         }
 
         return RedirectToAction(nameof(Index));

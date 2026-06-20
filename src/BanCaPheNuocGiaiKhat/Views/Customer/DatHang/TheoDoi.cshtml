@@ -20,9 +20,18 @@
     <div class="section-wrapper">
 
         <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;">
-            <a asp-action="DonHangCuaToi" style="color:var(--text-muted);text-decoration:none;font-size:.875rem;">
-                <i class="bi bi-arrow-left"></i> Đơn hàng của tôi
-            </a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-action="DonHangCuaToi" style="color:var(--text-muted);text-decoration:none;font-size:.875rem;">
+                    <i class="bi bi-arrow-left"></i> Đơn hàng của tôi
+                </a>
+            }
+            else
+            {
+                <a asp-controller="SanPham" asp-action="Index" style="color:var(--text-muted);text-decoration:none;font-size:.875rem;">
+                    <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+                </a>
+            }
             <span style="color:var(--border);">/</span>
             <span style="font-size:.875rem;color:var(--text-secondary);">Đơn #@Model.OrderId</span>
         </div>
@@ -130,9 +139,18 @@
             </div>
 
             <div style="text-align:center;">
-                <a asp-action="DonHangCuaToi" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:var(--cream-deep);color:var(--text-primary);font-size:.875rem;font-weight:600;text-decoration:none;border:1px solid var(--border);">
-                    <i class="bi bi-arrow-left"></i> Quay lại danh sách
-                </a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-action="DonHangCuaToi" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:var(--cream-deep);color:var(--text-primary);font-size:.875rem;font-weight:600;text-decoration:none;border:1px solid var(--border);">
+                        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="SanPham" asp-action="Index" style="display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.25rem;border-radius:var(--radius-sm);background:var(--cream-deep);color:var(--text-primary);font-size:.875rem;font-weight:600;text-decoration:none;border:1px solid var(--border);">
+                        <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+                    </a>
+                }
             </div>
 
         </div>

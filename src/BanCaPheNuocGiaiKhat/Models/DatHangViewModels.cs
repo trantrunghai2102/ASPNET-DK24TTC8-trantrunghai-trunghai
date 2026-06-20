@@ -36,6 +36,7 @@ public class DatHangThanhCongViewModel
     public string RecipientPhone { get; set; } = string.Empty;
     public string DeliveryAddress { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public bool IsGuest { get; set; }
     public List<DatHangItemViewModel> Items { get; set; } = new();
 }
 

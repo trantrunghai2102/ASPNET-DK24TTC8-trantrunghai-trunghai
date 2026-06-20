@@ -65,7 +65,19 @@
                 </p>
             </div>
 
-            <div style="display:flex;justify-content:center;">
+            <div style="display:flex;justify-content:center;gap:1rem;">
+                @if (Model.IsGuest)
+                {
+                    <button type="button" class="btn btn-coffee" style="background:var(--coffee-darkest);color:#fff;border:1px solid var(--coffee-darkest);" onclick="showToast('Vui lòng Đăng nhập hoặc Đăng ký để theo dõi tiến độ đơn hàng này!', true); setTimeout(() => window.location.href='/Auth/Login', 2500);">
+                        <i class="bi bi-search"></i> Theo dõi đơn hàng
+                    </button>
+                }
+                else
+                {
+                    <a asp-controller="DatHang" asp-action="TheoDoi" asp-route-id="@Model.OrderId" class="btn btn-coffee" style="background:var(--coffee-darkest);color:#fff;border:1px solid var(--coffee-darkest);">
+                        <i class="bi bi-search"></i> Theo dõi đơn hàng
+                    </a>
+                }
                 <a asp-controller="SanPham" asp-action="Index" class="btn btn-coffee" style="background:var(--cream-deep);color:var(--text-primary);border:1px solid var(--border);">
                     <i class="bi bi-shop"></i> Tiếp tục mua sắm
                 </a>
