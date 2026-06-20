@@ -259,6 +259,60 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
+     [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return RedirectToAction(nameof(Login));
+
+        var user = await _db.Users.Include(u => u.Role).AsNoTracking()
+                            .FirstOrDefaultAsync(u => u.UserId == userId);
+        if (user is null) return RedirectToAction(nameof(Login));
+
+        return View(new ProfileViewModel
+        {
+            FullName  = user.FullName,
+            Email     = user.Email,
+            Phone     = user.Phone,
+            Address   = user.Address,
+            Role      = user.Role?.RoleName ?? UserRoles.Customer,
+            CreatedAt = user.CreatedAt
+        });
+    }
+
+    // ── POST /Auth/Profile ───────────────────────────────────────────────
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> Profile(ProfileViewModel model)
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return RedirectToAction(nameof(Login));
+
+        var user = await _db.Users.Include(u => u.Role).AsNoTracking()
+                            .FirstOrDefaultAsync(u => u.UserId == userId);
+        if (user is null) return RedirectToAction(nameof(Login));
+
+        model.Email     = user.Email;
+        model.Role      = user.Role?.RoleName ?? UserRoles.Customer;
+        model.CreatedAt = user.CreatedAt;
+
+        if (!ModelState.IsValid)
+            return View(model);
+
+        await _db.Users
+                 .Where(u => u.UserId == userId)
+                 .ExecuteUpdateAsync(s => s
+                     .SetProperty(u => u.FullName,  model.FullName.Trim())
+                     .SetProperty(u => u.Phone,     string.IsNullOrWhiteSpace(model.Phone)   ? null : model.Phone.Trim())
+                     .SetProperty(u => u.Address,   string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim())
+                     .SetProperty(u => u.UpdatedAt, DateTime.UtcNow));
+
+        TempData["SuccessMessage"] = "Cập nhật hồ sơ thành công.";
+        return RedirectToAction(nameof(Profile));
+    }
+
 
     private async Task SignInAsync(AuthenticatedUser user, bool isPersistent)
     {

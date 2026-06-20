@@ -64,6 +64,27 @@ public class ChangePasswordViewModel
     public string ConfirmPassword { get; set; } = string.Empty;
 }
 
+public class ProfileViewModel
+{
+    // Display-only
+    public string Email { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+
+    // Editable
+    [Required(ErrorMessage = "Vui lòng nhập họ tên.")]
+    [StringLength(100)]
+    public string FullName { get; set; } = string.Empty;
+
+    [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
+    [StringLength(15)]
+    public string? Phone { get; set; }
+
+    [StringLength(300)]
+    public string? Address { get; set; }
+}
+
+
 public class ForgotPasswordViewModel
 {
     [Required(ErrorMessage = "Vui lòng nhập email.")]

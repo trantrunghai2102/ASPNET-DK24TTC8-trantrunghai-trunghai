@@ -1,0 +1,79 @@
+@model BanCaPheNuocGiaiKhat.Models.ProfileViewModel
+@{
+    ViewData["Title"] = "Hồ sơ của tôi";
+    var initial = Model.FullName.Length > 0 ? Model.FullName[0].ToString().ToUpper() : "U";
+}
+
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:4.5rem 1.5rem 3rem;">
+    <div style="background:#fbf4ef;border-radius:var(--radius-lg);padding:2.5rem 2.75rem;width:100%;max-width:480px;box-shadow:var(--shadow-md);">
+
+        <!-- Avatar + title -->
+        <div style="text-align:center;margin-bottom:1.75rem;">
+            <div style="width:60px;height:60px;border-radius:50%;background:var(--coffee-mid);color:#fff;font-size:1.5rem;font-weight:800;display:grid;place-items:center;margin:0 auto .9rem;letter-spacing:-.02em;">
+                @initial
+            </div>
+            <h1 style="font-size:1.45rem;font-weight:800;color:var(--coffee-darkest);margin:0 0 .25rem;letter-spacing:-.02em;">Hồ sơ của tôi</h1>
+            <p style="font-size:.85rem;color:var(--text-muted);margin:0;">Cập nhật thông tin cá nhân của bạn.</p>
+        </div>
+
+        @if (TempData["SuccessMessage"] is string msg)
+        {
+            <div style="padding:.65rem .9rem;border-radius:var(--radius-sm);background:#f0fdf4;border-left:3px solid #22c55e;color:#15803d;font-size:.85rem;font-weight:600;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem;">
+                <i class="bi bi-check-circle-fill"></i> @msg
+            </div>
+        }
+
+        <!-- Read-only info -->
+        <div style="background:var(--cream-deep);border:1px solid var(--border);border-radius:var(--radius-md);padding:.85rem 1.1rem;margin-bottom:1.6rem;display:grid;gap:.55rem;">
+            <div style="display:flex;align-items:center;gap:.65rem;font-size:.85rem;">
+                <i class="bi bi-envelope" style="color:var(--coffee-mid);flex-shrink:0;width:16px;text-align:center;"></i>
+                <span style="color:var(--text-secondary);">@Model.Email</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.65rem;font-size:.85rem;">
+                <i class="bi bi-shield-check" style="color:var(--coffee-mid);flex-shrink:0;width:16px;text-align:center;"></i>
+                <span style="color:var(--text-secondary);text-transform:capitalize;font-weight:600;">@Model.Role</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:.65rem;font-size:.85rem;">
+                <i class="bi bi-calendar3" style="color:var(--coffee-mid);flex-shrink:0;width:16px;text-align:center;"></i>
+                <span style="color:var(--text-muted);">Thành viên từ @Model.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy")</span>
+            </div>
+        </div>
+
+        <!-- Edit form -->
+        <form asp-action="Profile" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger small" style="margin-bottom:.75rem;"></div>
+
+            <div class="field-block">
+                <label asp-for="FullName">Họ tên</label>
+                <input asp-for="FullName" placeholder="Nhập họ tên..." />
+                <span asp-validation-for="FullName" class="field-validation-error"></span>
+            </div>
+
+            <div class="field-block">
+                <label asp-for="Phone">Số điện thoại</label>
+                <input asp-for="Phone" placeholder="Nhập số điện thoại..." />
+                <span asp-validation-for="Phone" class="field-validation-error"></span>
+            </div>
+
+            <div class="field-block" style="margin-bottom:1.5rem;">
+                <label asp-for="Address">Địa chỉ</label>
+                <input asp-for="Address" placeholder="Nhập địa chỉ..." />
+                <span asp-validation-for="Address" class="field-validation-error"></span>
+            </div>
+
+            <button type="submit" class="auth-entry-submit">LƯU THAY ĐỔI</button>
+        </form>
+
+        <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);text-align:center;">
+            <a asp-controller="Auth" asp-action="ChangePassword"
+               style="font-size:.82rem;color:var(--coffee-mid);font-weight:600;display:inline-flex;align-items:center;gap:.4rem;">
+                <i class="bi bi-lock"></i> Đổi mật khẩu
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -38,6 +38,7 @@
             </nav>
 
             <div class="staff-sidebar__footer">
+                <a asp-controller="Auth" asp-action="Profile"><i class="bi bi-person"></i> HỒ SƠ</a>
                 <a asp-controller="Auth" asp-action="ChangePassword"><i class="bi bi-gear"></i> CÀI ĐẶT</a>
                 <form asp-controller="Auth" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
