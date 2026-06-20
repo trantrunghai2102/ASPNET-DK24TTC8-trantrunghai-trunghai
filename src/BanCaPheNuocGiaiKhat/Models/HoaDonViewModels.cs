@@ -8,6 +8,7 @@ public class HoaDonTomTatViewModel
     public string? InvoiceCode { get; set; }
     public DateTime Date { get; set; }
     public decimal TotalAmount { get; set; }
+    public string? CustomerName { get; set; }
     public string? StaffName { get; set; }
     public string OrderType { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
@@ -44,5 +45,28 @@ public class HoaDonChiTietViewModel
     public decimal TotalAmount { get; set; }
     public decimal CashGiven { get; set; }
     public decimal ChangeAmount { get; set; }
+    public List<HoaDonItemViewModel> Items { get; set; } = new();
+}
+
+public class AdminOrderChiTietViewModel
+{
+    public int OrderId { get; set; }
+    public string InvoiceCode { get; set; } = string.Empty;
+    public string OrderType { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+    public string PaymentStatus { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public decimal? CashGiven { get; set; }
+    public decimal? ChangeAmount { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public DateTime? PaidAt { get; set; }
+    public string? CustomerName { get; set; }
+    public string? CustomerEmail { get; set; }
+    public string? StaffName { get; set; }
+    public string? RecipientName { get; set; }
+    public string? RecipientPhone { get; set; }
+    public string? DeliveryAddress { get; set; }
+    public string? Notes { get; set; }
     public List<HoaDonItemViewModel> Items { get; set; } = new();
 }

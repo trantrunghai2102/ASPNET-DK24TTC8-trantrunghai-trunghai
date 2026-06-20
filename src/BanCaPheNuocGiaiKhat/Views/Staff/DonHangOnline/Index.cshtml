@@ -58,7 +58,7 @@
                     <thead>
                         <tr style="background:var(--coffee-darkest);color:#fff;">
                             <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Mã ĐH</th>
-                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Khách hàng</th>
+                            <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Người đặt</th>
                             <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">Người nhận</th>
                             <th style="padding:.75rem 1rem;text-align:left;font-size:.83rem;">SĐT</th>
                             <th style="padding:.75rem 1rem;text-align:right;font-size:.83rem;">Tổng tiền</th>
@@ -73,7 +73,7 @@
                         {
                             <tr style="border-bottom:1px solid var(--border);">
                                 <td style="padding:.7rem 1rem;font-weight:600;color:var(--text-primary);font-size:.88rem;">#@o.OrderId</td>
-                                <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.CustomerName ?? "—")</td>
+                                <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(string.IsNullOrEmpty(o.CustomerName) ? "Vãng lai" : o.CustomerName)</td>
                                 <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientName ?? "—")</td>
                                 <td style="padding:.7rem 1rem;font-size:.85rem;color:var(--text-secondary);">@(o.RecipientPhone ?? "—")</td>
                                 <td style="padding:.7rem 1rem;text-align:right;font-weight:600;color:var(--coffee-darkest);font-size:.88rem;">@o.TotalAmount.ToString("N0") vnđ</td>

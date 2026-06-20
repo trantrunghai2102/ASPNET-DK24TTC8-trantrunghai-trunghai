@@ -73,6 +73,50 @@ public class AdminHoaDonController : Controller
         return View("~/Views/Admin/HoaDon/Index.cshtml", viewModel);
     }
 
+    // GET /AdminHoaDon/ChiTiet/{id}  (id = OrderId)
+    public async Task<IActionResult> ChiTiet(int id)
+    {
+        var order = await _db.Orders
+            .Include(o => o.Customer)
+            .Include(o => o.Staff)
+            .Include(o => o.Invoice)
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.OrderId == id);
+
+        if (order == null) return NotFound();
+
+        var vm = new AdminOrderChiTietViewModel
+        {
+            OrderId      = order.OrderId,
+            InvoiceCode  = order.Invoice?.InvoiceCode ?? $"ORD-{order.OrderId:D6}",
+            OrderType    = order.OrderType,
+            Status       = order.Status,
+            PaymentStatus = order.PaymentStatus,
+            TotalAmount  = order.TotalAmount,
+            CashGiven    = order.CashGiven,
+            ChangeAmount = order.ChangeAmount,
+            CreatedAt    = order.CreatedAt,
+            UpdatedAt    = order.UpdatedAt,
+            PaidAt       = order.Invoice?.PaidAt,
+            CustomerName = order.Customer?.FullName,
+            CustomerEmail = order.Customer?.Email,
+            StaffName    = order.Staff?.FullName,
+            RecipientName  = order.RecipientName,
+            RecipientPhone = order.RecipientPhone,
+            DeliveryAddress = order.DeliveryAddress,
+            Notes        = order.Notes,
+            Items = order.OrderItems.Select(i => new HoaDonItemViewModel
+            {
+                ProductName = i.ProductName,
+                UnitPrice   = i.UnitPrice,
+                Quantity    = i.Quantity,
+                Subtotal    = i.Subtotal
+            }).ToList()
+        };
+
+        return View("~/Views/Admin/HoaDon/ChiTiet.cshtml", vm);
+    }
+
     // POST /AdminHoaDon/Xoa/{id}
     [HttpPost]
     [ValidateAntiForgeryToken]

@@ -1,12 +1,12 @@
-﻿@model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
+@model BanCaPheNuocGiaiKhat.Models.DanhSachHoaDonViewModel
 @{
     ViewData["Title"] = "Quản lý hóa đơn";
 }
 
 <header class="admin-topbar" style="margin-bottom: 2rem;">
     <div>
-        <p class="admin-kicker">MANAGE SALES</p>
-        <h1>Orders to Process</h1>
+        <p class="admin-kicker">QUẢN LÝ BÁN HÀNG</p>
+        <h1>Quản lý đơn hàng</h1>
     </div>
 </header>
 
@@ -18,7 +18,7 @@
 <section class="admin-orders-layout">
     <div class="admin-panel">
         <div class="admin-panel__header">
-            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ALL ORDERS</small>
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">TẤT CẢ ĐƠN HÀNG</small>
             <form method="get" style="display:flex; gap: .5rem; align-items:center;">
                 <select name="type" onchange="this.form.submit()" style="padding: .4rem .6rem; border: 1px solid #d8c4b7; border-radius: 4px; background: #fff; font-size: .8rem; font-weight: 600; color: #4e3a2f; outline: none; cursor: pointer;">
                     <option value="">Tất cả loại đơn</option>
@@ -30,12 +30,12 @@
         
         <div class="admin-product-table">
             <div class="admin-product-table__head" style="grid-template-columns: 110px 100px 110px 130px minmax(100px, 1fr) 100px;">
-                <span>Code</span>
+                <span>Mã đơn</span>
                 <span>Loại đơn</span>
                 <span>Trạng thái</span>
-                <span>Date</span>
-                <span>Staff</span>
-                <span style="text-align: right;">Amount</span>
+                <span>Thời gian</span>
+                <span>Nhân viên</span>
+                <span style="text-align: right;">Tổng tiền</span>
             </div>
             
             @if (!Model.Invoices.Any())
@@ -47,7 +47,7 @@
                 foreach (var hd in Model.Invoices)
                 {
                     <div class="admin-product-table__row" style="grid-template-columns: 110px 100px 110px 130px minmax(100px, 1fr) 100px;">
-                        <div><span class="admin-status">@hd.InvoiceCode</span></div>
+                        <div><a asp-controller="AdminHoaDon" asp-action="ChiTiet" asp-route-id="@hd.OrderId" class="admin-status" style="text-decoration:none; color:inherit; border-bottom: 1px dashed currentColor;" title="Xem chi tiết">@hd.InvoiceCode</a></div>
                         <div style="font-size:.8rem; color:#6d5a4d;">
                             @if (hd.OrderType?.ToLower() == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
                         </div>
@@ -91,27 +91,27 @@
     <div>
         <div class="admin-panel" style="margin-bottom: 1.5rem;">
             <div class="admin-panel__header" style="border-bottom:none">
-                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">ORDER STATS</small>
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">THỐNG KÊ ĐƠN HÀNG</small>
             </div>
             <div style="padding: 0 1.2rem 1.2rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem;">
                     <div style="display:flex; align-items:center; gap:.5rem;">
                         <span style="width:10px; height:10px; border-radius:50%; background:#dcebf0;"></span>
-                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Pending Orders</span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Chờ xử lý</span>
                     </div>
                     <strong style="font-size:.9rem; color:#231a15">@Model.PendingOrders</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem;">
                     <div style="display:flex; align-items:center; gap:.5rem;">
                         <span style="width:10px; height:10px; border-radius:50%; background:#f1e6d8;"></span>
-                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Processing Orders</span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Đang xử lý</span>
                     </div>
                     <strong style="font-size:.9rem; color:#231a15">@Model.ProcessingOrders</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:.5rem;">
                         <span style="width:10px; height:10px; border-radius:50%; background:#e2efd9;"></span>
-                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Completed Orders</span>
+                        <span style="font-size:.8rem; font-weight:600; color:#231a15">Hoàn tất</span>
                     </div>
                     <strong style="font-size:.9rem; color:#231a15">@Model.CompletedOrders</strong>
                 </div>
@@ -120,7 +120,7 @@
 
         <div class="admin-panel">
             <div class="admin-panel__header" style="border-bottom:none">
-                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">RECENT ACTIVITY</small>
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">HOẠT ĐỘNG GẦN ĐÂY</small>
             </div>
             <div class="admin-activity-list">
                 @foreach (var hd in Model.Invoices.Take(4))
@@ -128,7 +128,7 @@
                     <div class="admin-activity-item">
                         <div class="admin-activity-item__icon" style="background:#e2efd9; color:#41652e"><i class="bi bi-check-lg"></i></div>
                         <div class="admin-activity-item__content">
-                            <p>Order @hd.InvoiceCode updated</p>
+                            <p>Đơn hàng @hd.InvoiceCode đã cập nhật</p>
                             <small>@hd.Date.ToLocalTime().ToString("MMM dd, yyyy - HH:mm")</small>
                         </div>
                     </div>

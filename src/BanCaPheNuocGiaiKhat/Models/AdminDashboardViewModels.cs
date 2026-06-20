@@ -16,6 +16,7 @@ public class AdminDashboardViewModel
     public int TotalProductsSold { get; set; }
     
     public List<AdminRevenuePointViewModel> RevenueByDay { get; set; } = new();
+    public bool IsMonthlyView { get; set; }
     public List<AdminTopProductViewModel> TopProducts { get; set; } = new();
     public List<AdminRecentInvoiceViewModel> RecentInvoices { get; set; } = new();
 }

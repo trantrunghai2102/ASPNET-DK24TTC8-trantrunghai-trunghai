@@ -5,8 +5,13 @@
 
 <header class="admin-topbar">
     <div>
-        <p class="admin-kicker">USER MANAGEMENT</p>
-        <h1>System Users & Customers</h1>
+        <p class="admin-kicker">QUẢN LÝ NGƯỜI DÙNG</p>
+        <h1>Hệ thống người dùng & khách hàng</h1>
+    </div>
+    <div>
+        <a asp-action="Create" class="admin-new-product">
+            <i class="bi bi-plus-lg"></i> TẠO NGƯỜI DÙNG
+        </a>
     </div>
 </header>
 
@@ -21,20 +26,20 @@
 
 <section class="admin-panel">
     <div class="admin-panel__header">
-        <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">FILTER & SEARCH</small>
+        <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">LỌC & TÌM KIẾM</small>
         <form method="get" style="display:flex; align-items:center; gap: 0.75rem; flex-wrap: wrap;">
             <select name="roleId" onchange="this.form.submit()" style="padding:.4rem .8rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.8rem; outline:none; background:#fff;">
-                <option value="">-- All Roles --</option>
+                <option value="">-- Tất cả vai trò --</option>
                 @foreach (var role in Model.Roles)
                 {
                     <option value="@role.RoleId" selected="@(Model.SelectedRoleId == role.RoleId ? "selected" : null)">@role.RoleName.ToUpper()</option>
                 }
             </select>
-            <input type="text" name="search" value="@Model.SearchQuery" placeholder="Search by name, email, phone..." style="padding:.4rem .8rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.8rem; outline:none; min-width:250px;">
-            <button type="submit" class="admin-secondary-btn" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: 4px;">Search</button>
+            <input type="text" name="search" value="@Model.SearchQuery" placeholder="Tìm kiếm tên, email, sđt..." style="padding:.4rem .8rem; border:1px solid #d8c4b7; border-radius:4px; font-size:.8rem; outline:none; min-width:250px;">
+            <button type="submit" class="admin-secondary-btn" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-radius: 4px;">Tìm</button>
             @if (!string.IsNullOrEmpty(Model.SearchQuery) || Model.SelectedRoleId.HasValue)
             {
-                <a asp-action="Index" class="btn btn-sm btn-link" style="color: #6d5a4d; font-size: 0.8rem; text-decoration: none;">Clear Filters</a>
+                <a asp-action="Index" class="btn btn-sm btn-link" style="color: #6d5a4d; font-size: 0.8rem; text-decoration: none;">Xóa lọc</a>
             }
         </form>
     </div>
@@ -42,19 +47,19 @@
     <div class="admin-product-table">
         <!-- 7-column layout: Avatar+User, Contact, Role, Status, Created At, Last Login, Actions -->
         <div class="admin-product-table__head" style="grid-template-columns: minmax(220px, 1.2fr) minmax(130px, 0.8fr) 140px 100px 110px 110px 150px;">
-            <span>User</span>
-            <span>Phone</span>
-            <span>Role</span>
-            <span>Status</span>
-            <span>Created At</span>
-            <span>Last Login</span>
-            <span style="text-align: right;">Actions</span>
+            <span>Người dùng</span>
+            <span>SĐT</span>
+            <span>Vai trò</span>
+            <span>Trạng thái</span>
+            <span>Ngày tạo</span>
+            <span>Đăng nhập cuối</span>
+            <span style="text-align: right;">Thao tác</span>
         </div>
         
         @if (!Model.Users.Any())
         {
             <div style="padding: 3rem; text-align: center; color: #6d5a4d; font-size: .85rem;">
-                No users found matching the query.
+                Không tìm thấy người dùng nào.
             </div>
         }
         else
@@ -92,15 +97,15 @@
                     <div>
                         @if (u.Status == BanCaPheNuocGiaiKhat.Models.Entities.UserStatus.active)
                         {
-                            <span class="admin-status admin-status--green">Active</span>
+                            <span class="admin-status admin-status--green">Hoạt động</span>
                         }
                         else if (u.Status == BanCaPheNuocGiaiKhat.Models.Entities.UserStatus.locked)
                         {
-                            <span class="admin-status admin-status--orange" style="background:#f8d7da; color:#842029;">Locked</span>
+                            <span class="admin-status admin-status--orange" style="background:#f8d7da; color:#842029;">Đã khóa</span>
                         }
                         else
                         {
-                            <span class="admin-status admin-status--orange">Pending</span>
+                            <span class="admin-status admin-status--orange">Chờ</span>
                         }
                     </div>
                     
@@ -108,7 +113,7 @@
                     <div style="font-size:.78rem; color:#6d5a4d;">@u.CreatedAt.ToString("dd/MM/yyyy")</div>
                     
                     <!-- Last Login -->
-                    <div style="font-size:.78rem; color:#6d5a4d;">@(u.LastLoginAt.HasValue ? u.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm") : "Never")</div>
+                    <div style="font-size:.78rem; color:#6d5a4d;">@(u.LastLoginAt.HasValue ? u.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa từng")</div>
                     
                     <!-- Action Lock/Unlock -->
                     <div style="text-align: right;">
@@ -118,13 +123,13 @@
                             @if (u.Status == BanCaPheNuocGiaiKhat.Models.Entities.UserStatus.active)
                             {
                                 <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-weight: 600;" title="Khóa tài khoản">
-                                    <i class="bi bi-lock-fill"></i> LOCK
+                                    <i class="bi bi-lock-fill"></i> KHÓA
                                 </button>
                             }
                             else
                             {
                                 <button type="submit" class="btn btn-sm btn-outline-success" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-weight: 600;" title="Mở khóa tài khoản">
-                                    <i class="bi bi-unlock-fill"></i> UNLOCK
+                                    <i class="bi bi-unlock-fill"></i> MỞ KHÓA
                                 </button>
                             }
                         </form>

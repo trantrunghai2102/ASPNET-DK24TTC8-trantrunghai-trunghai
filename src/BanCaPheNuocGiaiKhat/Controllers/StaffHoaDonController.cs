@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Staff)]
+[Authorize(Roles = UserRoles.Staff + "," + UserRoles.Admin)]
 public class StaffHoaDonController : Controller
 {
     private readonly AppDbContext _db;
@@ -48,6 +48,7 @@ public class StaffHoaDonController : Controller
                 InvoiceCode = o.Invoice != null ? o.Invoice.InvoiceCode : $"ORD-{o.OrderId:D6}",
                 Date        = o.Invoice != null ? o.Invoice.PaidAt : o.CreatedAt,
                 TotalAmount = o.TotalAmount,
+                CustomerName = o.Customer != null ? o.Customer.FullName : "Vãng lai",
                 StaffName   = o.Staff != null ? o.Staff.FullName : null,
                 OrderType   = o.OrderType,
                 Status      = o.Status

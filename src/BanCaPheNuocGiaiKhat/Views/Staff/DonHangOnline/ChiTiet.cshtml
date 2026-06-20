@@ -31,7 +31,7 @@
                     <div style="display:grid;gap:.6rem;font-size:.88rem;">
                         <div style="display:flex;gap:.5rem;">
                             <span style="color:var(--text-muted);min-width:140px;">Khách hàng:</span>
-                            <span style="font-weight:600;">@(Model.CustomerName ?? "—")
+                            <span style="font-weight:600;">@(string.IsNullOrEmpty(Model.CustomerName) ? "Vãng lai" : Model.CustomerName)
                                 @if (Model.CustomerEmail != null)
                                 {
                                     <span style="color:var(--text-muted);font-weight:400;"> (@Model.CustomerEmail)</span>
@@ -125,16 +125,16 @@
                             {
                                 <tr style="border-bottom:1px solid var(--border);">
                                     <td style="padding:.6rem .75rem;">@item.ProductName</td>
-                                    <td style="padding:.6rem .75rem;text-align:right;color:var(--text-secondary);">@item.UnitPrice.ToString("N3") vnđ</td>
+                                    <td style="padding:.6rem .75rem;text-align:right;color:var(--text-secondary);">@item.UnitPrice.ToString("N0") vnđ</td>
                                     <td style="padding:.6rem .75rem;text-align:center;">@item.Quantity</td>
-                                    <td style="padding:.6rem .75rem;text-align:right;font-weight:600;color:var(--coffee-darkest);">@item.Subtotal.ToString("N3") vnđ</td>
+                                    <td style="padding:.6rem .75rem;text-align:right;font-weight:600;color:var(--coffee-darkest);">@item.Subtotal.ToString("N0") vnđ</td>
                                 </tr>
                             }
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="3" style="padding:.75rem;text-align:right;font-weight:700;">Tổng cộng</td>
-                                <td style="padding:.75rem;text-align:right;font-size:1.1rem;font-weight:700;color:var(--coffee-darkest);">@Model.TotalAmount.ToString("N3") vnđ</td>
+                                <td style="padding:.75rem;text-align:right;font-size:1.1rem;font-weight:700;color:var(--coffee-darkest);">@Model.TotalAmount.ToString("N0") vnđ</td>
                             </tr>
                         </tfoot>
                     </table>

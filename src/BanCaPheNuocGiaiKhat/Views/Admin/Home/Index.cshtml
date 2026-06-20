@@ -9,7 +9,14 @@
         <h1>Phân Tích Doanh Thu</h1>
         <span>Theo dõi hiệu suất cửa hàng và xu hướng mua hàng.</span>
     </div>
-    <div>
+    <div style="display:flex; align-items:center; gap:.5rem;">
+        @* Year navigation *@
+        <a asp-controller="AdminDashboard" asp-action="Index" asp-route-year="@(Model.Year - 1)" asp-route-month="@Model.Month"
+           style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #d8c4b7; border-radius:4px; background:#fff; color:#4e3a2f; text-decoration:none; font-size:.8rem; cursor:pointer; transition: background 0.15s;"
+           title="Năm @(Model.Year - 1)">
+            <i class="bi bi-chevron-left"></i>
+        </a>
+
         <form asp-controller="AdminDashboard" asp-action="Index" method="get" style="margin: 0;">
             <div class="admin-secondary-btn" style="padding: 0; position: relative;">
                 <i class="bi bi-calendar3" style="margin-left: 0.9rem; pointer-events: none;"></i>
@@ -31,6 +38,12 @@
                 <input type="hidden" name="year" value="@Model.Year" />
             </div>
         </form>
+
+        <a asp-controller="AdminDashboard" asp-action="Index" asp-route-year="@(Model.Year + 1)" asp-route-month="@Model.Month"
+           style="display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid #d8c4b7; border-radius:4px; background:#fff; color:#4e3a2f; text-decoration:none; font-size:.8rem; cursor:pointer; transition: background 0.15s;"
+           title="Năm @(Model.Year + 1)">
+            <i class="bi bi-chevron-right"></i>
+        </a>
     </div>
 </header>
 
@@ -81,28 +94,109 @@
     <article class="admin-panel">
         <div class="admin-panel__header">
             <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">DOANH THU THEO THỜI GIAN</small>
-            <div style="display:flex; border: 1px solid #d8c4b7; border-radius: 4px; overflow: hidden;">
-                <button style="padding: .3rem .8rem; border:none; background: #fbf4ef; font-size:.75rem; font-weight:700; color:#5b351f;">Ngày</button>
-                <button style="padding: .3rem .8rem; border:none; border-left: 1px solid #d8c4b7; background: #fff; font-size:.75rem; font-weight:600; color:#6d5a4d;">Tháng</button>
-            </div>
         </div>
-        <div style="padding: 1.5rem; height: 340px;">
-            <div class="admin-revenue-bars">
-                @if (Model.RevenueByDay.Count == 0)
+        <div style="padding: 1.5rem; min-height: 340px;">
+            @if (Model.RevenueByDay.Count == 0)
+            {
+                <div class="admin-empty-state" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:250px; color:#6d5a4d;">
+                    <i class="bi bi-bar-chart" style="font-size:2rem; margin-bottom:.5rem;"></i>
+                    <span>Không có dữ liệu doanh thu cho kỳ này.</span>
+                </div>
+            }
+            else
+            {
+                @* Build full range filling gaps *@
+                var allBars = new List<AdminRevenuePointViewModel>();
+                var isMonthly = Model.IsMonthlyView;
+
+                if (isMonthly)
                 {
-                    <div class="admin-empty-state">
-                        <i class="bi bi-bar-chart"></i>
-                        <span>Không có dữ liệu doanh thu cho kỳ này.</span>
-                    </div>
+                    @* Monthly: fill all 12 months *@
+                    var revenueMap = Model.RevenueByDay.ToDictionary(r => r.Date.Month);
+                    for (int m = 1; m <= 12; m++)
+                    {
+                        if (revenueMap.TryGetValue(m, out var existing))
+                            allBars.Add(existing);
+                        else
+                            allBars.Add(new AdminRevenuePointViewModel { Date = new DateTime(Model.Year, m, 1), Revenue = 0, Orders = 0 });
+                    }
                 }
-                @foreach (var item in Model.RevenueByDay)
+                else
                 {
-                    var height = maxRevenue <= 0 ? 4 : Math.Max(8, (int)(item.Revenue / maxRevenue * 250));
-                    <div class="admin-revenue-bar" title="@item.Date.ToString("dd/MM"): @item.Revenue.ToString("N0") vnđ">
-                        <span style="height:@(height)px"></span>
-                    </div>
+                    @* Daily: fill all dates in the period *@
+                    var revenueMap = Model.RevenueByDay.ToDictionary(r => r.Date.Date);
+                    for (var d = Model.PeriodStart.Date; d <= Model.PeriodEnd.Date; d = d.AddDays(1))
+                    {
+                        if (revenueMap.TryGetValue(d, out var existing))
+                            allBars.Add(existing);
+                        else
+                            allBars.Add(new AdminRevenuePointViewModel { Date = d, Revenue = 0, Orders = 0 });
+                    }
                 }
-            </div>
+                if (allBars.Count == 0) { allBars = Model.RevenueByDay; }
+
+                var chartMax = allBars.Count > 0 ? allBars.Max(x => x.Revenue) : 0;
+                if (chartMax <= 0) chartMax = 1;
+
+                @* Y-axis scale *@
+                var ySteps = 4;
+                var yStep = chartMax / ySteps;
+
+                <div style="display:flex; gap:0; height:280px;">
+                    <!-- Y-axis labels -->
+                    <div style="display:flex; flex-direction:column; justify-content:space-between; padding-right:.5rem; min-width:65px; align-items:flex-end; font-size:.68rem; color:#6d5a4d; font-weight:600;">
+                        @for (int s = ySteps; s >= 0; s--)
+                        {
+                            var val = yStep * s;
+                            string label;
+                            if (val >= 1000000) { label = (val / 1000000m).ToString("0.#") + "tr"; }
+                            else if (val >= 1000) { label = (val / 1000m).ToString("0.#") + "k"; }
+                            else { label = val.ToString("N0"); }
+                            <span>@label</span>
+                        }
+                    </div>
+                    <!-- Bars + grid -->
+                    <div style="flex:1; display:flex; flex-direction:column; position:relative; border-left:1px solid #eadbd2;">
+                        <!-- Grid lines -->
+                        @for (int s = 0; s <= ySteps; s++)
+                        {
+                            var topPct = (100.0 * s / ySteps);
+                            <div style="position:absolute; left:0; right:0; top:@(topPct)%; border-top:1px dashed #eee6de; z-index:0;"></div>
+                        }
+                        <!-- Bars -->
+                        <div style="flex:1; display:flex; align-items:flex-end; gap:@(isMonthly ? "8" : "2")px; padding:0 @(isMonthly ? "12" : "4")px; position:relative; z-index:1;">
+                            @foreach (var item in allBars)
+                            {
+                                var pct = chartMax <= 0 ? 1 : (item.Revenue <= 0 ? 1 : Math.Max(2, (int)(item.Revenue / chartMax * 100)));
+                                var barColor = item.Revenue > 0 ? "linear-gradient(180deg, #5b351f, #8b6244)" : "#eee6de";
+                                var tooltipDate = isMonthly ? $"Tháng {item.Date.Month}/{item.Date.Year}" : item.Date.ToString("dd/MM/yyyy");
+                                <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;" title="@tooltipDate: @item.Revenue.ToString("N0") vnđ (@item.Orders đơn)">
+                                    <div style="width:100%; max-width:@(isMonthly ? "48" : "32")px; min-width:4px; height:@(pct)%; background:@barColor; border-radius:4px 4px 0 0; transition: height 0.3s;"></div>
+                                </div>
+                            }
+                        </div>
+                        <!-- Labels -->
+                        <div style="display:flex; gap:@(isMonthly ? "8" : "2")px; padding:0 @(isMonthly ? "12" : "4")px; border-top:1px solid #eadbd2; margin-top:2px;">
+                            @{
+                                var totalBars = allBars.Count;
+                                var labelInterval = isMonthly ? 1 : (totalBars <= 7 ? 1 : (totalBars <= 15 ? 2 : (totalBars <= 31 ? 3 : 5)));
+                                var idx = 0;
+                            }
+                            @foreach (var item in allBars)
+                            {
+                                var showLabel = (idx % labelInterval == 0) || (idx == totalBars - 1);
+                                <div style="flex:1; text-align:center; font-size:@(isMonthly ? ".72" : ".6")rem; color:#6d5a4d; font-weight:600; padding-top:4px; white-space:nowrap; overflow:hidden;">
+                                    @if (showLabel)
+                                    {
+                                        @(isMonthly ? $"T{item.Date.Month}" : item.Date.ToString("dd/MM"))
+                                    }
+                                </div>
+                                idx++;
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </article>
 

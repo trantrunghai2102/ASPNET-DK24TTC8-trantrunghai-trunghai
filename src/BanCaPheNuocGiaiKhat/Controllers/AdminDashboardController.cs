@@ -48,16 +48,41 @@ public class AdminDashboardController : Controller
         var totalRevenue = await invoiceQuery.SumAsync(i => (decimal?)i.TotalAmount) ?? 0m;
         var totalOrders = await invoiceQuery.CountAsync();
 
-        var revenueByDay = await invoiceQuery
-            .GroupBy(i => i.PaidAt.Date)
-            .Select(g => new AdminRevenuePointViewModel
-            {
-                Date = g.Key,
-                Revenue = g.Sum(i => i.TotalAmount),
-                Orders = g.Count()
-            })
-            .OrderBy(x => x.Date)
-            .ToListAsync();
+        var isMonthlyView = !selectedMonth.HasValue && !fromDate.HasValue && !toDate.HasValue;
+
+        List<AdminRevenuePointViewModel> revenueByDay;
+        if (isMonthlyView)
+        {
+            // Fetch daily data first, then aggregate to monthly in-memory (EF can't translate new DateTime in GroupBy)
+            var dailyData = await invoiceQuery
+                .GroupBy(i => i.PaidAt.Date)
+                .Select(g => new { Date = g.Key, Revenue = g.Sum(i => i.TotalAmount), Orders = g.Count() })
+                .ToListAsync();
+
+            revenueByDay = dailyData
+                .GroupBy(d => new { d.Date.Year, d.Date.Month })
+                .Select(g => new AdminRevenuePointViewModel
+                {
+                    Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+                    Revenue = g.Sum(x => x.Revenue),
+                    Orders = g.Sum(x => x.Orders)
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+        }
+        else
+        {
+            revenueByDay = await invoiceQuery
+                .GroupBy(i => i.PaidAt.Date)
+                .Select(g => new AdminRevenuePointViewModel
+                {
+                    Date = g.Key,
+                    Revenue = g.Sum(i => i.TotalAmount),
+                    Orders = g.Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToListAsync();
+        }
 
         var orderIds = await invoiceQuery.Select(i => i.OrderId).ToListAsync();
         var topProducts = orderIds.Count == 0
@@ -89,6 +114,7 @@ public class AdminDashboardController : Controller
             AverageOrderValue = totalOrders == 0 ? 0 : totalRevenue / totalOrders,
             TotalProductsSold = topProducts.Sum(p => p.Quantity),
             RevenueByDay = revenueByDay,
+            IsMonthlyView = isMonthlyView,
             TopProducts = topProducts,
             RecentInvoices = await invoiceQuery
                 .OrderByDescending(i => i.PaidAt)

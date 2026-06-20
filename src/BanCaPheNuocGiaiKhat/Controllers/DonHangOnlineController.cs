@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BanCaPheNuocGiaiKhat.Controllers;
 
-[Authorize(Roles = UserRoles.Staff)]
+[Authorize(Roles = UserRoles.Staff + "," + UserRoles.Admin)]
 public class DonHangOnlineController : Controller
 {
     private readonly AppDbContext _db;

@@ -40,39 +40,46 @@
                     <span id="cartCountBadge" style="display:none; position:absolute; top: -5px; right: -8px; background: #c0392b; color: white; border-radius: 50%; padding: 0.15rem 0.35rem; font-size: 0.65rem; font-weight: bold; line-height: 1;">0</span>
                 </a>
 
-                @{
+                @if (User.Identity?.IsAuthenticated == true)
+                {
                     var displayName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "U";
                     var initial = displayName.Length > 0 ? displayName[0].ToString().ToUpper() : "U";
-                }
 
-                <div class="nav-profile" id="nav-profile">
-                    <button class="nav-profile__btn" id="nav-profile-btn" aria-expanded="false" aria-haspopup="true" title="Tài khoản của tôi">
-                        <span class="nav-profile__avatar">@initial</span>
-                        <i class="bi bi-chevron-down nav-profile__caret" style="font-size:12px;"></i>
-                    </button>
-                    <div class="nav-profile__dropdown" id="nav-profile-dropdown" role="menu">
-                        <div class="nav-profile__header">
-                            <span class="nav-profile__name">@displayName</span>
-                            <span class="nav-profile__role">Khách hàng</span>
+                    <div class="nav-profile" id="nav-profile">
+                        <button class="nav-profile__btn" id="nav-profile-btn" aria-expanded="false" aria-haspopup="true" title="Tài khoản của tôi">
+                            <span class="nav-profile__avatar">@initial</span>
+                            <i class="bi bi-chevron-down nav-profile__caret" style="font-size:12px;"></i>
+                        </button>
+                        <div class="nav-profile__dropdown" id="nav-profile-dropdown" role="menu">
+                            <div class="nav-profile__header">
+                                <span class="nav-profile__name">@displayName</span>
+                                <span class="nav-profile__role">Khách hàng</span>
+                            </div>
+                            <a asp-controller="Auth" asp-action="Profile" class="nav-profile__item" role="menuitem">
+                                <i class="bi bi-person" style="font-size:14px;"></i>
+                                Hồ sơ của tôi
+                            </a>
+                            <a asp-controller="Auth" asp-action="ChangePassword" class="nav-profile__item" role="menuitem">
+                                <i class="bi bi-lock" style="font-size:14px;"></i>
+                                Đổi mật khẩu
+                            </a>
+                            <div class="nav-profile__divider"></div>
+                            <form asp-controller="Auth" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="nav-profile__item nav-profile__item--danger" role="menuitem">
+                                    <i class="bi bi-box-arrow-right" style="font-size:14px;"></i>
+                                    Đăng xuất
+                                </button>
+                            </form>
                         </div>
-                        <a asp-controller="Auth" asp-action="Profile" class="nav-profile__item" role="menuitem">
-                            <i class="bi bi-person" style="font-size:14px;"></i>
-                            Hồ sơ của tôi
-                        </a>
-                        <a asp-controller="Auth" asp-action="ChangePassword" class="nav-profile__item" role="menuitem">
-                            <i class="bi bi-lock" style="font-size:14px;"></i>
-                            Đổi mật khẩu
-                        </a>
-                        <div class="nav-profile__divider"></div>
-                        <form asp-controller="Auth" asp-action="Logout" method="post">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="nav-profile__item nav-profile__item--danger" role="menuitem">
-                                <i class="bi bi-box-arrow-right" style="font-size:14px;"></i>
-                                Đăng xuất
-                            </button>
-                        </form>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="Login" class="site-nav__icon-btn" aria-label="Đăng nhập" title="Đăng nhập" style="text-decoration: none;">
+                        <i class="bi bi-person" style="font-size:17px;"></i>
+                    </a>
+                }
             </div>
         </div>
     </nav>

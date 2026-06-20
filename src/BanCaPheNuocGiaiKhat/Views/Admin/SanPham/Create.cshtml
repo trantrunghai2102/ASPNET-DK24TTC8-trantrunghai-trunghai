@@ -5,33 +5,33 @@
 
 <header class="admin-topbar">
     <div>
-        <p class="admin-kicker">INVENTORY</p>
-        <h1>New Product</h1>
+        <p class="admin-kicker">KHO HÀNG</p>
+        <h1>Thêm sản phẩm</h1>
     </div>
 </header>
 
 <section class="admin-panel" style="max-width: 900px;">
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="admin-panel__header">
-            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">PRODUCT DETAILS</small>
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">CHI TIẾT SẢN PHẨM</small>
         </div>
         <div class="admin-form-grid">
             <div class="admin-field">
-                <label asp-for="Name">Product Name *</label>
-                <input asp-for="Name" required placeholder="e.g. Ethiopian Yirgacheffe" />
+                <label asp-for="Name">Tên sản phẩm *</label>
+                <input asp-for="Name" required placeholder="VD: Cà phê đen" />
                 <span asp-validation-for="Name" class="text-danger" style="font-size:.75rem;"></span>
             </div>
             
             <div class="admin-field">
-                <label asp-for="Slug">URL Slug *</label>
-                <input asp-for="Slug" required placeholder="e.g. ethiopian-yirgacheffe" />
+                <label asp-for="Slug">Đường dẫn (Slug) *</label>
+                <input asp-for="Slug" required placeholder="VD: ca-phe-den" />
                 <span asp-validation-for="Slug" class="text-danger" style="font-size:.75rem;"></span>
             </div>
 
             <div class="admin-field">
-                <label asp-for="CategoryId">Category *</label>
+                <label asp-for="CategoryId">Danh mục *</label>
                 <select asp-for="CategoryId" required>
-                    <option value="">-- Select Category --</option>
+                    <option value="">-- Chọn danh mục --</option>
                     @if (ViewBag.Categories != null)
                     {
                         foreach (var cat in ViewBag.Categories)
@@ -44,62 +44,62 @@
             </div>
 
             <div class="admin-field">
-                <label asp-for="StockQty">Initial Stock *</label>
+                <label asp-for="StockQty">Tồn kho ban đầu *</label>
                 <input asp-for="StockQty" type="number" min="0" required placeholder="0" />
                 <span asp-validation-for="StockQty" class="text-danger" style="font-size:.75rem;"></span>
             </div>
 
             <div class="admin-field">
-                <label asp-for="BasePrice">Base Price (VND) *</label>
+                <label asp-for="BasePrice">Giá gốc (VNĐ) *</label>
                 <input asp-for="BasePrice" type="number" min="0" step="1000" required placeholder="0" />
                 <span asp-validation-for="BasePrice" class="text-danger" style="font-size:.75rem;"></span>
             </div>
 
             <div class="admin-field">
-                <label asp-for="PromotionPrice">Promotion Price (VND)</label>
-                <input asp-for="PromotionPrice" type="number" min="0" step="1000" placeholder="Optional" />
+                <label asp-for="PromotionPrice">Giá khuyến mãi (VNĐ)</label>
+                <input asp-for="PromotionPrice" type="number" min="0" step="1000" placeholder="Không bắt buộc" />
                 <span asp-validation-for="PromotionPrice" class="text-danger" style="font-size:.75rem;"></span>
             </div>
 
             <div class="admin-field admin-field--wide">
-                <label asp-for="ShortDesc">Short Description</label>
-                <input asp-for="ShortDesc" placeholder="Brief summary for catalog view" />
+                <label asp-for="ShortDesc">Mô tả ngắn</label>
+                <input asp-for="ShortDesc" placeholder="Tóm tắt ngắn gọn về sản phẩm" />
             </div>
 
             <div class="admin-field admin-field--wide">
-                <label asp-for="DetailDesc">Full Description</label>
-                <textarea asp-for="DetailDesc" rows="5" placeholder="Detailed product description..."></textarea>
+                <label asp-for="DetailDesc">Mô tả chi tiết</label>
+                <textarea asp-for="DetailDesc" rows="5" placeholder="Nhập chi tiết sản phẩm..."></textarea>
             </div>
             
         </div>
 
         <div class="admin-panel__header" style="border-top: 1px solid #eadbd2;">
-            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">PRODUCT IMAGES</small>
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">HÌNH ẢNH SẢN PHẨM</small>
         </div>
         <div style="padding: 1.2rem;">
             <div class="admin-field">
-                <label>Upload Images (Multiple allowed)</label>
+                <label>Tải ảnh lên (Có thể chọn nhiều ảnh)</label>
                 <input type="file" name="images" multiple accept="image/*" style="padding: 1rem; border: 2px dashed #d8c4b7; background: #fbf6f1; cursor: pointer;" />
-                <p style="margin-top:.5rem; font-size:.75rem; color:#6d5a4d;">The first image will be used as the thumbnail.</p>
+                <p style="margin-top:.5rem; font-size:.75rem; color:#6d5a4d;">Hình ảnh đầu tiên sẽ được dùng làm ảnh đại diện.</p>
             </div>
         </div>
 
         <div class="admin-panel__header" style="border-top: 1px solid #eadbd2;">
-            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">STATUS</small>
+            <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">TRẠNG THÁI</small>
         </div>
         <div style="padding: 1.2rem;">
             <div class="admin-field">
-                <label asp-for="Status">Product Status</label>
+                <label asp-for="Status">Trạng thái sản phẩm</label>
                 <select asp-for="Status">
-                    <option value="active">Active (Visible)</option>
-                    <option value="hidden">Hidden (Draft)</option>
+                    <option value="active">Hoạt động (Hiển thị)</option>
+                    <option value="hidden">Ẩn (Bản nháp)</option>
                 </select>
             </div>
         </div>
 
         <div style="padding: 1.2rem; background: #fbf6f1; border-top: 1px solid #eadbd2; display: flex; justify-content: flex-end; gap: 1rem;">
             <a asp-action="Index" class="admin-secondary-btn">Hủy bỏ</a>
-            <button type="submit" class="admin-primary-btn">SAVE PRODUCT</button>
+            <button type="submit" class="admin-primary-btn">LƯU SẢN PHẨM</button>
         </div>
     </form>
 </section>

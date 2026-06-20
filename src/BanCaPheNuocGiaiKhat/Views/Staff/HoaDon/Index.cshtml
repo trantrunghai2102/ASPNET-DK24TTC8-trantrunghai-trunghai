@@ -128,6 +128,7 @@
                     <thead>
                         <tr>
                             <th>Mã đơn/HD</th>
+                            <th>Khách hàng</th>
                             <th>Loại đơn</th>
                             <th>Trạng thái</th>
                             <th>Thời gian</th>
@@ -141,6 +142,7 @@
                         {
                             <tr>
                                 <td><span class="invoice-code-badge">@hd.InvoiceCode</span></td>
+                                <td style="font-weight:600;color:var(--text-primary);">@(string.IsNullOrEmpty(hd.CustomerName) ? "Vãng lai" : hd.CustomerName)</td>
                                 <td>
                                     @if (hd.OrderType?.ToLower() == "online") { <span style="color:#007bff;font-weight:600">Online</span> } else { <span style="color:#28a745;font-weight:600">POS</span> }
                                 </td>

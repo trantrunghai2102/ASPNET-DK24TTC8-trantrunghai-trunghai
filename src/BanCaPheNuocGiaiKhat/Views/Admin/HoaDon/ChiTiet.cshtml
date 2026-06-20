@@ -1,0 +1,193 @@
+@model BanCaPheNuocGiaiKhat.Models.AdminOrderChiTietViewModel
+@{
+    ViewData["Title"] = $"Chi tiết đơn hàng #{Model.OrderId}";
+}
+
+<header class="admin-topbar" style="margin-bottom: 2rem;">
+    <div>
+        <p class="admin-kicker">CHI TIẾT ĐƠN HÀNG</p>
+        <h1>@Model.InvoiceCode</h1>
+    </div>
+    <a asp-action="Index" class="admin-secondary-btn" style="text-decoration:none; display:flex; align-items:center; gap:.4rem;">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
+</header>
+
+<section style="display:grid; grid-template-columns: 1fr 340px; gap:1.5rem; align-items:start;">
+
+    <!-- Main content -->
+    <div style="display:grid; gap:1.25rem;">
+
+        <!-- Thông tin đơn hàng -->
+        <div class="admin-panel">
+            <div class="admin-panel__header">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">THÔNG TIN ĐƠN HÀNG</small>
+                <div style="display:flex; gap:.5rem;">
+                    @{
+                        var typeBg = Model.OrderType?.ToLower() == "online" ? "#dbeafe" : "#dcfce7";
+                        var typeFg = Model.OrderType?.ToLower() == "online" ? "#1d4ed8" : "#15803d";
+                        var typeLabel = Model.OrderType?.ToLower() == "online" ? "Online" : "Tại quầy (POS)";
+                    }
+                    <span style="background:@typeBg; color:@typeFg; padding:.2rem .75rem; border-radius:20px; font-size:.78rem; font-weight:700;">@typeLabel</span>
+                </div>
+            </div>
+            <div style="padding:1.25rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem .5rem; font-size:.88rem;">
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Mã đơn</span>
+                        <span style="font-weight:700; color:#231a15;">@Model.InvoiceCode</span>
+                    </div>
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Trạng thái</span>
+                        @{
+                            var statusLabel = Model.Status switch
+                            {
+                                "pending"    => "Chờ xử lý",
+                                "processing" => "Đang xử lý",
+                                "shipping"   => "Đang giao",
+                                "delivered"  => "Đã giao",
+                                "paid"       => "Hoàn tất",
+                                "completed"  => "Hoàn tất",
+                                "cancelled"  => "Đã hủy",
+                                _            => Model.Status
+                            };
+                            var (bg, fg) = Model.Status switch
+                            {
+                                "pending"    => ("#fef9c3", "#a16207"),
+                                "processing" => ("#dbeafe", "#1d4ed8"),
+                                "shipping"   => ("#e0f2fe", "#0369a1"),
+                                "delivered"  => ("#dcfce7", "#15803d"),
+                                "paid"       => ("#dcfce7", "#15803d"),
+                                "completed"  => ("#dcfce7", "#15803d"),
+                                "cancelled"  => ("#fee2e2", "#b91c1c"),
+                                _            => ("#f3f4f6", "#374151")
+                            };
+                        }
+                        <span style="background:@bg; color:@fg; padding:.2rem .75rem; border-radius:20px; font-size:.82rem; font-weight:600;">@statusLabel</span>
+                    </div>
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Thanh toán</span>
+                        @if (Model.PaymentStatus == "paid")
+                        {
+                            <span style="background:#dcfce7; color:#15803d; padding:.2rem .75rem; border-radius:20px; font-size:.82rem; font-weight:600;">Đã thanh toán</span>
+                        }
+                        else
+                        {
+                            <span style="background:#fee2e2; color:#b91c1c; padding:.2rem .75rem; border-radius:20px; font-size:.82rem; font-weight:600;">Chưa thanh toán</span>
+                        }
+                    </div>
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Tổng tiền</span>
+                        <span style="font-weight:700; color:#231a15; font-size:1.05rem;">@Model.TotalAmount.ToString("N0") vnđ</span>
+                    </div>
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Ngày tạo</span>
+                        <span>@Model.CreatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                    </div>
+                    <div>
+                        <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Cập nhật lúc</span>
+                        <span>@Model.UpdatedAt.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                    </div>
+                    @if (Model.PaidAt.HasValue)
+                    {
+                        <div>
+                            <span style="display:block; font-size:.75rem; font-weight:700; color:#6d5a4d; margin-bottom:.25rem; text-transform:uppercase;">Thanh toán lúc</span>
+                            <span>@Model.PaidAt.Value.ToLocalTime().ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sản phẩm -->
+        <div class="admin-panel">
+            <div class="admin-panel__header">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">SẢN PHẨM TRONG ĐƠN</small>
+                <small style="color:#6d5a4d; font-weight:600;">@Model.Items.Count sản phẩm</small>
+            </div>
+            <div class="admin-product-table">
+                <div class="admin-product-table__head" style="grid-template-columns: minmax(200px, 1fr) 120px 80px 120px;">
+                    <span>Sản phẩm</span>
+                    <span style="text-align:right;">Đơn giá</span>
+                    <span style="text-align:center;">SL</span>
+                    <span style="text-align:right;">Thành tiền</span>
+                </div>
+                @foreach (var item in Model.Items)
+                {
+                    <div class="admin-product-table__row" style="grid-template-columns: minmax(200px, 1fr) 120px 80px 120px;">
+                        <div style="font-weight:600; color:#231a15;">@item.ProductName</div>
+                        <div style="text-align:right; font-size:.85rem; color:#6d5a4d;">@item.UnitPrice.ToString("N0") vnđ</div>
+                        <div style="text-align:center; font-weight:700;">@item.Quantity</div>
+                        <div style="text-align:right; font-weight:700; color:#231a15;">@item.Subtotal.ToString("N0") vnđ</div>
+                    </div>
+                }
+            </div>
+            <div style="padding:1rem 1.5rem; border-top:2px solid #eadbd2; display:flex; justify-content:flex-end; gap:1rem; align-items:center;">
+                <span style="font-size:.9rem; font-weight:700; color:#4e3a2f;">Tổng cộng:</span>
+                <span style="font-size:1.15rem; font-weight:800; color:#231a15;">@Model.TotalAmount.ToString("N0") vnđ</span>
+            </div>
+            @if (Model.CashGiven.HasValue && Model.CashGiven > 0)
+            {
+                <div style="padding:0 1.5rem 1rem; display:flex; justify-content:flex-end; gap:1rem; align-items:center; font-size:.85rem; color:#6d5a4d;">
+                    <span>Tiền khách đưa: @Model.CashGiven.Value.ToString("N0") vnđ</span>
+                    <span>|</span>
+                    <span>Tiền thừa: @((Model.ChangeAmount ?? 0).ToString("N0")) vnđ</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div style="display:grid; gap:1.25rem;">
+
+        <!-- Khách hàng -->
+        <div class="admin-panel">
+            <div class="admin-panel__header" style="border-bottom:none;">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">KHÁCH HÀNG</small>
+            </div>
+            <div style="padding: 0 1.2rem 1.2rem;">
+                <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:1rem;">
+                    <div style="width:42px; height:42px; border-radius:50%; background:#e9e2db; display:grid; place-items:center; font-size:1.1rem; color:#4e3a2f;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:700; color:#231a15; font-size:.9rem;">@(string.IsNullOrEmpty(Model.CustomerName) ? "Vãng lai" : Model.CustomerName)</div>
+                        @if (!string.IsNullOrEmpty(Model.CustomerEmail))
+                        {
+                            <div style="font-size:.78rem; color:#6d5a4d;">@Model.CustomerEmail</div>
+                        }
+                    </div>
+                </div>
+                @if (Model.OrderType?.ToLower() == "online")
+                {
+                    <div style="font-size:.85rem; display:grid; gap:.5rem; border-top:1px solid #eadbd2; padding-top:.75rem;">
+                        <div><span style="color:#6d5a4d; min-width:90px; display:inline-block;">Người nhận:</span> <strong>@(Model.RecipientName ?? "—")</strong></div>
+                        <div><span style="color:#6d5a4d; min-width:90px; display:inline-block;">SĐT:</span> @(Model.RecipientPhone ?? "—")</div>
+                        <div><span style="color:#6d5a4d; min-width:90px; display:inline-block;">Địa chỉ:</span> @(Model.DeliveryAddress ?? "—")</div>
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <div><span style="color:#6d5a4d; min-width:90px; display:inline-block;">Ghi chú:</span> <em>@Model.Notes</em></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Nhân viên -->
+        <div class="admin-panel">
+            <div class="admin-panel__header" style="border-bottom:none;">
+                <small style="font-weight: 800; color: #4e3a2f; letter-spacing: .05em;">NHÂN VIÊN XỬ LÝ</small>
+            </div>
+            <div style="padding: 0 1.2rem 1.2rem;">
+                <div style="display:flex; align-items:center; gap:.75rem;">
+                    <div style="width:42px; height:42px; border-radius:50%; background:#f1e6d8; display:grid; place-items:center; font-size:1.1rem; color:#4e3a2f;">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:700; color:#231a15; font-size:.9rem;">@(Model.StaffName ?? "—")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
