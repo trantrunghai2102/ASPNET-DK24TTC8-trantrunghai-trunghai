@@ -20,7 +20,19 @@ public static class IdentitySeeder
             FullName: "Store Staff",
             Email: "staff@thedrinkvn.local",
             Phone: "0900000002",
-            Password: "Staff@123")
+            Password: "Staff@123"),
+        new(
+            RoleName: UserRoles.Staff,
+            FullName: "Nhân viên 2",
+            Email: "trunghai.2102@gmail.com",
+            Phone: "0900000003",
+            Password: "Demo@123"),
+        new(
+            RoleName: UserRoles.Staff,
+            FullName: "Nhân viên 3",
+            Email: "trunghai.pn@gmail.com",
+            Phone: "0900000004",
+            Password: "Demo@123")
     ];
 
     public static async Task SeedAsync(AppDbContext db, ILogger logger)

@@ -290,48 +290,68 @@
     transform: translateY(-2px);
 }
 
-/* --- Accordions --- */
-.accordion-group {
-    border-top: 1px solid rgba(47, 29, 19, 0.15);
+/* --- Product Features & Description --- */
+.product-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    background: #f8f6f4;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
 }
 
-.accordion-item {
-    border-bottom: 1px solid rgba(47, 29, 19, 0.15);
-}
-
-.accordion-header {
+.feature-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 0;
+    gap: 1rem;
+}
+
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #fff;
+    border-radius: 50%;
+    color: var(--coffee-darkest);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.feature-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-text strong {
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--coffee-darkest);
-    cursor: pointer;
-    list-style: none;
-    /* remove native triangle */
+    margin-bottom: 0.2rem;
 }
 
-.accordion-header::-webkit-details-marker {
-    display: none;
+.feature-text span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
-.accordion-header svg {
+.detail-description-box {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(47, 29, 19, 0.15);
+}
+
+.box-title {
+    font-size: 1.2rem;
+    font-weight: 800;
     color: var(--coffee-darkest);
+    margin-bottom: 1rem;
 }
 
-details[open] .icon-plus {
-    display: none;
-}
-
-details:not([open]) .icon-minus {
-    display: none;
-}
-
-.accordion-content {
-    padding-bottom: 1.2rem;
-    font-size: 0.88rem;
-    line-height: 1.6;
+.long-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
     color: var(--text-secondary);
 }
 
