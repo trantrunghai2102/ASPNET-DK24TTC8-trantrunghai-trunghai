@@ -20,13 +20,16 @@
 
             <ul class="site-nav__links">
                 <li><a asp-controller="SanPham" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "SanPham" ? "active" : "")">Cửa hàng</a></li>
-                <li>
-                    <a asp-controller="DatHang"
-                       asp-action="DonHangCuaToi"
-                       class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DatHang" ? "active" : "")">
-                        Đơn hàng
-                    </a>
-                </li>
+                @if (User.Identity?.IsAuthenticated == true && User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value?.ToLower() == "customer")
+                {
+                    <li>
+                        <a asp-controller="DatHang"
+                           asp-action="DonHangCuaToi"
+                           class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DatHang" ? "active" : "")">
+                            Đơn hàng
+                        </a>
+                    </li>
+                }
             </ul>
 
             <div class="site-nav__right">
@@ -76,9 +79,7 @@
                 }
                 else
                 {
-                    <a asp-controller="Auth" asp-action="Login" class="site-nav__icon-btn" aria-label="Đăng nhập" title="Đăng nhập" style="text-decoration: none;">
-                        <i class="bi bi-person" style="font-size:17px;"></i>
-                    </a>
+                    <a asp-controller="Auth" asp-action="Login" class="btn-nav-login">Đăng nhập</a>
                 }
             </div>
         </div>
