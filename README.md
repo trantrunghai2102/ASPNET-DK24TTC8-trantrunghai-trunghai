@@ -3,6 +3,8 @@
 > **Đồ án môn học** · Chuyên đề ASP.NET
 > **Giảng viên hướng dẫn:** · TS. Đoàn Phước Miền  
 > **Thương hiệu:** The Drink VN
+> **Người thực hiện:** Trần Trung Hải
+
 
 ---
 
@@ -235,6 +237,7 @@ dotnet run
 #### 6. Module Xác Thực (Auth)
 - [x] Đăng ký tài khoản (họ tên, email, SĐT, username, mật khẩu)
 - [x] Đăng nhập / Đăng xuất
+- [ ] Oauth2 Google/Facebook
 - [x] Đổi mật khẩu / Quên mật khẩu trực tiếp
 - [x] Phân quyền (Role: Customer / Staff / Admin)
 
