@@ -21,7 +21,6 @@ public class DanhSachHoaDonViewModel
     public int TotalPages { get; set; } = 1;
 
 
-    // Added stats
     public int PendingOrders { get; set; }
     public int ProcessingOrders { get; set; }
     public int CompletedOrders { get; set; }

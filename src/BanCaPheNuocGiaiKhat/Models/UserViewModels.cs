@@ -21,11 +21,9 @@ public class UserListViewModel
     public List<UserItemViewModel> Users { get; set; } = new();
     public List<Role> Roles { get; set; } = new();
     
-    // Filters
     public string? SearchQuery { get; set; }
     public byte? SelectedRoleId { get; set; }
 
-    // Pagination
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
 }

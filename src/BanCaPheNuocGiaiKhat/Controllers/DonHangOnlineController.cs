@@ -21,7 +21,6 @@ public class DonHangOnlineController : Controller
     private static readonly string[] ValidStatuses =
         ["pending", "processing", "shipping", "delivered", "cancelled"];
 
-    // GET /DonHangOnline
     public async Task<IActionResult> Index(string? status, int page = 1)
     {
         const int pageSize = 10;
@@ -64,7 +63,6 @@ public class DonHangOnlineController : Controller
         });
     }
 
-    // GET /DonHangOnline/ChiTiet/{id}
     public async Task<IActionResult> ChiTiet(int id)
     {
         var order = await _db.Orders
@@ -102,7 +100,6 @@ public class DonHangOnlineController : Controller
         return View("~/Views/Staff/DonHangOnline/ChiTiet.cshtml", vm);
     }
 
-    // POST /DonHangOnline/CapNhatTrangThai
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CapNhatTrangThai(CapNhatTrangThaiInput input)
@@ -112,14 +109,12 @@ public class DonHangOnlineController : Controller
 
         if (order == null) return NotFound();
 
-        // Xác nhận thanh toán: delivered + paid
         if (input.NewStatus == "paid")
         {
             order.Status        = "delivered";
             order.PaymentStatus = "paid";
             order.UpdatedAt     =  DateTime.UtcNow;
 
-            // Generate Invoice for online order
             var invoice = new Invoice
             {
                 OrderId      = order.OrderId,

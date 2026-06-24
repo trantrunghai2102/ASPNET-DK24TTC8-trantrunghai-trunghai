@@ -71,7 +71,6 @@ public class DatHangController : Controller
             .ToList();
     }
 
-    // GET /DatHang/ThongTin
     public async Task<IActionResult> ThongTin()
     {
         var userId = GetUserId();
@@ -96,7 +95,6 @@ public class DatHangController : Controller
         return View("~/Views/Customer/DatHang/ThongTin.cshtml", vm);
     }
 
-    // POST /DatHang/XacNhan
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> XacNhan(DatHangViewModel input)
@@ -116,7 +114,6 @@ public class DatHangController : Controller
             return View("~/Views/Customer/DatHang/ThongTin.cshtml", input);
         }
 
-        // Kiểm tra tồn kho
         var stockErrors = cartItems
             .Where(c => c.Quantity > c.StockQty)
             .Select(c => $"{c.ProductName} (còn {c.StockQty})")
@@ -179,7 +176,6 @@ public class DatHangController : Controller
         return RedirectToAction(nameof(ThanhCong), new { orderId = order.OrderId });
     }
 
-    // GET /DatHang/DonHangCuaToi
     [Authorize(Roles = UserRoles.Customer)]
     public async Task<IActionResult> DonHangCuaToi(string? status, int page = 1)
     {
@@ -222,7 +218,6 @@ public class DatHangController : Controller
         });
     }
 
-    // GET /DatHang/TheoDoi/{id}
     public async Task<IActionResult> TheoDoi(int id)
     {
         var userId = GetUserId();
@@ -270,7 +265,6 @@ public class DatHangController : Controller
         return View("~/Views/Customer/DatHang/TheoDoi.cshtml", vm);
     }
 
-    // GET /DatHang/ThanhCong/{orderId}
     public async Task<IActionResult> ThanhCong(int orderId)
     {
         var userId = GetUserId();
@@ -284,7 +278,6 @@ public class DatHangController : Controller
         }
         else
         {
-            // Guest: xác minh qua session để tránh order enumeration
             var sessionOrderId = HttpContext.Session.GetInt32("GuestOrderId");
             if (sessionOrderId != orderId) return NotFound();
 

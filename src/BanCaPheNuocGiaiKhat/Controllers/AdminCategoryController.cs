@@ -18,7 +18,6 @@ public class AdminCategoryController : Controller
         _db = db;
     }
 
-    // GET /AdminCategory
     public async Task<IActionResult> Index(int page = 1, string search = "")
     {
         const int pageSize = 10;
@@ -63,7 +62,6 @@ public class AdminCategoryController : Controller
         return View("~/Views/Admin/Category/Index.cshtml", vm);
     }
 
-    // GET /AdminCategory/Create
     public async Task<IActionResult> Create()
     {
         var vm = new CategoryViewModel();
@@ -71,7 +69,6 @@ public class AdminCategoryController : Controller
         return View("~/Views/Admin/Category/Create.cshtml", vm);
     }
 
-    // POST /AdminCategory/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CategoryViewModel model)
@@ -109,7 +106,6 @@ public class AdminCategoryController : Controller
         return View("~/Views/Admin/Category/Create.cshtml", model);
     }
 
-    // GET /AdminCategory/Edit/{id}
     public async Task<IActionResult> Edit(int id)
     {
         var category = await _db.Categories.FindAsync(id);
@@ -126,7 +122,6 @@ public class AdminCategoryController : Controller
         return View("~/Views/Admin/Category/Edit.cshtml", vm);
     }
 
-    // POST /AdminCategory/Edit/{id}
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, CategoryViewModel model)
@@ -174,7 +169,6 @@ public class AdminCategoryController : Controller
         return View("~/Views/Admin/Category/Edit.cshtml", model);
     }
 
-    // POST /AdminCategory/Delete/{id}
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)

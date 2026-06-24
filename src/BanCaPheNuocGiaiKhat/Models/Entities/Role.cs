@@ -20,6 +20,5 @@ public class Role
     [StringLength(150)]
     public string? Description { get; set; }
 
-    // Navigation
     public ICollection<User> Users { get; set; } = new List<User>();
 }

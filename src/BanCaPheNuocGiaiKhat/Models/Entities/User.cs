@@ -67,7 +67,6 @@ public class User
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation
     [ForeignKey(nameof(RoleId))]
     public Role? Role { get; set; }
 }

@@ -24,7 +24,6 @@ public class GioHangController : Controller
         return claim != null ? int.Parse(claim) : null;
     }
 
-    // GET /GioHang/GetCartCount
     [HttpGet]
     public async Task<IActionResult> GetCartCount()
     {
@@ -42,7 +41,6 @@ public class GioHangController : Controller
         }
     }
 
-    // GET /GioHang
     public async Task<IActionResult> Index()
     {
         var userId = GetUserId();
@@ -98,7 +96,6 @@ public class GioHangController : Controller
         return View("~/Views/Customer/GioHang/Index.cshtml", new GioHangViewModel { Items = items });
     }
 
-    // POST /GioHang/Them
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Them(ThemVaoGioHangInput input)
@@ -178,7 +175,6 @@ public class GioHangController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // POST /GioHang/ThemAjax
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ThemAjax(ThemVaoGioHangInput input)
@@ -248,7 +244,6 @@ public class GioHangController : Controller
         return Json(new { success = true, count = newCount, message = $"Đã thêm {product.Name} vào giỏ hàng." });
     }
 
-    // POST /GioHang/CapNhat
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CapNhat(CapNhatGioHangInput input)
@@ -294,7 +289,6 @@ public class GioHangController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // POST /GioHang/Xoa
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Xoa(int cartItemId)

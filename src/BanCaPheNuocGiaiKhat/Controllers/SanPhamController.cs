@@ -25,7 +25,6 @@ public class SanPhamController : Controller
 
         var query = _db.Products.Where(p => p.Status == "active");
 
-        // Category Filter
         if (categoryId.HasValue && categoryId.Value > 0)
         {
             var targetIds = new List<int> { categoryId.Value };
@@ -42,7 +41,6 @@ public class SanPhamController : Controller
             query = query.Where(p => p.CategoryId.HasValue && targetIds.Contains(p.CategoryId.Value));
         }
 
-        // Search Filter
         if (!string.IsNullOrWhiteSpace(search))
         {
             var searchClean = search.Trim().ToLower();
@@ -50,7 +48,6 @@ public class SanPhamController : Controller
                                      (p.ShortDesc != null && p.ShortDesc.ToLower().Contains(searchClean)));
         }
 
-        // Sorting
         query = sortBy switch
         {
             "price-asc" => query.OrderBy(p => p.BasePrice),
@@ -59,7 +56,6 @@ public class SanPhamController : Controller
             _ => query.OrderByDescending(p => p.ViewCount) 
         };
 
-        // Pagination
         int pageSize = 10; 
         int totalItems = await query.CountAsync();
         int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
@@ -118,11 +114,9 @@ public class SanPhamController : Controller
             return NotFound();
         }
 
-        // Increase view count
         product.ViewCount++;
         await _db.SaveChangesAsync();
 
-        // Fetch related products (same category, different product, max 4)
         var relatedProducts = await _db.Products
             .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId && p.Status == "active")
             .Take(4)

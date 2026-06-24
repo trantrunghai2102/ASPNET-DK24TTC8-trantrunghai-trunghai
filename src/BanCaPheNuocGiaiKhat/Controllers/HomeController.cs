@@ -28,7 +28,6 @@ namespace BanCaPheNuocGiaiKhat.Controllers
                     return RedirectToAction("Index", "BanHang");
             }
 
-            // Fetch 3 newest products
             var newProducts = await _db.Products
                 .Where(p => p.Status == "active")
                 .OrderByDescending(p => p.CreatedAt)
@@ -47,7 +46,6 @@ namespace BanCaPheNuocGiaiKhat.Controllers
                 })
                 .ToListAsync();
 
-            // Fetch 1 best seller (most viewed)
             var bestSeller = await _db.Products
                 .Where(p => p.Status == "active")
                 .OrderByDescending(p => p.ViewCount)

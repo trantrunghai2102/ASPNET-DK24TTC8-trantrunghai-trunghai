@@ -40,7 +40,6 @@ public class AuthController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        // Kiểm tra role tồn tại trong DB
         var role = await _db.Roles.AsNoTracking()
                             .FirstOrDefaultAsync(r => r.RoleName == model.Role);
         if (role is null)
@@ -49,7 +48,6 @@ public class AuthController : Controller
             return View(model);
         }
 
-        // Kiểm tra email hoặc tên đăng nhập trùng
         var emailLower = model.Email.Trim().ToLowerInvariant();
         var alreadyExists = await _db.Users.AsNoTracking()
                                      .AnyAsync(u => u.Email == emailLower);
@@ -126,7 +124,6 @@ public class AuthController : Controller
             return View(model);
         }
 
-        // Cập nhật last_login_at
         await _db.Users
                  .Where(u => u.UserId == user.UserId)
                  .ExecuteUpdateAsync(s => s
@@ -149,7 +146,6 @@ public class AuthController : Controller
         return RedirectByRole(roleName);
     }
 
-    // ── POST /Auth/Logout ────────────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]
@@ -159,12 +155,10 @@ public class AuthController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-    // ── GET /Auth/ChangePassword ─────────────────────────────────────────
     [HttpGet]
     [Authorize]
     public IActionResult ChangePassword() => View(new ChangePasswordViewModel());
 
-    // ── POST /Auth/ChangePassword ────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]
@@ -228,7 +222,6 @@ public class AuthController : Controller
         return View(model);
     }
 
-    // ── GET /Auth/ResetPassword ──────────────────────────────────────────
     [HttpGet]
     [AllowAnonymous]
     public IActionResult ResetPassword(string email)
@@ -239,7 +232,6 @@ public class AuthController : Controller
         return View(new ResetPasswordViewModel { Email = email });
     }
 
-    // ── POST /Auth/ResetPassword ─────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [AllowAnonymous]
@@ -285,7 +277,6 @@ public class AuthController : Controller
         });
     }
 
-    // ── POST /Auth/Profile ───────────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]

@@ -237,7 +237,6 @@ public class AdminSanPhamController : Controller
         product.Status = model.Status;
         product.UpdatedAt = DateTime.UtcNow;
 
-        // Delete selected images
         if (model.DeleteImageIds != null && model.DeleteImageIds.Any())
         {
             var imagesToDelete = product.ProductImages
@@ -260,7 +259,6 @@ public class AdminSanPhamController : Controller
             }
         }
 
-        // Upload new images
         if (images != null && images.Any())
         {
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");

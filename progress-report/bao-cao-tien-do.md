@@ -1,9 +1,9 @@
 # BÁO CÁO TIẾN ĐỘ DỰ ÁN
 ## Website Bán Sản Phẩm Cà Phê & Nước Giải Khát — *The Drink VN*
 
-> **Giảng viên hướng dẫn:** ThS. Lê Nguyên Thảo  
-> **Công nghệ:** C# ASP.NET MVC · MySQL · The Drink VN  
-> **Cập nhật lần cuối:** 16/06/2026
+> **Giảng viên hướng dẫn:** TS. Đoàn Phước Miền
+> **Công nghệ:** C# ASP.NET MVC · SQL Server · The Drink VN  
+> **Cập nhật lần cuối:** 24/06/2026
 
 ---
 
@@ -33,7 +33,7 @@
 
 ### 1. Cơ Sở Lý Thuyết
 - [x] Ngôn ngữ lập trình C# — giới thiệu, tính năng, ưu/nhược điểm
-- [x] Hệ quản trị CSDL MySQL — giới thiệu, tính năng, ưu/nhược điểm
+- [x] Hệ quản trị CSDL SQL Server — giới thiệu, tính năng, ưu/nhược điểm
 - [x] Mô hình kiến trúc MVC (Model – View – Controller)
 
 ### 2. Phân Tích Yêu Cầu Hệ Thống
@@ -139,16 +139,16 @@
 - [x] Chương Hiện thực hóa — phân tích yêu cầu, use case, kiến trúc
 - [x] Hoàn thiện phần Thiết kế CSDL (diagram + mô tả bảng)
 - [x] Chương 4 — Kết quả (chụp ảnh màn hình giao diện thực tế và mô tả chức năng)
-- [ ] Chương 5 — Kết luận và hướng phát triển
-- [ ] Tóm tắt đồ án
-- [ ] Mục lục tự động
-- [ ] Danh mục hình ảnh & bảng biểu
-- [ ] Danh mục tài liệu tham khảo
+- [x] Chương 5 — Kết luận và hướng phát triển
+- [x] Tóm tắt đồ án
+- [x] Mục lục tự động
+- [x] Danh mục hình ảnh & bảng biểu
+- [x] Danh mục tài liệu tham khảo
 
 ---
 
 ## Ghi Chú
 - Tên thương hiệu: **The Drink VN**
-- Stack: **C# ASP.NET MVC** + **MySQL**
+- Stack: **C# ASP.NET MVC** + **SQL Server**
 - Đăng nhập bên thứ ba: **Google**, **Facebook**
 - Tài liệu gốc: `BaoCaoDoAnCafeGiaiKhat.doc`

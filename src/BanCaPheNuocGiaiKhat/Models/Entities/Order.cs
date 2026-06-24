@@ -61,7 +61,6 @@ public class Order
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation
     [ForeignKey(nameof(CustomerId))]
     public User? Customer { get; set; }
 

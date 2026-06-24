@@ -18,7 +18,6 @@ public class BanHangController : Controller
         _db = db;
     }
 
-    // GET /BanHang
     public async Task<IActionResult> Index()
     {
         var products = await _db.Products
@@ -40,7 +39,6 @@ public class BanHangController : Controller
         return View("~/Views/Staff/BanHang/Index.cshtml", new BanHangViewModel { Products = products });
     }
 
-    // POST /BanHang/TaoHoaDon
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> TaoHoaDon(TaoHoaDonInput input)
@@ -67,7 +65,6 @@ public class BanHangController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Kiểm tra tồn kho
         var stockErrors = input.Items
             .Where(i => i.Quantity > 0 && products.TryGetValue(i.ProductId, out var p) && i.Quantity > p.StockQty)
             .Select(i => $"{products[i.ProductId].Name} (còn {products[i.ProductId].StockQty})")
@@ -123,7 +120,6 @@ public class BanHangController : Controller
         return RedirectToAction(nameof(ThanhToan), new { orderId = order.OrderId });
     }
 
-    // GET /BanHang/ThanhToan/{orderId}
     public async Task<IActionResult> ThanhToan(int orderId)
     {
         var order = await _db.Orders
@@ -149,7 +145,6 @@ public class BanHangController : Controller
         return View("~/Views/Staff/BanHang/ThanhToan.cshtml", vm);
     }
 
-    // POST /BanHang/XacNhanThanhToan
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> XacNhanThanhToan(int orderId, decimal cashGiven)

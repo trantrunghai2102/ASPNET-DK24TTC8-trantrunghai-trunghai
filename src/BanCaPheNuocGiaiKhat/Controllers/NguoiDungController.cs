@@ -257,9 +257,7 @@ public class NguoiDungController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Check related orders where user is Customer
         var hasOrders = await _db.Orders.AnyAsync(o => o.CustomerId == id);
-        // Check related orders where user is Staff
         var hasStaffOrders = await _db.Orders.AnyAsync(o => o.StaffId == id);
 
         if (hasOrders || hasStaffOrders)

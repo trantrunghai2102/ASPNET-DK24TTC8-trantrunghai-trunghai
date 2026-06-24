@@ -16,7 +16,6 @@ public class StaffHoaDonController : Controller
         _db = db;
     }
 
-    // GET /StaffHoaDon
     public async Task<IActionResult> Index(int page = 1, string type = "")
     {
         const int pageSize = 10;
@@ -74,7 +73,6 @@ public class StaffHoaDonController : Controller
         return View("~/Views/Staff/HoaDon/Index.cshtml", viewModel);
     }
 
-    // GET /StaffHoaDon/ChiTiet/{id}
     public async Task<IActionResult> ChiTiet(int id)
     {
         var invoice = await _db.Invoices
@@ -105,7 +103,6 @@ public class StaffHoaDonController : Controller
         return View("~/Views/Staff/HoaDon/ChiTiet.cshtml", vm);
     }
 
-    // POST /StaffHoaDon/Xoa/{id}
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Xoa(int id)

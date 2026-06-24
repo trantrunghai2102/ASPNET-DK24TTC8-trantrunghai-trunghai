@@ -19,7 +19,6 @@ public class CategoryViewModel
 
     public int ProductCount { get; set; }
 
-    // Dùng cho Dropdownlist
     public List<SelectListItem> ParentCategories { get; set; } = new();
 }
 

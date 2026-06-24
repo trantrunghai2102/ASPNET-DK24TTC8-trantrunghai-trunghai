@@ -20,12 +20,10 @@ public class ProductListViewModel
     public List<ProductCardViewModel> Products { get; set; } = new();
     public List<Category> Categories { get; set; } = new();
 
-    // Filters & Search
     public int? SelectedCategoryId { get; set; }
     public string? SearchQuery { get; set; }
     public string? SortBy { get; set; }
 
-    // Pagination
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
     public int PageSize { get; set; } = 6;
