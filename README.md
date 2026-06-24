@@ -113,21 +113,29 @@ Cafe_Website/
 │       ├── appsettings.json           # Connection string, cấu hình app
 │       │
 │       ├── Controllers/               # Các controller xử lý request
-│       │   └── HomeController.cs      # Controller trang chủ
+│       │   ├── Admin...               # Các Controller quản trị (AdminCategory, AdminDashboard, AdminSanPham, ...)
+│       │   ├── Staff...               # Các Controller nghiệp vụ (BanHang, DonHangOnline, StaffHoaDon)
+│       │   ├── AuthController.cs      # Xử lý đăng nhập, đăng ký, đổi mật khẩu
+│       │   └── ...                    # Các Controller khách hàng (HomeController, SanPhamController, GioHangController, ...)
 │       │
-│       ├── Models/                    # Các model / entity
-│       │   └── ErrorViewModel.cs      # Model xử lý lỗi
+│       ├── Models/                    # Các class chứa dữ liệu
+│       │   ├── Entities/              # Các Entity tương ứng các bảng CSDL (User, Product, Order, ...)
+│       │   └── *ViewModels.cs         # Các Model dùng để truyền dữ liệu ra View
+│       │
+│       ├── Data/                      # Tầng thao tác dữ liệu (Entity Framework Core)
+│       │   ├── AppDbContext.cs        # Định nghĩa CSDL và Fluent API
+│       │   ├── Migrations/            # Chứa các file Migration sinh tự động
+│       │   └── *Seeder.cs             # Mã nguồn mồi dữ liệu ban đầu (ProductSeeder, IdentitySeeder)
+│       │
+│       ├── Utils/ & Helpers/          # Các class tiện ích (PasswordHasher, Session Helper, ...)
 │       │
 │       ├── Views/                     # Giao diện Razor
-│       │   ├── Home/
-│       │   │   ├── Index.cshtml       # Trang chủ
-│       │   │   └── Privacy.cshtml     # Trang chính sách
-│       │   ├── Shared/
-│       │   │   ├── _Layout.cshtml     # Layout chung (navbar, footer)
-│       │   │   ├── _Layout.cshtml.css # CSS cho layout
-│       │   │   └── Error.cshtml       # Trang lỗi
-│       │   ├── _ViewImports.cshtml    # Import TagHelpers
-│       │   └── _ViewStart.cshtml      # Layout mặc định
+│       │   ├── Admin/                 # Giao diện quản trị viên
+│       │   ├── Staff/                 # Giao diện nhân viên bán hàng
+│       │   ├── Customer/              # Giao diện người dùng đã đăng nhập (Giỏ hàng, Đặt hàng)
+│       │   ├── Home/ & SanPham/       # Giao diện trang chủ và chi tiết sản phẩm
+│       │   ├── Auth/                  # Giao diện đăng nhập, đăng ký
+│       │   └── Shared/                # Layout chung và các trang báo lỗi
 │       │
 │       └── wwwroot/                   # File tĩnh (CSS, JS, hình ảnh)
 │           ├── css/
