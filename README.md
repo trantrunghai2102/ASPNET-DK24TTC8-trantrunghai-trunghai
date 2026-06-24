@@ -215,7 +215,7 @@ dotnet run
 | 10 | Module Nhân viên | Hoàn thành | 100% |
 | 11 | Module Admin / Quản trị | Hoàn thành | 100% |
 | 12 | Module Thống kê doanh thu | Hoàn thành | 100% |
-| 13 | Hoàn thiện báo cáo | Đang thực hiện | 80% |
+| 13 | Hoàn thiện báo cáo | Đang thực hiện | 100% |
 
 ---
 
@@ -235,7 +235,7 @@ dotnet run
 - Yêu cầu phi chức năng (bảo mật, hiệu năng, giao diện, đa thiết bị)
 
 #### 3. Thiết kế kiến trúc hệ thống
-- Mô hình kiến trúc tổng thể (ASP.NET MVC + MySQL)
+- Mô hình kiến trúc tổng thể (ASP.NET MVC + SQL Server)
 
 #### 4. Thiết kế Use Case
 - Lược đồ Use Case hệ thống đầy đủ (3 actor: Khách hàng, Nhân viên, Quản trị viên)
@@ -248,7 +248,7 @@ dotnet run
 
 #### 6. Khởi tạo dự án
 - Tạo project ASP.NET Core MVC (.NET 8)
-- Cấu hình kết nối MySQL (MySql.Data ADO.NET)
+- Cấu hình kết nối SQLServer 
 - Layout cơ bản với Bootstrap (Navbar, Footer)
 
 ---
@@ -327,7 +327,7 @@ dotnet run
 ## Tài Liệu Tham Khảo
 
 - [ASP.NET Core MVC — Microsoft Docs](https://learn.microsoft.com/aspnet/core/mvc)
-- [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/)
+- [SQL Server 2025l](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/?tabs=dotnet-core-cli%2Csqlserver)
 - [Bootstrap 5 Documentation](https://getbootstrap.com/docs/5.3/)
 
 ---

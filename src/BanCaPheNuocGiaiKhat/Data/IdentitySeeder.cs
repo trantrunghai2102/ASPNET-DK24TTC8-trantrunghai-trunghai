@@ -31,7 +31,13 @@ public static class IdentitySeeder
             RoleName: UserRoles.Staff,
             FullName: "Nhân viên 3",
             Email: "trunghai.pn@gmail.com",
-            Phone: "0900000004",
+            Phone: "0908276466",
+            Password: "Demo@123"),
+        new(
+            RoleName: UserRoles.Customer,
+            FullName: "Trung hải",
+            Email: "trunghai.21@gmail.com",
+            Phone: "0908276465",
             Password: "Demo@123")
     ];
 

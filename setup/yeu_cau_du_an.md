@@ -17,7 +17,7 @@ Bạn hãy mở file `src/BanCaPheNuocGiaiKhat/appsettings.json` và kiểm tra 
   "DefaultConnection": "Server=localhost;Database=thedrinkvn_db;User Id=sa;Password=123456;TrustServerCertificate=True;"
 }
 ```
-*Lưu ý:* Hãy đổi `User Id` và `Password` cho khớp với SQL Server trên máy của bạn (hoặc đổi thành `Server=(localdb)\\mssqllocaldb;Database=thedrinkvn_db;Trusted_Connection=True;MultipleActiveResultSets=true` nếu bạn dùng LocalDB).
+*Lưu ý:* Hãy đổi `User Id` và `Password` cho khớp với SQL Server trên máy của bạn.
 
 ## 3. Khởi Chạy Dự Án
 
@@ -44,18 +44,10 @@ Trong lần chạy đầu tiên, EF Core sẽ mất vài giây để:
 
 ### Bước 3.3: Truy cập website
 Mở trình duyệt và truy cập vào địa chỉ:
-👉 **http://localhost:5200** (hoặc port được báo trên Terminal).
+=> **http://localhost:5200** (hoặc port được báo trên Terminal).
 
-## 4. Tài Khoản Đăng Nhập Mẫu
-Hệ thống đã tự động tạo sẵn các tài khoản sau để bạn test chức năng:
 
-| Chức vụ | Tên đăng nhập (Email) | Mật khẩu |
-|---|---|---|
-| **Admin** (Quản trị viên) | `admin@thedrink.vn` | `Admin@123` |
-| **Staff** (Nhân viên) | `staff1@thedrink.vn` | `Staff@123` |
-| **Customer** (Khách hàng) | `khachhang@gmail.com` | `Khach@123` |
-
-## 5. Xử Lý Sự Cố Thường Gặp
+## 4. Xử Lý Sự Cố Thường Gặp
 **Lỗi: Cannot drop database "thedrinkvn_db" because it is currently in use**
 - Nguyên nhân: Bạn đang mở kết nối đến DB này (ví dụ đang dùng SSMS) hoặc ứng dụng đang chạy ngầm.
 - Khắc phục: Mở SSMS, mở một New Query và chạy lệnh sau để ép đóng kết nối và xóa DB:

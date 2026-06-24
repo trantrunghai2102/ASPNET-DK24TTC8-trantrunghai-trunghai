@@ -101,6 +101,7 @@ Hệ thống tự động thêm các tài khoản mẫu sau vào cơ sở dữ l
 | **Store Staff** | `staff@thedrinkvn.local` | `Staff@123` | Nhân viên (Staff) |
 | **Nhân viên 2** | `trunghai.2102@gmail.com` | `Demo@123` | Nhân viên (Staff) |
 | **Nhân viên 3** | `trunghai.pn@gmail.com` | `Demo@123` | Nhân viên (Staff) |
+| **Trung hải** | `trunghai.21@gmail.com` | `Demo@123` | Khách hàng (Customer) |
 
 ### 2. Dữ liệu sản phẩm mẫu (ProductSeeder)
 
