@@ -5,6 +5,15 @@
 > **Thương hiệu:** The Drink VN
 > **Người thực hiện:** Trần Trung Hải
 
+---
+## Thông tin thành viên
+| Thông tin | Chi tiết |
+| :--- | :--- |
+| **Họ và Tên** | Trần Trung Hải |
+| **Mã Sinh Viên** | 170124969 |
+| **Lớp** | DK24TTC8 |
+| **Email** | [haitt210263@tvu-onschool.edu.vn](mailto:haitt210263@tvu-onschool.edu.vn) |
+
 
 ---
 
@@ -28,7 +37,7 @@
 **The Drink VN** là website thương mại điện tử chuyên bán các sản phẩm **cà phê** và **nước giải khát**. Hệ thống được xây dựng nhằm phục vụ 3 nhóm người dùng:
 
 | Vai trò | Mô tả |
-|---|---|
+| :--- | :--- |
 | **Khách hàng** | Duyệt sản phẩm, đặt hàng, thanh toán, đánh giá |
 | **Nhân viên** | Quản lý đơn hàng, xử lý giao hàng, xuất hóa đơn |
 | **Admin** | Quản trị toàn bộ hệ thống (sản phẩm, danh mục, người dùng, thống kê) |
@@ -46,10 +55,10 @@
 ## Công Nghệ Sử Dụng
 
 | Thành phần | Công nghệ | Phiên bản |
-|---|---|---|
+| :--- | :--- | :--- |
 | **Ngôn ngữ** | C# | .NET 8.0 |
 | **Framework** | ASP.NET Core MVC | 8.0 |
-| **Cơ sở dữ liệu** | SQL Server| 2025 |
+| **Cơ sở dữ liệu** | SQL Server | 2025 |
 | **ORM / Data Access** | EF SQL Server | 8.x |
 | **Front-end** | Razor Views + Bootstrap | 5.x |
 | **IDE** | Visual Studio / VS Code | — |
@@ -140,7 +149,7 @@ Cafe_Website/
 ### Danh sách các bảng
 
 | # | Bảng | Mô tả |
-|---|---|---|
+| :--- | :--- | :--- |
 | 1 | `roles` | Vai trò người dùng: admin, staff, customer |
 | 2 | `users` | Người dùng hệ thống, gồm quản trị viên, nhân viên và khách hàng |
 | 3 | `categories` | Danh mục sản phẩm đồ uống, hỗ trợ phân cấp bằng `parent_id` |
@@ -159,7 +168,8 @@ Cafe_Website/
 ### Yêu cầu hệ thống
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [MySQL8.4.6](https://downloads.mysql.com/archives/get/p/23/file/mysql-8.4.6-winx64.msi)
+- [MySQL 8.4.6](https://downloads.mysql.com/archives/get/p/23/file/mysql-8.4.6-winx64.msi)
+
 ### Bước 1: Clone repository
 
 ```bash
@@ -172,9 +182,10 @@ cd ASPNET-DK24TTC8-trantrunghai-trunghai
 ```bash
 cd BanCaPheNuocGiaiKhat
 dotnet run
-``
-Ứng dụng sẽ chạy tại: **https://localhost:5200** 
 ```
+
+Ứng dụng sẽ chạy tại: **https://localhost:5200**
+
 ---
 
 ## Tiến Độ Thực Hiện
@@ -183,13 +194,13 @@ dotnet run
 > **Tiến độ tổng thể:** ~95%
 
 | # | Module / Hạng mục | Trạng thái | Tiến độ |
-|---|---|---|---|
+| :--- | :--- | :--- | :--- |
 | 1 | Cơ sở lý thuyết | Hoàn thành | 100% |
 | 2 | Phân tích yêu cầu hệ thống | Hoàn thành | 100% |
 | 3 | Thiết kế kiến trúc hệ thống | Hoàn thành | 100% |
 | 4 | Thiết kế Use Case | Hoàn thành | 100% |
 | 5 | Thiết kế cơ sở dữ liệu | Hoàn thành | 100% |
-| 6 | Module Xác thực (Auth)| **Hoàn thành** | **100%** |
+| 6 | Module Xác thực (Auth) | **Hoàn thành** | **100%** |
 | 7 | Module Sản phẩm & Danh mục | Hoàn thành | 100% |
 | 8 | Module Giỏ hàng & Đặt hàng | Hoàn thành | 100% |
 | 9 | Module Thanh toán | Hoàn thành | 100% |
@@ -297,8 +308,8 @@ dotnet run
 ## Nhật Ký Phát Triển
 
 | Ngày | Nội dung |
-|---|---|
-| 04/06/2026 | Hoàn thiện Cơ sở lý thuyết, phân tích yêu cầu hệ thống, thiết kế kiến trúc hệ thống, thiết kế Use Case, thiết kế cơ sở dữ liệu  |
+| :--- | :--- |
+| 04/06/2026 | Hoàn thiện Cơ sở lý thuyết, phân tích yêu cầu hệ thống, thiết kế kiến trúc hệ thống, thiết kế Use Case, thiết kế cơ sở dữ liệu |
 | 08/06/2026 | Hoàn thiện tài liệu (CSDL, Use Case), cập nhật báo cáo, Hoàn thành module đăng ký/đăng nhập |
 | 09/06/2026 - 15/06/2026 | Phát triển và hoàn thiện các module cốt lõi: Quản lý Sản phẩm & Danh mục, Giỏ hàng, Đặt hàng, Thanh toán, Admin Dashboard, Thống kê doanh thu và phân hệ Nhân viên. |
 | 16/06/2026 - 21/06/2026 | Giai đoạn Refactor: Đồng bộ giao diện tiếng Việt, chuẩn hóa định dạng tiền tệ VNĐ (từ 25.00 sang 250,000), hoàn thiện toàn bộ tính năng Admin (Thống kê, Quản lý), Staff (Bán hàng POS, Quản lý đơn), Customer (Đặt hàng), và tối ưu UX (Toast notification, đổi mật khẩu trực tiếp). |
